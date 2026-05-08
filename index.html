@@ -3,46 +3,47 @@
 <head>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:transparent;color:#111;font-size:14px}
-.header{padding:1rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.header h1{font-size:16px;font-weight:500}
-.status{font-size:12px;color:#888}
+body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size:14px;min-height:100vh;padding:1rem 1.25rem 3rem}
+.header{padding:0.5rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:0.5px solid #2a2b2f;padding-bottom:0.75rem;margin-bottom:0.75rem}
+.header h1{font-size:16px;font-weight:500;color:#fff}
+.status{font-size:12px;color:#666}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0.75rem 0}
-.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:12px;color:#666;transition:all 0.15s}
-.filter-btn.active{background:#f0f0f0;color:#111;border-color:#999}
+.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid #333;background:transparent;cursor:pointer;font-size:12px;color:#888;transition:all 0.15s}
+.filter-btn.active{background:#23242a;color:#e8e8e8;border-color:#555}
 .summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:0.75rem 0 1rem}
-.metric{background:#f5f5f5;border-radius:8px;padding:0.75rem 1rem}
-.metric-label{font-size:12px;color:#888;margin-bottom:4px}
-.metric-value{font-size:22px;font-weight:500}
-.metric-sub{font-size:11px;color:#aaa;margin-top:2px}
-.section-label{font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
+.metric{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:8px;padding:0.75rem 1rem}
+.metric-label{font-size:12px;color:#666;margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:500;color:#fff}
+.metric-sub{font-size:11px;color:#555;margin-top:2px}
+.section-label{font-size:11px;font-weight:500;color:#555;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
-.card{background:#fff;border:0.5px solid #e0e0e0;border-radius:12px;padding:1rem 1.25rem;transition:border-color 0.15s}
-.card:hover{border-color:#bbb}
+.card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.25rem;transition:border-color 0.15s}
+.card:hover{border-color:#444}
+.card-event{font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.03em}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.card-title{font-size:13px;font-weight:500;color:#111;line-height:1.4;max-width:75%}
+.card-title{font-size:13px;font-weight:500;color:#e8e8e8;line-height:1.4;max-width:75%}
 .badge{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.badge-macro{background:#E6F1FB;color:#0C447C}
-.badge-equity{background:#EAF3DE;color:#27500A}
-.badge-event{background:#FAEEDA;color:#633806}
-.badge-distressed{background:#FCEBEB;color:#791F1F}
+.badge-macro{background:#0C447C;color:#B5D4F4}
+.badge-equity{background:#27500A;color:#C0DD97}
+.badge-event{background:#633806;color:#FAC775}
+.badge-distressed{background:#791F1F;color:#F7C1C1}
 .prob-row{display:flex;align-items:center;gap:10px;margin:8px 0}
-.prob-bar-track{flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.prob-bar-track{flex:1;height:6px;background:#2a2b2f;border-radius:3px;overflow:hidden}
 .prob-bar-fill{height:100%;border-radius:3px}
 .card-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
-.meta-item{font-size:11px;color:#888}
-.meta-item span{color:#111;font-weight:500}
-.delta-up{color:#3B6D11}
-.delta-down{color:#A32D2D}
+.meta-item{font-size:11px;color:#555}
+.meta-item span{color:#aaa;font-weight:500}
+.delta-up{color:#639922}
+.delta-down{color:#E24B4A}
 .sentiment-tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
-.bull{background:#EAF3DE;color:#3B6D11}
-.bear{background:#FCEBEB;color:#A32D2D}
-.neut{background:#f0f0f0;color:#666}
-.loading{text-align:center;padding:3rem;color:#888}
-.error-msg{text-align:center;padding:2rem;color:#888;font-size:13px;border:0.5px dashed #ddd;border-radius:12px}
-.refresh-btn{padding:4px 12px;border-radius:8px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:12px;color:#666}
-.refresh-btn:hover{background:#f0f0f0}
-.empty{color:#aaa;font-size:13px;padding:1.5rem 0;text-align:center}
+.bull{background:#1a2e0a;color:#639922;border:0.5px solid #3B6D11}
+.bear{background:#2e0a0a;color:#E24B4A;border:0.5px solid #A32D2D}
+.neut{background:#23242a;color:#888;border:0.5px solid #333}
+.loading{text-align:center;padding:3rem;color:#555}
+.error-msg{text-align:center;padding:2rem;color:#555;font-size:13px;border:0.5px dashed #2a2b2f;border-radius:12px}
+.refresh-btn{padding:4px 12px;border-radius:8px;border:0.5px solid #333;background:transparent;cursor:pointer;font-size:12px;color:#666}
+.refresh-btn:hover{background:#23242a;color:#aaa}
+.empty{color:#555;font-size:13px;padding:1.5rem 0;text-align:center}
 </style>
 </head>
 <body>
@@ -71,58 +72,57 @@ body{font-family:system-ui,sans-serif;background:transparent;color:#111;font-siz
 let allMarkets = [];
 let activeFilter = 'all';
 
-const SPORTS_EXCLUDE = [
-  'nba','nfl','mlb','nhl','nascar','pga','ufc','mma','tennis','soccer','golf',
-  'wins by','home run','touchdown','strikeout','rebound','assists','points scored',
-  'yards','innings','playoff','series','championship game','super bowl','world series',
-  'stanley cup','mvp award','draft pick','march madness','ncaa','premier league',
-  'champions league','la liga','bundesliga','serie a','ligue','transfer',
-  ' pts ',' reb ',' ast ',' yds ',' td ',' hr ',
-  'jalen','lebron','mahomes','messi','ronaldo','curry','durant','wembanyama',
-  'brunson','maxey','edwards','tatum','giannis','embiid','luka','shai',
-  'judge','ohtani','trout','acuna','betts','vlad','soto','jackson',
-  'lamar','burrow','hurts','stroud','allen','purdy','stafford',
-  'djokovic','alcaraz','sinner','federer','nadal','serena',
-  'ugo humbert','dortmund','josh hart','oubre',
-  'houston astros','atlanta','toronto','tampa bay','milwaukee','seattle','arizona',
-  'los angeles dodgers','yankees','red sox','cubs','mets','phillies','braves',
-  'golden state','boston celtics','miami heat','denver nuggets','phoenix suns',
-  'dallas mavericks','oklahoma city','minnesota timberwolves','new york knicks',
-  'indiana pacers','cleveland cavaliers','orlando magic','atlanta hawks'
+const FINANCIAL_EVENT_PREFIXES = [
+  'KXINFL','KXCPI','KXFED','KXFOMC','KXRATE','KXGDP','KXUNEMP',
+  'KXPAYROLL','KXPCE','KXHOUSING','KXOIL','KXGOLD','KXBTC','KXETH',
+  'KXCRYPTO','KXSP500','KXNASDAQ','KXDOW','KXVIX','KXEARNINGS',
+  'KXACQ','KXMERGER','KXIPO','KXBANK','KXDEFAULT','KXTARIFF',
+  'KXTRADE','KXDEBT','KXDEFICIT','KXRECESS','KXAPPL','KXNVDA',
+  'KXTSLA','KXMETA','KXGOOG','KXAMZN','KXMSFT','KXJPM','KXGS',
+  'KXDOLLAR','KXYIELD','KXTREASURY','KXPOLITICS','KXELECT'
 ];
 
-const FINANCIAL_INCLUDE = [
-  'fed','federal reserve','rate cut','rate hike','interest rate','fomc',
-  'cpi','inflation','pce','gdp','recession','unemployment','payroll','nonfarm',
-  'treasury','yield','tariff','trade war','trade deficit','debt ceiling','deficit',
-  'bitcoin','crypto','ethereum','btc','eth',
-  's&p','sp500','nasdaq','dow jones','russell','vix','spy','qqq',
-  'stock','equity','earnings','eps','revenue','profit','margin',
-  'acquire','acquisition','merger','takeover','ipo','buyout','deal','bid',
-  'bankrupt','chapter 11','default','restructur','distress',
-  'oil','gold','silver','commodit','brent','wti','natural gas',
-  'dollar','euro','yen','yuan','forex','fx','exchange rate',
-  'housing','mortgage','home price','real estate','reit',
-  'election','president','congress','senate','policy','regulation','sec','fed chair',
-  'trump','biden','powell','yellen','treasury secretary',
-  'jobs report','pmi','ism','consumer confidence','retail sales','industrial',
-  'apple','microsoft','nvidia','amazon','google','meta','tesla','berkshire',
-  'jpmorgan','goldman','morgan stanley','bank of america','wells fargo',
-  'recession probability','market crash','bear market','bull market'
+const FINANCIAL_KEYWORDS = [
+  'federal reserve','fed funds','rate cut','rate hike','interest rate','fomc',
+  'cpi','inflation','core pce','gdp','recession','unemployment','nonfarm payroll',
+  'treasury yield','tariff','trade war','trade deficit','debt ceiling',
+  'bitcoin','ethereum','crypto','btc','eth',
+  's&p 500','sp500','nasdaq','dow jones','russell 2000','vix',
+  'earnings per share','eps','revenue','stock price','market cap',
+  'acquisition','merger','takeover','ipo','bankruptcy','chapter 11','default',
+  'oil price','gold price','brent crude','natural gas',
+  'us dollar','exchange rate','fed chair','treasury secretary',
+  'jobs report','retail sales','consumer price','producer price',
+  'apple stock','nvidia','tesla','meta platforms','alphabet','amazon','microsoft',
+  'jpmorgan','goldman sachs','bear market','bull market','market crash',
+  'will the fed','will inflation','will gdp','will unemployment','will bitcoin',
+  'will trump','will congress','will the s&p','will nasdaq','will oil'
 ];
 
-function isFinancial(title) {
-  const t = title.toLowerCase();
-  if (FINANCIAL_INCLUDE.some(k => t.includes(k))) return true;
-  if (SPORTS_EXCLUDE.some(k => t.includes(k))) return false;
+const HARD_SPORTS_EXCLUDE = [
+  'wins by over','runs scored','points scored','goals scored','yards','touchdowns',
+  'strikeouts','home runs','rebounds','assists','nba finals','mlb','nfl','nhl',
+  'super bowl','world series','stanley cup','champions league','premier league',
+  'grand slam','wimbledon','us open','french open','australian open',
+  'ufc','mma','boxing','wrestling','formula 1','nascar race'
+];
+
+function isFinancial(m) {
+  const title = (m.title || m.question || '').toLowerCase();
+  const ticker = (m.ticker || m.market_ticker || '').toUpperCase();
+  const event = (m.event_ticker || '').toUpperCase();
+
+  if (HARD_SPORTS_EXCLUDE.some(k => title.includes(k))) return false;
+  if (FINANCIAL_EVENT_PREFIXES.some(p => event.startsWith(p) || ticker.startsWith(p))) return true;
+  if (FINANCIAL_KEYWORDS.some(k => title.includes(k))) return true;
   return false;
 }
 
 const CATEGORY_RULES = [
-  {cat:'distressed', keywords:['bankrupt','chapter 11','chapter 7','restructur','default','distress','insolvency']},
-  {cat:'event', keywords:['acqui','merger','takeover','buyout','ipo','spin','delist','deal','bid']},
-  {cat:'equity', keywords:['stock','shares','s&p','nasdaq','dow','russell','etf','sp500','equity','earnings','eps','qqq','spy','apple','microsoft','nvidia','amazon','google','meta','tesla','jpmorgan','goldman']},
-  {cat:'macro', keywords:['fed','rate','cpi','inflation','gdp','recession','unemployment','payroll','fomc','treasury','yield','tariff','trade','deficit','debt','interest','bitcoin','crypto','oil','gold','dollar','euro','housing','election','policy']}
+  {cat:'distressed', keywords:['bankrupt','chapter 11','default','restructur','distress','insolvency']},
+  {cat:'event', keywords:['acqui','merger','takeover','buyout','ipo','spin','delist','deal']},
+  {cat:'equity', keywords:['s&p','nasdaq','dow','russell','vix','sp500','earnings','eps','apple','nvidia','tesla','meta','alphabet','amazon','microsoft','jpmorgan','goldman','stock price']},
+  {cat:'macro', keywords:['fed','rate','cpi','inflation','gdp','recession','unemployment','payroll','fomc','treasury','yield','tariff','trade','deficit','debt','bitcoin','crypto','oil','gold','dollar','exchange rate','housing','retail sales','jobs']}
 ];
 
 function categorize(title) {
@@ -134,12 +134,9 @@ function categorize(title) {
 }
 
 function getProb(m) {
-  const candidates = [
-    m.yes_bid_dollars, m.yes_ask_dollars, m.last_price_dollars,
-    m.yes_bid, m.yes_ask, m.last_price,
-    m.previous_yes_bid_dollars, m.notional_value_dollars
-  ];
-  for (const v of candidates) {
+  const fields = ['yes_bid_dollars','last_price_dollars','yes_ask_dollars','yes_bid','yes_ask','last_price'];
+  for (const f of fields) {
+    const v = m[f];
     if (v !== undefined && v !== null && v !== '' && !isNaN(v)) {
       const n = parseFloat(v);
       if (n > 0 && n <= 1) return Math.round(n * 100);
@@ -150,8 +147,9 @@ function getProb(m) {
 }
 
 function getPrevProb(m) {
-  const candidates = [m.previous_yes_bid_dollars, m.previous_price_dollars, m.previous_yes_ask_dollars];
-  for (const v of candidates) {
+  const fields = ['previous_yes_bid_dollars','previous_price_dollars','previous_yes_ask_dollars'];
+  for (const f of fields) {
+    const v = m[f];
     if (v !== undefined && v !== null && v !== '' && !isNaN(v)) {
       const n = parseFloat(v);
       if (n > 0 && n <= 1) return Math.round(n * 100);
@@ -162,8 +160,9 @@ function getPrevProb(m) {
 }
 
 function getVolume(m) {
-  const candidates = [m.volume_dollars, m.volume, m.notional_value_dollars, m.open_interest_dollars, m.open_interest];
-  for (const v of candidates) {
+  const fields = ['volume_dollars','volume','notional_value_dollars','open_interest_dollars','open_interest'];
+  for (const f of fields) {
+    const v = m[f];
     if (v !== undefined && v !== null && !isNaN(v) && parseFloat(v) > 0) return parseFloat(v);
   }
   return 0;
@@ -178,7 +177,7 @@ function sentimentFromProb(p) {
 function barColor(p) {
   if (p >= 65) return '#639922';
   if (p <= 35) return '#E24B4A';
-  return '#888780';
+  return '#555';
 }
 
 function fmtVol(v) {
@@ -186,6 +185,17 @@ function fmtVol(v) {
   if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
   if (v >= 1000) return '$' + Math.round(v/1000) + 'K';
   return '$' + Math.round(v);
+}
+
+function cleanTitle(m) {
+  const event = m.event_ticker || '';
+  const title = m.title || m.question || 'Unnamed';
+  const subtitle = m.sub_title || m.subtitle || '';
+  if (subtitle && subtitle.length < 120) return subtitle;
+  if (title.startsWith('yes ') || title.includes(',yes ') || title.includes(',no ')) {
+    return event.replace(/KX[A-Z]+[-_]?/,'').replace(/[-_]/g,' ').toLowerCase() || title.slice(0,80);
+  }
+  return title;
 }
 
 function renderCards(markets) {
@@ -210,13 +220,17 @@ function renderCards(markets) {
       const displayProb = prob !== null ? prob : '?';
       const sent = prob !== null ? sentimentFromProb(prob) : {label:'unknown', cls:'neut'};
       const delta = (prob !== null && prevProb !== null && prevProb > 0) ? prob - prevProb : null;
-      const dStr = delta !== null ? (delta > 0 ? '+' : '') + delta + '%' : null;
+      const dStr = delta !== null && delta !== 0 ? (delta > 0 ? '+' : '') + delta + '%' : null;
       const badgeMap = {macro:'badge-macro',equity:'badge-equity',event:'badge-event',distressed:'badge-distressed'};
       const catLabel = {macro:'macro',equity:'equity',event:'M&A / event',distressed:'distressed'};
       const barW = prob !== null ? prob : 50;
+      const eventLabel = (m.event_ticker || '').replace(/KX[A-Z]+-?/,'').replace(/-/g,' ');
+      const displayTitle = cleanTitle(m);
+
       html += `<div class="card">
+        ${eventLabel ? `<div class="card-event">${eventLabel}</div>` : ''}
         <div class="card-top">
-          <div class="card-title">${m.title || m.question || 'Unnamed'}</div>
+          <div class="card-title">${displayTitle}</div>
           <span class="badge ${badgeMap[m._cat]}">${catLabel[m._cat]}</span>
         </div>
         <div class="prob-row">
@@ -246,8 +260,8 @@ function renderSummary(markets) {
   const totalVol = markets.reduce((s,m) => s + getVolume(m), 0);
   document.getElementById('summary').innerHTML = `
     <div class="metric"><div class="metric-label">Markets tracked</div><div class="metric-value">${markets.length}</div><div class="metric-sub">financial contracts</div></div>
-    <div class="metric"><div class="metric-label">Bullish bias</div><div class="metric-value" style="color:#3B6D11">${bull}</div><div class="metric-sub">contracts &gt;65%</div></div>
-    <div class="metric"><div class="metric-label">Bearish bias</div><div class="metric-value" style="color:#A32D2D">${bear}</div><div class="metric-sub">contracts ≤35%</div></div>
+    <div class="metric"><div class="metric-label">Bullish bias</div><div class="metric-value" style="color:#639922">${bull}</div><div class="metric-sub">contracts &gt;65%</div></div>
+    <div class="metric"><div class="metric-label">Bearish bias</div><div class="metric-value" style="color:#E24B4A">${bear}</div><div class="metric-sub">contracts ≤35%</div></div>
     <div class="metric"><div class="metric-label">Event / distressed</div><div class="metric-value" style="color:#BA7517">${events}</div><div class="metric-sub">M&A + bankruptcy</div></div>
     <div class="metric"><div class="metric-label">Total volume</div><div class="metric-value">${fmtVol(totalVol)}</div><div class="metric-sub">across all markets</div></div>
   `;
@@ -260,56 +274,34 @@ function setFilter(cat, el) {
   renderCards(allMarkets);
 }
 
-const FINANCIAL_SERIES = [
-  'KXINFL','KXCPI','KXFED','KXFOMC','KXRATE','KXGDP','KXUNEMPLOYMENT',
-  'KXPAYROLL','KXPCE','KXHOUSING','KXOIL','KXGOLD','KXBTC','KXETH',
-  'KXCRYPTO','KXSP500','KXNASDAQ','KXDOW','KXVIX','KXEARNINGS',
-  'KXACQUISITION','KXMERGER','KXIPO','KXBANKRUPTCY','KXDEFAULT',
-  'KXTARIFF','KXTRADE','KXDEBT','KXDEFICIT','KXRECESSION',
-  'KXAPPL','KXNVDA','KXTSLA','KXMETA','KXGOOG','KXAMZN','KXMSFT',
-  'KXJPM','KXGS','KXDOLLAR','KXYIELD','KXTREASURY'
-];
-
-async function fetchAllFinancialMarkets() {
-  const allResults = [];
-
-  const batchParams = new URLSearchParams({
-    path: '/markets',
-    limit: 1000,
-    status: 'open',
-    with_nested_markets: false
-  });
-
-  const res = await fetch(`https://market-sentiment-db.vercel.app/api/proxy?${batchParams}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  const markets = data.markets || [];
-
-  const financial = markets.filter(m => {
-    const title = (m.title || m.question || '').toLowerCase();
-    const ticker = (m.ticker || m.market_ticker || '').toUpperCase();
-    const event = (m.event_ticker || '').toUpperCase();
-
-    if (FINANCIAL_SERIES.some(s => ticker.startsWith(s) || event.startsWith(s))) return true;
-    if (FINANCIAL_INCLUDE.some(k => title.includes(k))) return true;
-    if (SPORTS_EXCLUDE.some(k => title.includes(k))) return false;
-    return false;
-  });
-
-  return financial;
-}
-
 async function loadData() {
   document.getElementById('status').textContent = 'Fetching live data...';
   document.getElementById('content').innerHTML = '<div class="loading">Fetching Kalshi markets...</div>';
   try {
-    allMarkets = (await fetchAllFinancialMarkets())
+    let allFetched = [];
+    let cursor = null;
+    let pages = 0;
+
+    do {
+      const params = new URLSearchParams({ path: '/markets', limit: 200, status: 'open' });
+      if (cursor) params.set('cursor', cursor);
+      const res = await fetch(`https://market-sentiment-db.vercel.app/api/proxy?${params}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const batch = data.markets || [];
+      allFetched = allFetched.concat(batch);
+      cursor = data.cursor || null;
+      pages++;
+    } while (cursor && pages < 8);
+
+    allMarkets = allFetched
+      .filter(m => isFinancial(m))
       .map(m => ({...m, _cat: categorize(m.title || m.question || '')}))
       .sort((a,b) => getVolume(b) - getVolume(a));
 
     renderSummary(allMarkets);
     renderCards(allMarkets);
-    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allMarkets.length} financial markets`;
+    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allMarkets.length} financial markets (${allFetched.length} total scanned)`;
   } catch(e) {
     document.getElementById('content').innerHTML = `<div class="error-msg"><div style="font-weight:500;margin-bottom:6px">Error loading data</div><div style="font-size:12px">${e.message}</div></div>`;
     document.getElementById('status').textContent = 'Error — see message below';
