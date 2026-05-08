@@ -260,25 +260,50 @@ function setFilter(cat, el) {
   renderCards(allMarkets);
 }
 
+const FINANCIAL_SERIES = [
+  'KXINFL','KXCPI','KXFED','KXFOMC','KXRATE','KXGDP','KXUNEMPLOYMENT',
+  'KXPAYROLL','KXPCE','KXHOUSING','KXOIL','KXGOLD','KXBTC','KXETH',
+  'KXCRYPTO','KXSP500','KXNASDAQ','KXDOW','KXVIX','KXEARNINGS',
+  'KXACQUISITION','KXMERGER','KXIPO','KXBANKRUPTCY','KXDEFAULT',
+  'KXTARIFF','KXTRADE','KXDEBT','KXDEFICIT','KXRECESSION',
+  'KXAPPL','KXNVDA','KXTSLA','KXMETA','KXGOOG','KXAMZN','KXMSFT',
+  'KXJPM','KXGS','KXDOLLAR','KXYIELD','KXTREASURY'
+];
+
+async function fetchAllFinancialMarkets() {
+  const allResults = [];
+
+  const batchParams = new URLSearchParams({
+    path: '/markets',
+    limit: 1000,
+    status: 'open',
+    with_nested_markets: false
+  });
+
+  const res = await fetch(`https://market-sentiment-db.vercel.app/api/proxy?${batchParams}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  const markets = data.markets || [];
+
+  const financial = markets.filter(m => {
+    const title = (m.title || m.question || '').toLowerCase();
+    const ticker = (m.ticker || m.market_ticker || '').toUpperCase();
+    const event = (m.event_ticker || '').toUpperCase();
+
+    if (FINANCIAL_SERIES.some(s => ticker.startsWith(s) || event.startsWith(s))) return true;
+    if (FINANCIAL_INCLUDE.some(k => title.includes(k))) return true;
+    if (SPORTS_EXCLUDE.some(k => title.includes(k))) return false;
+    return false;
+  });
+
+  return financial;
+}
+
 async function loadData() {
   document.getElementById('status').textContent = 'Fetching live data...';
   document.getElementById('content').innerHTML = '<div class="loading">Fetching Kalshi markets...</div>';
   try {
-    const params = new URLSearchParams({
-      path: '/markets',
-      limit: 200,
-      status: 'open',
-      with_nested_markets: false
-    });
-    const res = await fetch(`https://market-sentiment-db.vercel.app/api/proxy?${params}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    allMarkets = (data.markets || [])
-      .filter(m => {
-        const title = m.title || m.question || '';
-        return isFinancial(title);
-      })
+    allMarkets = (await fetchAllFinancialMarkets())
       .map(m => ({...m, _cat: categorize(m.title || m.question || '')}))
       .sort((a,b) => getVolume(b) - getVolume(a));
 
