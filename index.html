@@ -3,7 +3,7 @@
 <head>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--color-text-primary,#111);font-size:14px}
+body{font-family:system-ui,sans-serif;background:transparent;color:#111;font-size:14px}
 .header{padding:1rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .header h1{font-size:16px;font-weight:500}
 .status{font-size:12px;color:#888}
@@ -17,7 +17,7 @@ body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--c
 .metric-sub{font-size:11px;color:#aaa;margin-top:2px}
 .section-label{font-size:11px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
-.card{background:#fff;border:0.5px solid #e0e0e0;border-radius:12px;padding:1rem 1.25rem;cursor:pointer;transition:border-color 0.15s}
+.card{background:#fff;border:0.5px solid #e0e0e0;border-radius:12px;padding:1rem 1.25rem;transition:border-color 0.15s}
 .card:hover{border-color:#bbb}
 .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .card-title{font-size:13px;font-weight:500;color:#111;line-height:1.4;max-width:75%}
@@ -29,7 +29,6 @@ body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--c
 .prob-row{display:flex;align-items:center;gap:10px;margin:8px 0}
 .prob-bar-track{flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden}
 .prob-bar-fill{height:100%;border-radius:3px}
-.prob-label{font-size:13px;font-weight:500;min-width:36px;text-align:right}
 .card-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
 .meta-item{font-size:11px;color:#888}
 .meta-item span{color:#111;font-weight:500}
@@ -39,7 +38,7 @@ body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--c
 .bull{background:#EAF3DE;color:#3B6D11}
 .bear{background:#FCEBEB;color:#A32D2D}
 .neut{background:#f0f0f0;color:#666}
-.loading{text-align:center;padding:3rem;color:#888;font-size:14px}
+.loading{text-align:center;padding:3rem;color:#888}
 .error-msg{text-align:center;padding:2rem;color:#888;font-size:13px;border:0.5px dashed #ddd;border-radius:12px}
 .refresh-btn{padding:4px 12px;border-radius:8px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:12px;color:#666}
 .refresh-btn:hover{background:#f0f0f0}
@@ -72,11 +71,58 @@ body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--c
 let allMarkets = [];
 let activeFilter = 'all';
 
+const SPORTS_EXCLUDE = [
+  'nba','nfl','mlb','nhl','nascar','pga','ufc','mma','tennis','soccer','golf',
+  'wins by','home run','touchdown','strikeout','rebound','assists','points scored',
+  'yards','innings','playoff','series','championship game','super bowl','world series',
+  'stanley cup','mvp award','draft pick','march madness','ncaa','premier league',
+  'champions league','la liga','bundesliga','serie a','ligue','transfer',
+  ' pts ',' reb ',' ast ',' yds ',' td ',' hr ',
+  'jalen','lebron','mahomes','messi','ronaldo','curry','durant','wembanyama',
+  'brunson','maxey','edwards','tatum','giannis','embiid','luka','shai',
+  'judge','ohtani','trout','acuna','betts','vlad','soto','jackson',
+  'lamar','burrow','hurts','stroud','allen','purdy','stafford',
+  'djokovic','alcaraz','sinner','federer','nadal','serena',
+  'ugo humbert','dortmund','josh hart','oubre',
+  'houston astros','atlanta','toronto','tampa bay','milwaukee','seattle','arizona',
+  'los angeles dodgers','yankees','red sox','cubs','mets','phillies','braves',
+  'golden state','boston celtics','miami heat','denver nuggets','phoenix suns',
+  'dallas mavericks','oklahoma city','minnesota timberwolves','new york knicks',
+  'indiana pacers','cleveland cavaliers','orlando magic','atlanta hawks'
+];
+
+const FINANCIAL_INCLUDE = [
+  'fed','federal reserve','rate cut','rate hike','interest rate','fomc',
+  'cpi','inflation','pce','gdp','recession','unemployment','payroll','nonfarm',
+  'treasury','yield','tariff','trade war','trade deficit','debt ceiling','deficit',
+  'bitcoin','crypto','ethereum','btc','eth',
+  's&p','sp500','nasdaq','dow jones','russell','vix','spy','qqq',
+  'stock','equity','earnings','eps','revenue','profit','margin',
+  'acquire','acquisition','merger','takeover','ipo','buyout','deal','bid',
+  'bankrupt','chapter 11','default','restructur','distress',
+  'oil','gold','silver','commodit','brent','wti','natural gas',
+  'dollar','euro','yen','yuan','forex','fx','exchange rate',
+  'housing','mortgage','home price','real estate','reit',
+  'election','president','congress','senate','policy','regulation','sec','fed chair',
+  'trump','biden','powell','yellen','treasury secretary',
+  'jobs report','pmi','ism','consumer confidence','retail sales','industrial',
+  'apple','microsoft','nvidia','amazon','google','meta','tesla','berkshire',
+  'jpmorgan','goldman','morgan stanley','bank of america','wells fargo',
+  'recession probability','market crash','bear market','bull market'
+];
+
+function isFinancial(title) {
+  const t = title.toLowerCase();
+  if (FINANCIAL_INCLUDE.some(k => t.includes(k))) return true;
+  if (SPORTS_EXCLUDE.some(k => t.includes(k))) return false;
+  return false;
+}
+
 const CATEGORY_RULES = [
   {cat:'distressed', keywords:['bankrupt','chapter 11','chapter 7','restructur','default','distress','insolvency']},
-  {cat:'event', keywords:['acqui','merger','takeover','buyout','ipo','spin','delist','m&a','deal','bid for']},
-  {cat:'equity', keywords:['stock','shares','s&p','nasdaq','dow','russell','etf','sp500','equity','earnings','revenue','profit','eps','qqq','spy']},
-  {cat:'macro', keywords:['fed','rate','cpi','inflation','gdp','recession','unemployment','payroll','fomc','treasury','yield','tariff','trade','deficit','debt ceiling','interest']}
+  {cat:'event', keywords:['acqui','merger','takeover','buyout','ipo','spin','delist','deal','bid']},
+  {cat:'equity', keywords:['stock','shares','s&p','nasdaq','dow','russell','etf','sp500','equity','earnings','eps','qqq','spy','apple','microsoft','nvidia','amazon','google','meta','tesla','jpmorgan','goldman']},
+  {cat:'macro', keywords:['fed','rate','cpi','inflation','gdp','recession','unemployment','payroll','fomc','treasury','yield','tariff','trade','deficit','debt','interest','bitcoin','crypto','oil','gold','dollar','euro','housing','election','policy']}
 ];
 
 function categorize(title) {
@@ -85,6 +131,42 @@ function categorize(title) {
     if (r.keywords.some(k => t.includes(k))) return r.cat;
   }
   return 'macro';
+}
+
+function getProb(m) {
+  const candidates = [
+    m.yes_bid_dollars, m.yes_ask_dollars, m.last_price_dollars,
+    m.yes_bid, m.yes_ask, m.last_price,
+    m.previous_yes_bid_dollars, m.notional_value_dollars
+  ];
+  for (const v of candidates) {
+    if (v !== undefined && v !== null && v !== '' && !isNaN(v)) {
+      const n = parseFloat(v);
+      if (n > 0 && n <= 1) return Math.round(n * 100);
+      if (n > 1 && n <= 100) return Math.round(n);
+    }
+  }
+  return null;
+}
+
+function getPrevProb(m) {
+  const candidates = [m.previous_yes_bid_dollars, m.previous_price_dollars, m.previous_yes_ask_dollars];
+  for (const v of candidates) {
+    if (v !== undefined && v !== null && v !== '' && !isNaN(v)) {
+      const n = parseFloat(v);
+      if (n > 0 && n <= 1) return Math.round(n * 100);
+      if (n > 1 && n <= 100) return Math.round(n);
+    }
+  }
+  return null;
+}
+
+function getVolume(m) {
+  const candidates = [m.volume_dollars, m.volume, m.notional_value_dollars, m.open_interest_dollars, m.open_interest];
+  for (const v of candidates) {
+    if (v !== undefined && v !== null && !isNaN(v) && parseFloat(v) > 0) return parseFloat(v);
+  }
+  return 0;
 }
 
 function sentimentFromProb(p) {
@@ -100,10 +182,10 @@ function barColor(p) {
 }
 
 function fmtVol(v) {
-  if (!v) return '—';
+  if (!v || v === 0) return '—';
   if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
   if (v >= 1000) return '$' + Math.round(v/1000) + 'K';
-  return '$' + v;
+  return '$' + Math.round(v);
 }
 
 function renderCards(markets) {
@@ -122,54 +204,48 @@ function renderCards(markets) {
     if (label) html += `<div class="section-label">${label}</div>`;
     html += '<div class="card-grid">';
     list.forEach(m => {
-      const raw = m.yes_bid || m.last_price || m.yes_ask || 0.5;
-      const prob = Math.round(raw <= 1 ? raw * 100 : raw);
-      const sent = sentimentFromProb(prob);
-      const prev = m.previous_yes_bid_dollars || m.previous_price_dollars;
-      const prevProb = prev ? Math.round(prev <= 1 ? prev * 100 : prev) : null;
-      const delta = prevProb !== null ? prob - prevProb : null;
+      const prob = getProb(m);
+      const prevProb = getPrevProb(m);
+      const vol = getVolume(m);
+      const displayProb = prob !== null ? prob : '?';
+      const sent = prob !== null ? sentimentFromProb(prob) : {label:'unknown', cls:'neut'};
+      const delta = (prob !== null && prevProb !== null && prevProb > 0) ? prob - prevProb : null;
       const dStr = delta !== null ? (delta > 0 ? '+' : '') + delta + '%' : null;
       const badgeMap = {macro:'badge-macro',equity:'badge-equity',event:'badge-event',distressed:'badge-distressed'};
       const catLabel = {macro:'macro',equity:'equity',event:'M&A / event',distressed:'distressed'};
+      const barW = prob !== null ? prob : 50;
       html += `<div class="card">
         <div class="card-top">
-          <div class="card-title">${m.title || m.question || 'Unnamed market'}</div>
+          <div class="card-title">${m.title || m.question || 'Unnamed'}</div>
           <span class="badge ${badgeMap[m._cat]}">${catLabel[m._cat]}</span>
         </div>
         <div class="prob-row">
-          <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barColor(prob)}"></div></div>
-          <div class="prob-label" style="color:${barColor(prob)}">${prob}%</div>
+          <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${barW}%;background:${barColor(barW)}"></div></div>
+          <div style="font-size:13px;font-weight:500;min-width:36px;text-align:right;color:${barColor(barW)}">${displayProb}%</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
           <span class="sentiment-tag ${sent.cls}">${sent.label}</span>
           ${dStr ? `<span class="meta-item ${delta > 0 ? 'delta-up' : 'delta-down'}">24h: ${dStr}</span>` : ''}
         </div>
         <div class="card-meta">
-          <div class="meta-item">Vol <span>${fmtVol(m.volume)}</span></div>
-          ${m.open_interest ? `<div class="meta-item">OI <span>${fmtVol(m.open_interest)}</span></div>` : ''}
+          <div class="meta-item">Vol <span>${fmtVol(vol)}</span></div>
           ${m.close_time ? `<div class="meta-item">Resolves <span>${new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</span></div>` : ''}
         </div>
       </div>`;
     });
     html += '</div>';
   }
-  if (!html) html = '<div class="empty">No markets in this category.</div>';
+  if (!html) html = '<div class="empty">No financial markets found in this category.</div>';
   document.getElementById('content').innerHTML = html;
 }
 
 function renderSummary(markets) {
-  const bull = markets.filter(m => {
-    const r = m.yes_bid || m.last_price || 0.5;
-    return Math.round(r <= 1 ? r*100 : r) >= 65;
-  }).length;
-  const bear = markets.filter(m => {
-    const r = m.yes_bid || m.last_price || 0.5;
-    return Math.round(r <= 1 ? r*100 : r) <= 35;
-  }).length;
+  const bull = markets.filter(m => { const p = getProb(m); return p !== null && p >= 65; }).length;
+  const bear = markets.filter(m => { const p = getProb(m); return p !== null && p <= 35; }).length;
   const events = markets.filter(m => m._cat === 'distressed' || m._cat === 'event').length;
-  const totalVol = markets.reduce((s,m) => s + (m.volume || 0), 0);
+  const totalVol = markets.reduce((s,m) => s + getVolume(m), 0);
   document.getElementById('summary').innerHTML = `
-    <div class="metric"><div class="metric-label">Markets tracked</div><div class="metric-value">${markets.length}</div><div class="metric-sub">live contracts</div></div>
+    <div class="metric"><div class="metric-label">Markets tracked</div><div class="metric-value">${markets.length}</div><div class="metric-sub">financial contracts</div></div>
     <div class="metric"><div class="metric-label">Bullish bias</div><div class="metric-value" style="color:#3B6D11">${bull}</div><div class="metric-sub">contracts &gt;65%</div></div>
     <div class="metric"><div class="metric-label">Bearish bias</div><div class="metric-value" style="color:#A32D2D">${bear}</div><div class="metric-sub">contracts ≤35%</div></div>
     <div class="metric"><div class="metric-label">Event / distressed</div><div class="metric-value" style="color:#BA7517">${events}</div><div class="metric-sub">M&A + bankruptcy</div></div>
@@ -197,13 +273,18 @@ async function loadData() {
     const res = await fetch(`https://market-sentiment-db.vercel.app/api/proxy?${params}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+
     allMarkets = (data.markets || [])
-      .filter(m => m.title || m.question)
+      .filter(m => {
+        const title = m.title || m.question || '';
+        return isFinancial(title);
+      })
       .map(m => ({...m, _cat: categorize(m.title || m.question || '')}))
-      .sort((a,b) => (b.volume||0) - (a.volume||0));
+      .sort((a,b) => getVolume(b) - getVolume(a));
+
     renderSummary(allMarkets);
     renderCards(allMarkets);
-    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allMarkets.length} open markets`;
+    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allMarkets.length} financial markets`;
   } catch(e) {
     document.getElementById('content').innerHTML = `<div class="error-msg"><div style="font-weight:500;margin-bottom:6px">Error loading data</div><div style="font-size:12px">${e.message}</div></div>`;
     document.getElementById('status').textContent = 'Error — see message below';
