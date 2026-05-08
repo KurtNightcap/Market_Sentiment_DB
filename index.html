@@ -204,13 +204,15 @@ async function loadData() {
   document.getElementById('content').innerHTML = '<div class="loading">Fetching Kalshi markets...</div>';
 
   try {
+    const PROXY = "https://kalshi-proxy.kurtnightcap.workers.dev";
+
     const params = new URLSearchParams({
       limit: 200,
       status: 'open',
       with_nested_markets: false
     });
 
-    const res = await fetch(`https://api.elections.kalshi.com/trade-api/v2/markets?${params}`, {
+    const res = await fetch(`${PROXY}/kalshi/markets?${params}`, {
       headers: { 'Accept': 'application/json' }
     });
 
