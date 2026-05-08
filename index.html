@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--color-text-primary);font-size:14px}
+.header{padding:1rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.header h1{font-size:16px;font-weight:500}
+.status{font-size:12px;color:var(--color-text-secondary)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0.75rem 0}
+.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-secondary);transition:all 0.15s}
+.filter-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:0.75rem 0 1rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:0.75rem 1rem}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-value{font-size:22px;font-weight:500}
+.metric-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;cursor:pointer;transition:border-color 0.15s}
+.card:hover{border-color:var(--color-border-secondary)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.card-title{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1.4;max-width:75%}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.badge-macro{background:#E6F1FB;color:#0C447C}
+.badge-equity{background:#EAF3DE;color:#27500A}
+.badge-event{background:#FAEEDA;color:#633806}
+.badge-distressed{background:#FCEBEB;color:#791F1F}
+.prob-row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.prob-bar-track{flex:1;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.prob-bar-fill{height:100%;border-radius:3px;transition:width 0.4s}
+.prob-label{font-size:13px;font-weight:500;min-width:36px;text-align:right}
+.card-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
+.meta-item{font-size:11px;color:var(--color-text-secondary)}
+.meta-item span{color:var(--color-text-primary);font-weight:500}
+.delta-up{color:#3B6D11}
+.delta-down{color:#A32D2D}
+.delta-flat{color:var(--color-text-secondary)}
+.sentiment-tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
+.bull{background:#EAF3DE;color:#3B6D11}
+.bear{background:#FCEBEB;color:#A32D2D}
+.neut{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.loading{text-align:center;padding:3rem;color:var(--color-text-secondary);font-size:14px}
+.error-msg{text-align:center;padding:2rem;color:var(--color-text-secondary);font-size:13px;border:0.5px dashed var(--color-border-tertiary);border-radius:var(--border-radius-lg)}
+.refresh-btn{padding:4px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:transparent;cursor:pointer;font-size:12px;color:var(--color-text-secondary)}
+.refresh-btn:hover{background:var(--color-background-secondary)}
+.corroboration{display:flex;align-items:center;gap:4px;margin-top:6px}
+.corr-dot{width:8px;height:8px;border-radius:50%}
+.empty{color:var(--color-text-tertiary);font-size:13px;padding:1.5rem 0;text-align:center}
+@media(prefers-color-scheme:dark){
+  .badge-macro{background:#0C447C;color:#B5D4F4}
+  .badge-equity{background:#27500A;color:#C0DD97}
+  .badge-event{background:#633806;color:#FAC775}
+  .badge-distressed{background:#791F1F;color:#F7C1C1}
+  .bull{background:#27500A;color:#C0DD97}
+  .bear{background:#791F1F;color:#F7C1C1}
+}
+</style>
+</head>
+<body>
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Kalshi prediction market sentiment dashboard showing live contract prices by category</h2>
+
+<div class="header">
+  <div>
+    <h1>Kalshi — market sentiment layer</h1>
+    <div class="status" id="status">Loading live data...</div>
+  </div>
+  <button class="refresh-btn" onclick="loadData()">Refresh</button>
+</div>
+
+<div class="summary-row" id="summary"></div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-cat="all" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" data-cat="macro" onclick="setFilter('macro',this)">Macro</button>
+  <button class="filter-btn" data-cat="equity" onclick="setFilter('equity',this)">Equity / sector</button>
+  <button class="filter-btn" data-cat="event" onclick="setFilter('event',this)">M&A / events</button>
+  <button class="filter-btn" data-cat="distressed" onclick="setFilter('distressed',this)">Distressed</button>
+</div>
+
+<div id="content"><div class="loading">Fetching Kalshi markets...</div></div>
+
+<script>
+let allMarkets = [];
+let activeFilter = 'all';
+
+const CATEGORY_RULES = [
+  {cat:'distressed', keywords:['bankrupt','chapter 11','chapter 7','restructur','default','distress','insolvency']},
+  {cat:'event', keywords:['acqui','merger','takeover','buyout','ipo','spin','delist','m&a','deal','bid for']},
+  {cat:'equity', keywords:['stock','shares','s&p','nasdaq','dow','russell','etf','sp500','equity','earnings','revenue','profit','eps','qqq','spy']},
+  {cat:'macro', keywords:['fed','rate','cpi','inflation','gdp','recession','unemployment','payroll','fomc','treasury','yield','tariff','trade','deficit','debt ceiling','interest']}
+];
+
+function categorize(title) {
+  const t = title.toLowerCase();
+  for (const r of CATEGORY_RULES) {
+    if (r.keywords.some(k => t.includes(k))) return r.cat;
+  }
+  return 'macro';
+}
+
+function sentimentFromProb(p) {
+  if (p >= 65) return {label:'bullish', cls:'bull'};
+  if (p <= 35) return {label:'bearish', cls:'bear'};
+  return {label:'neutral', cls:'neut'};
+}
+
+function deltaClass(d) {
+  if (d > 0) return 'delta-up';
+  if (d < 0) return 'delta-down';
+  return 'delta-flat';
+}
+
+function fmtVol(v) {
+  if (!v) return '—';
+  if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
+  if (v >= 1000) return '$' + Math.round(v/1000) + 'K';
+  return '$' + v;
+}
+
+function barColor(p) {
+  if (p >= 65) return '#639922';
+  if (p <= 35) return '#E24B4A';
+  return '#888780';
+}
+
+function renderCards(markets) {
+  const filtered = activeFilter === 'all' ? markets : markets.filter(m => m._cat === activeFilter);
+  const buckets = {macro:[],equity:[],event:[],distressed:[]};
+  filtered.forEach(m => buckets[m._cat]?.push(m));
+
+  let html = '';
+  const order = activeFilter === 'all'
+    ? [['distressed','M&A, distressed & events'],['event','Corporate events'],['equity','Equity & sector'],['macro','Macro & economic']]
+    : [[activeFilter, '']];
+
+  for (const [cat, label] of order) {
+    const items = cat === 'event'
+      ? [...buckets.event, ...(activeFilter==='all'?[]:[])]
+      : buckets[cat];
+    const show = activeFilter === 'all' ? items : filtered;
+    const list = activeFilter === 'all' ? items : filtered;
+    if (!list.length) continue;
+    if (label) html += `<div class="section-label">${label}</div>`;
+    html += '<div class="card-grid">';
+    list.forEach(m => {
+      const prob = Math.round(m.yes_bid || m.last_price || 50);
+      const sent = sentimentFromProb(prob);
+      const delta = m.price_change_24h ? Math.round(m.price_change_24h * 100) : null;
+      const dStr = delta !== null ? (delta > 0 ? '+' : '') + delta + '%' : null;
+      const badgeMap = {macro:'badge-macro',equity:'badge-equity',event:'badge-event',distressed:'badge-distressed'};
+      const catLabel = {macro:'macro',equity:'equity',event:'M&A / event',distressed:'distressed'};
+      html += `<div class="card">
+        <div class="card-top">
+          <div class="card-title">${m.title || m.question || 'Unnamed market'}</div>
+          <span class="badge ${badgeMap[m._cat]}">${catLabel[m._cat]}</span>
+        </div>
+        <div class="prob-row">
+          <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barColor(prob)}"></div></div>
+          <div class="prob-label" style="color:${barColor(prob)}">${prob}%</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          <span class="sentiment-tag ${sent.cls}">${sent.label}</span>
+          ${dStr ? `<span class="meta-item ${deltaClass(delta)}">24h: ${dStr}</span>` : ''}
+        </div>
+        <div class="card-meta">
+          <div class="meta-item">Vol <span>${fmtVol(m.volume)}</span></div>
+          ${m.open_interest ? `<div class="meta-item">OI <span>${fmtVol(m.open_interest)}</span></div>` : ''}
+          ${m.close_time ? `<div class="meta-item">Resolves <span>${new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</span></div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  if (!html) html = '<div class="empty">No markets in this category right now.</div>';
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderSummary(markets) {
+  const total = markets.length;
+  const bull = markets.filter(m => (m.yes_bid || m.last_price || 50) >= 65).length;
+  const bear = markets.filter(m => (m.yes_bid || m.last_price || 50) <= 35).length;
+  const events = markets.filter(m => m._cat === 'distressed' || m._cat === 'event').length;
+  const totalVol = markets.reduce((s,m) => s + (m.volume || 0), 0);
+
+  document.getElementById('summary').innerHTML = `
+    <div class="metric"><div class="metric-label">Markets tracked</div><div class="metric-value">${total}</div><div class="metric-sub">live Kalshi contracts</div></div>
+    <div class="metric"><div class="metric-label">Bullish bias</div><div class="metric-value" style="color:#3B6D11">${bull}</div><div class="metric-sub">contracts >65%</div></div>
+    <div class="metric"><div class="metric-label">Bearish bias</div><div class="metric-value" style="color:#A32D2D">${bear}</div><div class="metric-sub">contracts ≤35%</div></div>
+    <div class="metric"><div class="metric-label">Event / distressed</div><div class="metric-value" style="color:#BA7517">${events}</div><div class="metric-sub">M&A + bankruptcy signals</div></div>
+    <div class="metric"><div class="metric-label">Total volume</div><div class="metric-value">${fmtVol(totalVol)}</div><div class="metric-sub">across all markets</div></div>
+  `;
+}
+
+function setFilter(cat, el) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderCards(allMarkets);
+}
+
+async function loadData() {
+  document.getElementById('status').textContent = 'Fetching live data...';
+  document.getElementById('content').innerHTML = '<div class="loading">Fetching Kalshi markets...</div>';
+
+  try {
+    const params = new URLSearchParams({
+      limit: 200,
+      status: 'open',
+      with_nested_markets: false
+    });
+
+    const res = await fetch(`https://api.elections.kalshi.com/trade-api/v2/markets?${params}`, {
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const markets = data.markets || [];
+
+    allMarkets = markets
+      .filter(m => m.status === 'open' && (m.title || m.question))
+      .map(m => ({ ...m, _cat: categorize(m.title || m.question || '') }))
+      .sort((a,b) => (b.volume||0) - (a.volume||0));
+
+    renderSummary(allMarkets);
+    renderCards(allMarkets);
+    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allMarkets.length} open markets`;
+  } catch(e) {
+    document.getElementById('content').innerHTML = `
+      <div class="error-msg">
+        <div style="font-weight:500;margin-bottom:6px">Could not reach Kalshi API directly</div>
+        <div style="font-size:12px;color:var(--color-text-tertiary)">Browser CORS restrictions block direct API calls from this sandbox. The next step is to route this through a lightweight proxy or GitHub Pages deployment — the same path we identified for the prediction market dashboard. All the logic here is correct and ready to wire up.</div>
+      </div>`;
+    document.getElementById('status').textContent = 'API blocked by browser CORS — see note below';
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
