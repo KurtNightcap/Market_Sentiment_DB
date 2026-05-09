@@ -108,9 +108,24 @@ const HARD_SPORTS_EXCLUDE = [
   'ufc','mma','boxing','wrestling','formula 1','nascar race'
 ];
 
+const SPORTS_TICKERS = [
+  'KXNBA','KXMLB','KXNFL','KXNHL','KXNASCAR','KXPGA','KXUFC','KXMMA',
+  'KXTENNIS','KXSOCCER','KXGOLF','KXMVE','KXMVESPORTS','KXMVECROSS',
+  'KXEPL','KXUCL','KXLALIGA','KXBUNDES','KXSERIEA','KXLIGUE',
+  'KXNCAA','KXCFB','KXCBB','KXWNBA','KXFORMULA','KXBOXING','KXWWE'
+];
+
 function isFinancial(m) {
   const title = (m.title || m.question || '').toLowerCase();
-  if (HARD_SPORTS_EXCLUDE.some(k => title.includes(k))) return false;
+  const event = (m.event_ticker || '').toUpperCase();
+  const ticker = (m.market_ticker || m.ticker || '').toUpperCase();
+
+  // Block anything with a sports event ticker prefix
+  if (SPORTS_TICKERS.some(p => event.startsWith(p) || ticker.startsWith(p))) return false;
+
+  // Block multivariate combo markets (these are all sports parlays)
+  if (event.startsWith('KXMVE') || ticker.includes('KXMVE')) return false;
+
   return true;
 }
 
@@ -184,14 +199,37 @@ function fmtVol(v) {
 }
 
 function cleanTitle(m) {
-  const event = m.event_ticker || '';
-  const title = m.title || m.question || 'Unnamed';
-  const subtitle = m.sub_title || m.subtitle || '';
-  if (subtitle && subtitle.length < 120) return subtitle;
-  if (title.startsWith('yes ') || title.includes(',yes ') || title.includes(',no ')) {
-    return event.replace(/KX[A-Z]+[-_]?/,'').replace(/[-_]/g,' ').toLowerCase() || title.slice(0,80);
+  // Try every possible human-readable field Kalshi might use
+  const candidates = [
+    m.title,
+    m.question,
+    m.sub_title,
+    m.subtitle,
+    m.name,
+    m.short_name,
+    m.description,
+    m.yes_sub_title,
+    m.no_sub_title,
+    m.market_title,
+    m.event_title,
+    m.custom_strike
+  ];
+  for (const c of candidates) {
+    if (c && typeof c === 'string' && c.length > 4 && !c.match(/^s2026[0-9a-f]{8,}/i)) {
+      return c.length > 120 ? c.slice(0, 117) + '...' : c;
+    }
   }
-  return title;
+  // Last resort: show event ticker cleaned up
+  const ev = (m.event_ticker || m.ticker || '').replace(/[-_]/g,' ');
+  return ev || 'Unnamed market';
+}
+
+function debugFields(m) {
+  // Show all non-empty string fields for debugging
+  return Object.entries(m)
+    .filter(([k,v]) => typeof v === 'string' && v.length > 2 && v.length < 200)
+    .map(([k,v]) => `${k}: ${v}`)
+    .join(' | ');
 }
 
 function renderCards(markets) {
@@ -227,6 +265,7 @@ function renderCards(markets) {
         ${eventLabel ? `<div class="card-event">${eventLabel}</div>` : ''}
         <div class="card-top">
           <div class="card-title">${displayTitle}</div>
+
           <span class="badge ${badgeMap[m._cat]}">${catLabel[m._cat]}</span>
         </div>
         <div class="prob-row">
