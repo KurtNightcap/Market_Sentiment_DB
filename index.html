@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <style>
@@ -109,13 +110,8 @@ const HARD_SPORTS_EXCLUDE = [
 
 function isFinancial(m) {
   const title = (m.title || m.question || '').toLowerCase();
-  const ticker = (m.ticker || m.market_ticker || '').toUpperCase();
-  const event = (m.event_ticker || '').toUpperCase();
-
   if (HARD_SPORTS_EXCLUDE.some(k => title.includes(k))) return false;
-  if (FINANCIAL_EVENT_PREFIXES.some(p => event.startsWith(p) || ticker.startsWith(p))) return true;
-  if (FINANCIAL_KEYWORDS.some(k => title.includes(k))) return true;
-  return false;
+  return true;
 }
 
 const CATEGORY_RULES = [
@@ -310,5 +306,6 @@ async function loadData() {
 
 loadData();
 </script>
+
 </body>
 </html>
