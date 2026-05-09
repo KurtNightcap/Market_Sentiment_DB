@@ -5,56 +5,66 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size:14px;min-height:100vh;padding:1rem 1.25rem 3rem}
-.header{padding:0.5rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:0.5px solid #2a2b2f;padding-bottom:0.75rem;margin-bottom:0.75rem}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:0.5px solid #2a2b2f;padding-bottom:0.75rem;margin-bottom:0.75rem}
 .header h1{font-size:16px;font-weight:500;color:#fff}
-.status{font-size:12px;color:#666}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0.75rem 0}
-.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid #333;background:transparent;cursor:pointer;font-size:12px;color:#888;transition:all 0.15s}
-.filter-btn.active{background:#23242a;color:#e8e8e8;border-color:#555}
-.summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:0.75rem 0 1rem}
-.metric{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:8px;padding:0.75rem 1rem}
-.metric-label{font-size:12px;color:#666;margin-bottom:4px}
-.metric-value{font-size:22px;font-weight:500;color:#fff}
-.metric-sub{font-size:11px;color:#555;margin-top:2px}
-.section-label{font-size:11px;font-weight:500;color:#555;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
+.status{font-size:12px;color:#555;margin-top:2px}
+.summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:0.75rem 0 1rem}
+.metric{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:8px;padding:0.65rem 0.85rem}
+.metric-label{font-size:11px;color:#555;margin-bottom:3px}
+.metric-value{font-size:20px;font-weight:500;color:#fff}
+.metric-sub{font-size:10px;color:#444;margin-top:1px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0.5rem 0 1rem}
+.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#666}
+.filter-btn.active{background:#23242a;color:#e8e8e8;border-color:#444}
+.section-label{font-size:11px;font-weight:500;color:#444;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
-.card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.25rem;transition:border-color 0.15s}
-.card:hover{border-color:#444}
-.card-event{font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.03em}
-.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.card-title{font-size:13px;font-weight:500;color:#e8e8e8;line-height:1.4;max-width:75%}
-.badge{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap}
-.badge-macro{background:#0C447C;color:#B5D4F4}
-.badge-equity{background:#27500A;color:#C0DD97}
-.badge-event{background:#633806;color:#FAC775}
-.badge-distressed{background:#791F1F;color:#F7C1C1}
-.prob-row{display:flex;align-items:center;gap:10px;margin:8px 0}
-.prob-bar-track{flex:1;height:6px;background:#2a2b2f;border-radius:3px;overflow:hidden}
-.prob-bar-fill{height:100%;border-radius:3px}
-.card-meta{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
-.meta-item{font-size:11px;color:#555}
-.meta-item span{color:#aaa;font-weight:500}
-.delta-up{color:#639922}
-.delta-down{color:#E24B4A}
-.sentiment-tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
+.card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem}
+.card:hover{border-color:#3a3b40}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.card-entity{font-size:15px;font-weight:600;color:#fff}
+.card-theme{font-size:11px;color:#555;margin-top:2px}
+.signal-badge{font-size:11px;padding:2px 8px;border-radius:20px;white-space:nowrap;font-weight:500}
+.signal-aligned{background:#1a2e0a;color:#639922;border:0.5px solid #3B6D11}
+.signal-diverging{background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513}
+.signal-reddit{background:#23242a;color:#888;border:0.5px solid #333}
+.divider{height:0.5px;background:#2a2b2f;margin:10px 0}
+.section-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.section-icon{font-size:11px;color:#444;width:60px;flex-shrink:0;padding-top:2px}
+.section-content{flex:1}
+.reddit-posts{display:flex;flex-direction:column;gap:5px}
+.reddit-post{font-size:12px;color:#aaa;line-height:1.4;display:flex;gap:6px;align-items:flex-start}
+.post-score{font-size:11px;color:#555;white-space:nowrap;padding-top:1px}
+.post-sub{font-size:10px;color:#444;white-space:nowrap}
+.sentiment-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sent-tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
 .bull{background:#1a2e0a;color:#639922;border:0.5px solid #3B6D11}
 .bear{background:#2e0a0a;color:#E24B4A;border:0.5px solid #A32D2D}
-.neut{background:#23242a;color:#888;border:0.5px solid #333}
-.loading{text-align:center;padding:3rem;color:#555}
-.error-msg{text-align:center;padding:2rem;color:#555;font-size:13px;border:0.5px dashed #2a2b2f;border-radius:12px}
-.refresh-btn{padding:4px 12px;border-radius:8px;border:0.5px solid #333;background:transparent;cursor:pointer;font-size:12px;color:#666}
+.neut{background:#23242a;color:#666;border:0.5px solid #333}
+.kalshi-block{background:#141518;border-radius:8px;padding:8px 10px;margin-top:4px}
+.kalshi-title{font-size:12px;color:#aaa;line-height:1.4;margin-bottom:6px}
+.prob-row{display:flex;align-items:center;gap:8px}
+.prob-bar-track{flex:1;height:5px;background:#2a2b2f;border-radius:3px;overflow:hidden}
+.prob-bar-fill{height:100%;border-radius:3px}
+.prob-pct{font-size:12px;font-weight:600;min-width:32px;text-align:right}
+.kalshi-meta{font-size:11px;color:#444;margin-top:5px}
+.no-kalshi{font-size:11px;color:#333;font-style:italic;margin-top:4px}
+.refresh-btn{padding:4px 12px;border-radius:8px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#555}
 .refresh-btn:hover{background:#23242a;color:#aaa}
-.empty{color:#555;font-size:13px;padding:1.5rem 0;text-align:center}
+.loading{text-align:center;padding:3rem;color:#444}
+.empty{color:#444;font-size:13px;padding:2rem 0;text-align:center}
+.error{text-align:center;padding:2rem;color:#444;font-size:13px;border:0.5px dashed #2a2b2f;border-radius:12px}
+.source-dots{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.dot{font-size:10px;padding:1px 6px;border-radius:10px;background:#23242a;color:#555;border:0.5px solid #2a2b2f}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div>
-    <h1>Kalshi — market sentiment layer</h1>
-    <div class="status" id="status">Loading live data...</div>
+    <h1>Market sentiment dashboard</h1>
+    <div class="status" id="status">Loading...</div>
   </div>
-  <button class="refresh-btn" onclick="loadData()">Refresh</button>
+  <button class="refresh-btn" onclick="init()">Refresh</button>
 </div>
 
 <div class="summary-row" id="summary"></div>
@@ -62,127 +72,71 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 <div class="filters">
   <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
   <button class="filter-btn" onclick="setFilter('macro',this)">Macro</button>
-  <button class="filter-btn" onclick="setFilter('equity',this)">Equity / sector</button>
+  <button class="filter-btn" onclick="setFilter('equity',this)">Equity</button>
+  <button class="filter-btn" onclick="setFilter('crypto',this)">Crypto</button>
   <button class="filter-btn" onclick="setFilter('event',this)">M&A / events</button>
-  <button class="filter-btn" onclick="setFilter('distressed',this)">Distressed</button>
 </div>
 
-<div id="content"><div class="loading">Fetching Kalshi markets...</div></div>
+<div id="content"><div class="loading">Pulling Reddit + Kalshi data...</div></div>
 
 <script>
-let allMarkets = [];
-let activeFilter = 'all';
+const PROXY = "https://market-sentiment-db.vercel.app/api/proxy";
+const REDDIT_PROXY = "https://market-sentiment-db.vercel.app/api/reddit";
 
-const FINANCIAL_EVENT_PREFIXES = [
-  'KXINFL','KXCPI','KXFED','KXFOMC','KXRATE','KXGDP','KXUNEMP',
-  'KXPAYROLL','KXPCE','KXHOUSING','KXOIL','KXGOLD','KXBTC','KXETH',
-  'KXCRYPTO','KXSP500','KXNASDAQ','KXDOW','KXVIX','KXEARNINGS',
-  'KXACQ','KXMERGER','KXIPO','KXBANK','KXDEFAULT','KXTARIFF',
-  'KXTRADE','KXDEBT','KXDEFICIT','KXRECESS','KXAPPL','KXNVDA',
-  'KXTSLA','KXMETA','KXGOOG','KXAMZN','KXMSFT','KXJPM','KXGS',
-  'KXDOLLAR','KXYIELD','KXTREASURY','KXPOLITICS','KXELECT'
+const SUBREDDITS = [
+  {name:'investing', weight:1.0},
+  {name:'wallstreetbets', weight:0.7},
+  {name:'stocks', weight:0.9},
+  {name:'SecurityAnalysis', weight:1.2},
+  {name:'MacroEconomics', weight:1.1}
 ];
 
-const FINANCIAL_KEYWORDS = [
-  'federal reserve','fed funds','rate cut','rate hike','interest rate','fomc',
-  'cpi','inflation','core pce','gdp','recession','unemployment','nonfarm payroll',
-  'treasury yield','tariff','trade war','trade deficit','debt ceiling',
-  'bitcoin','ethereum','crypto','btc','eth',
-  's&p 500','sp500','nasdaq','dow jones','russell 2000','vix',
-  'earnings per share','eps','revenue','stock price','market cap',
-  'acquisition','merger','takeover','ipo','bankruptcy','chapter 11','default',
-  'oil price','gold price','brent crude','natural gas',
-  'us dollar','exchange rate','fed chair','treasury secretary',
-  'jobs report','retail sales','consumer price','producer price',
-  'apple stock','nvidia','tesla','meta platforms','alphabet','amazon','microsoft',
-  'jpmorgan','goldman sachs','bear market','bull market','market crash',
-  'will the fed','will inflation','will gdp','will unemployment','will bitcoin',
-  'will trump','will congress','will the s&p','will nasdaq','will oil'
+// Entity definitions: ticker/theme → search terms + category
+const ENTITIES = [
+  // Macro
+  {id:'fed-rate', label:'Fed rate decision', terms:['fed','federal reserve','rate cut','rate hike','fomc','interest rate','powell'], cat:'macro'},
+  {id:'inflation', label:'Inflation / CPI', terms:['inflation','cpi','cpi data','pce','core inflation','consumer price'], cat:'macro'},
+  {id:'recession', label:'Recession risk', terms:['recession','gdp','economic slowdown','downturn','contraction'], cat:'macro'},
+  {id:'tariffs', label:'Tariffs / trade war', terms:['tariff','trade war','trade deal','trade policy','import tax','china trade'], cat:'macro'},
+  {id:'unemployment', label:'Jobs / unemployment', terms:['jobs report','unemployment','payroll','nonfarm','labor market'], cat:'macro'},
+  {id:'treasury-yield', label:'Treasury yields', terms:['treasury yield','10 year yield','bond yield','yield curve','10yr'], cat:'macro'},
+  {id:'housing', label:'Housing market', terms:['housing','mortgage rate','home price','real estate market','housing market'], cat:'macro'},
+  // Equity
+  {id:'NVDA', label:'Nvidia', terms:['nvda','nvidia'], cat:'equity'},
+  {id:'AAPL', label:'Apple', terms:['aapl','apple stock','apple earnings'], cat:'equity'},
+  {id:'TSLA', label:'Tesla', terms:['tsla','tesla'], cat:'equity'},
+  {id:'MSFT', label:'Microsoft', terms:['msft','microsoft'], cat:'equity'},
+  {id:'AMZN', label:'Amazon', terms:['amzn','amazon stock','amazon earnings'], cat:'equity'},
+  {id:'META', label:'Meta', terms:['meta','meta platforms','facebook stock'], cat:'equity'},
+  {id:'GOOGL', label:'Alphabet', terms:['googl','goog','alphabet','google stock'], cat:'equity'},
+  {id:'SPY', label:'S&P 500', terms:['s&p 500','sp500','spy','s&p','market rally','market selloff','market crash'], cat:'equity'},
+  {id:'QQQ', label:'Nasdaq / QQQ', terms:['nasdaq','qqq','tech stocks','tech selloff'], cat:'equity'},
+  // Crypto
+  {id:'BTC', label:'Bitcoin', terms:['bitcoin','btc'], cat:'crypto'},
+  {id:'ETH', label:'Ethereum', terms:['ethereum','eth'], cat:'crypto'},
+  {id:'crypto', label:'Crypto market', terms:['crypto','cryptocurrency','digital assets','altcoin'], cat:'crypto'},
+  // Events
+  {id:'ma-general', label:'M&A activity', terms:['acquisition','merger','takeover','buyout','deal','acquired'], cat:'event'},
+  {id:'ipo', label:'IPO market', terms:['ipo','initial public offering','going public','listing'], cat:'event'},
+  {id:'bankruptcy', label:'Bankruptcy / distress', terms:['bankruptcy','chapter 11','default','restructuring','distressed'], cat:'event'},
 ];
 
-const HARD_SPORTS_EXCLUDE = [
-  'wins by over','runs scored','points scored','goals scored','yards','touchdowns',
-  'strikeouts','home runs','rebounds','assists','nba finals','mlb','nfl','nhl',
-  'super bowl','world series','stanley cup','champions league','premier league',
-  'grand slam','wimbledon','us open','french open','australian open',
-  'ufc','mma','boxing','wrestling','formula 1','nascar race'
-];
+const BULL_WORDS = ['bull','bullish','buying','long','calls','moon','rally','surge','pump','undervalued','buy','upside','breakout','strong','beat','outperform'];
+const BEAR_WORDS = ['bear','bearish','selling','short','puts','crash','dump','overvalued','sell','downside','breakdown','weak','miss','underperform','recession','bubble','collapse'];
 
-const SPORTS_TICKERS = [
-  'KXNBA','KXMLB','KXNFL','KXNHL','KXNASCAR','KXPGA','KXUFC','KXMMA',
-  'KXTENNIS','KXSOCCER','KXGOLF','KXMVE','KXMVESPORTS','KXMVECROSS',
-  'KXEPL','KXUCL','KXLALIGA','KXBUNDES','KXSERIEA','KXLIGUE',
-  'KXNCAA','KXCFB','KXCBB','KXWNBA','KXFORMULA','KXBOXING','KXWWE'
-];
-
-function isFinancial(m) {
-  const title = (m.title || m.question || '').toLowerCase();
-  const event = (m.event_ticker || '').toUpperCase();
-  const ticker = (m.market_ticker || m.ticker || '').toUpperCase();
-
-  // Block anything with a sports event ticker prefix
-  if (SPORTS_TICKERS.some(p => event.startsWith(p) || ticker.startsWith(p))) return false;
-
-  // Block multivariate combo markets (these are all sports parlays)
-  if (event.startsWith('KXMVE') || ticker.includes('KXMVE')) return false;
-
-  return true;
+function scoreSentiment(text) {
+  const t = text.toLowerCase();
+  let score = 0;
+  BULL_WORDS.forEach(w => { if (t.includes(w)) score++; });
+  BEAR_WORDS.forEach(w => { if (t.includes(w)) score--; });
+  if (score > 0) return 'bull';
+  if (score < 0) return 'bear';
+  return 'neut';
 }
 
-const CATEGORY_RULES = [
-  {cat:'distressed', keywords:['bankrupt','chapter 11','default','restructur','distress','insolvency']},
-  {cat:'event', keywords:['acqui','merger','takeover','buyout','ipo','spin','delist','deal']},
-  {cat:'equity', keywords:['s&p','nasdaq','dow','russell','vix','sp500','earnings','eps','apple','nvidia','tesla','meta','alphabet','amazon','microsoft','jpmorgan','goldman','stock price']},
-  {cat:'macro', keywords:['fed','rate','cpi','inflation','gdp','recession','unemployment','payroll','fomc','treasury','yield','tariff','trade','deficit','debt','bitcoin','crypto','oil','gold','dollar','exchange rate','housing','retail sales','jobs']}
-];
-
-function categorize(title) {
-  const t = title.toLowerCase();
-  for (const r of CATEGORY_RULES) {
-    if (r.keywords.some(k => t.includes(k))) return r.cat;
-  }
-  return 'macro';
-}
-
-function getProb(m) {
-  const fields = ['yes_bid_dollars','last_price_dollars','yes_ask_dollars','yes_bid','yes_ask','last_price'];
-  for (const f of fields) {
-    const v = m[f];
-    if (v !== undefined && v !== null && v !== '' && !isNaN(v)) {
-      const n = parseFloat(v);
-      if (n > 0 && n <= 1) return Math.round(n * 100);
-      if (n > 1 && n <= 100) return Math.round(n);
-    }
-  }
-  return null;
-}
-
-function getPrevProb(m) {
-  const fields = ['previous_yes_bid_dollars','previous_price_dollars','previous_yes_ask_dollars'];
-  for (const f of fields) {
-    const v = m[f];
-    if (v !== undefined && v !== null && v !== '' && !isNaN(v)) {
-      const n = parseFloat(v);
-      if (n > 0 && n <= 1) return Math.round(n * 100);
-      if (n > 1 && n <= 100) return Math.round(n);
-    }
-  }
-  return null;
-}
-
-function getVolume(m) {
-  const fields = ['volume_dollars','volume','notional_value_dollars','open_interest_dollars','open_interest'];
-  for (const f of fields) {
-    const v = m[f];
-    if (v !== undefined && v !== null && !isNaN(v) && parseFloat(v) > 0) return parseFloat(v);
-  }
-  return 0;
-}
-
-function sentimentFromProb(p) {
-  if (p >= 65) return {label:'bullish', cls:'bull'};
-  if (p <= 35) return {label:'bearish', cls:'bear'};
-  return {label:'neutral', cls:'neut'};
+function fmtScore(n) {
+  if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+  return n;
 }
 
 function barColor(p) {
@@ -191,159 +145,219 @@ function barColor(p) {
   return '#555';
 }
 
-function fmtVol(v) {
-  if (!v || v === 0) return '—';
-  if (v >= 1000000) return '$' + (v/1000000).toFixed(1) + 'M';
-  if (v >= 1000) return '$' + Math.round(v/1000) + 'K';
-  return '$' + Math.round(v);
-}
-
-function cleanTitle(m) {
-  // Try every possible human-readable field Kalshi might use
-  const candidates = [
-    m.title,
-    m.question,
-    m.sub_title,
-    m.subtitle,
-    m.name,
-    m.short_name,
-    m.description,
-    m.yes_sub_title,
-    m.no_sub_title,
-    m.market_title,
-    m.event_title,
-    m.custom_strike
-  ];
-  for (const c of candidates) {
-    if (c && typeof c === 'string' && c.length > 4 && !c.match(/^s2026[0-9a-f]{8,}/i)) {
-      return c.length > 120 ? c.slice(0, 117) + '...' : c;
-    }
+function getProb(m) {
+  const fields = ['yes_bid_dollars','last_price_dollars','yes_ask_dollars'];
+  for (const f of fields) {
+    const v = parseFloat(m[f]);
+    if (!isNaN(v) && v > 0) return v <= 1 ? Math.round(v*100) : Math.round(v);
   }
-  // Last resort: show event ticker cleaned up
-  const ev = (m.event_ticker || m.ticker || '').replace(/[-_]/g,' ');
-  return ev || 'Unnamed market';
+  return null;
 }
 
-function debugFields(m) {
-  // Show all non-empty string fields for debugging
-  return Object.entries(m)
-    .filter(([k,v]) => typeof v === 'string' && v.length > 2 && v.length < 200)
-    .map(([k,v]) => `${k}: ${v}`)
-    .join(' | ');
+function fmtVol(m) {
+  const v = parseFloat(m.volume_dollars || m.volume_fp || 0);
+  if (v >= 1000000) return '$'+(v/1000000).toFixed(1)+'M';
+  if (v >= 1000) return '$'+Math.round(v/1000)+'K';
+  if (v > 0) return '$'+Math.round(v);
+  return null;
 }
 
-function renderCards(markets) {
-  const filtered = activeFilter === 'all' ? markets : markets.filter(m => m._cat === activeFilter);
-  const buckets = {macro:[],equity:[],event:[],distressed:[]};
-  filtered.forEach(m => buckets[m._cat]?.push(m));
+// --- DATA FETCHING ---
 
-  let html = '';
+async function fetchRedditPosts() {
+  const allPosts = [];
+  await Promise.allSettled(SUBREDDITS.map(async sub => {
+    try {
+      const res = await fetch(`${REDDIT_PROXY}?sub=${sub.name}&t=day&limit=25`);
+      if (!res.ok) return;
+      const data = await res.json();
+      const posts = (data.data?.children || []).map(p => ({
+        title: p.data.title,
+        score: Math.round((p.data.score || 0) * sub.weight),
+        comments: p.data.num_comments || 0,
+        ratio: p.data.upvote_ratio || 0.5,
+        sub: sub.name,
+        url: 'https://reddit.com' + p.data.permalink
+      }));
+      allPosts.push(...posts);
+    } catch(e) {}
+  }));
+  return allPosts;
+}
+
+async function fetchKalshiForTerm(term) {
+  try {
+    const params = new URLSearchParams({ path: '/markets', status: 'open', search: term, limit: 3 });
+    const res = await fetch(`${PROXY}?${params}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.markets || []).filter(m => {
+      const ev = (m.event_ticker || '').toUpperCase();
+      const SPORTS = ['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXNASCAR','KXTENNIS','KXUFC','KXSOCCER','KXGOLF','KXWNBA','KXNCAA','KXBOXING'];
+      return !SPORTS.some(p => ev.startsWith(p));
+    }).slice(0, 2);
+  } catch(e) { return []; }
+}
+
+// --- MATCHING ---
+
+function matchPostsToEntity(posts, entity) {
+  return posts.filter(p => {
+    const t = p.title.toLowerCase();
+    return entity.terms.some(term => t.includes(term.toLowerCase()));
+  }).sort((a,b) => b.score - a.score).slice(0, 4);
+}
+
+// --- RENDER ---
+
+let allCards = [];
+let activeFilter = 'all';
+
+function renderSummary() {
+  const total = allCards.length;
+  const bull = allCards.filter(c => c.sentiment === 'bull').length;
+  const bear = allCards.filter(c => c.sentiment === 'bear').length;
+  const aligned = allCards.filter(c => c.signal === 'aligned').length;
+  const diverging = allCards.filter(c => c.signal === 'diverging').length;
+  document.getElementById('summary').innerHTML = `
+    <div class="metric"><div class="metric-label">Topics tracked</div><div class="metric-value">${total}</div><div class="metric-sub">with Reddit activity</div></div>
+    <div class="metric"><div class="metric-label">Bullish tilt</div><div class="metric-value" style="color:#639922">${bull}</div><div class="metric-sub">topics</div></div>
+    <div class="metric"><div class="metric-label">Bearish tilt</div><div class="metric-value" style="color:#E24B4A">${bear}</div><div class="metric-sub">topics</div></div>
+    <div class="metric"><div class="metric-label">Aligned</div><div class="metric-value" style="color:#639922">${aligned}</div><div class="metric-sub">Reddit = Kalshi</div></div>
+    <div class="metric"><div class="metric-label">Diverging</div><div class="metric-value" style="color:#E2844A">${diverging}</div><div class="metric-sub">Reddit ≠ Kalshi</div></div>
+  `;
+}
+
+function renderCards() {
+  const filtered = activeFilter === 'all' ? allCards : allCards.filter(c => c.cat === activeFilter);
+  if (!filtered.length) {
+    document.getElementById('content').innerHTML = '<div class="empty">No topics with Reddit activity in this category.</div>';
+    return;
+  }
+
   const sections = activeFilter === 'all'
-    ? [['distressed','M&A, distressed & events'],['event','Corporate events'],['equity','Equity & sector'],['macro','Macro & economic']]
+    ? [['event','M&A, distressed & events'],['equity','Equity & sector'],['crypto','Crypto'],['macro','Macro & economic']]
     : [[activeFilter,'']];
 
+  let html = '';
   for (const [cat, label] of sections) {
-    const list = activeFilter === 'all' ? buckets[cat] : filtered;
+    const list = activeFilter === 'all' ? filtered.filter(c => c.cat === cat) : filtered;
     if (!list.length) continue;
     if (label) html += `<div class="section-label">${label}</div>`;
     html += '<div class="card-grid">';
-    list.forEach(m => {
-      const prob = getProb(m);
-      const prevProb = getPrevProb(m);
-      const vol = getVolume(m);
-      const displayProb = prob !== null ? prob : '?';
-      const sent = prob !== null ? sentimentFromProb(prob) : {label:'unknown', cls:'neut'};
-      const delta = (prob !== null && prevProb !== null && prevProb > 0) ? prob - prevProb : null;
-      const dStr = delta !== null && delta !== 0 ? (delta > 0 ? '+' : '') + delta + '%' : null;
-      const badgeMap = {macro:'badge-macro',equity:'badge-equity',event:'badge-event',distressed:'badge-distressed'};
-      const catLabel = {macro:'macro',equity:'equity',event:'M&A / event',distressed:'distressed'};
-      const barW = prob !== null ? prob : 50;
-      const eventLabel = (m.event_ticker || '').replace(/KX[A-Z]+-?/,'').replace(/-/g,' ');
-      const displayTitle = cleanTitle(m);
+    list.forEach(c => {
+      const sentCls = c.sentiment === 'bull' ? 'bull' : c.sentiment === 'bear' ? 'bear' : 'neut';
+      const sentLabel = c.sentiment === 'bull' ? 'bullish' : c.sentiment === 'bear' ? 'bearish' : 'neutral';
+      const sigCls = c.signal === 'aligned' ? 'signal-aligned' : c.signal === 'diverging' ? 'signal-diverging' : 'signal-reddit';
+      const sigLabel = c.signal === 'aligned' ? '⬆ aligned' : c.signal === 'diverging' ? '⚡ diverging' : 'reddit only';
+      const subs = [...new Set(c.posts.map(p => p.sub))];
+
+      let kalshiHtml = '';
+      if (c.kalshi.length) {
+        kalshiHtml = c.kalshi.map(m => {
+          const prob = getProb(m);
+          const vol = fmtVol(m);
+          const title = m.title || m.question || '';
+          const cleanT = title.length > 80 ? title.slice(0,77)+'...' : title;
+          return `<div class="kalshi-block">
+            <div class="kalshi-title">${cleanT}</div>
+            ${prob !== null ? `<div class="prob-row">
+              <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barColor(prob)}"></div></div>
+              <div class="prob-pct" style="color:${barColor(prob)}">${prob}%</div>
+            </div>` : ''}
+            <div class="kalshi-meta">${vol ? 'Vol '+vol+' · ' : ''}Resolves ${m.close_time ? new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—'}</div>
+          </div>`;
+        }).join('');
+      } else {
+        kalshiHtml = '<div class="no-kalshi">No Kalshi contract found</div>';
+      }
 
       html += `<div class="card">
-        ${eventLabel ? `<div class="card-event">${eventLabel}</div>` : ''}
-        <div class="card-top">
-          <div class="card-title">${displayTitle}</div>
-
-          <span class="badge ${badgeMap[m._cat]}">${catLabel[m._cat]}</span>
+        <div class="card-header">
+          <div>
+            <div class="card-entity">${c.label}</div>
+            <div class="card-theme">${c.posts.length} Reddit post${c.posts.length>1?'s':''} · ${c.posts.reduce((s,p)=>s+p.score,0).toLocaleString()} upvotes</div>
+          </div>
+          <span class="signal-badge ${sigCls}">${sigLabel}</span>
         </div>
-        <div class="prob-row">
-          <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${barW}%;background:${barColor(barW)}"></div></div>
-          <div style="font-size:13px;font-weight:500;min-width:36px;text-align:right;color:${barColor(barW)}">${displayProb}%</div>
+        <div class="sentiment-row">
+          <span class="sent-tag ${sentCls}">${sentLabel}</span>
+          <div class="source-dots">${subs.map(s=>`<span class="dot">r/${s}</span>`).join('')}</div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
-          <span class="sentiment-tag ${sent.cls}">${sent.label}</span>
-          ${dStr ? `<span class="meta-item ${delta > 0 ? 'delta-up' : 'delta-down'}">24h: ${dStr}</span>` : ''}
+        <div class="divider"></div>
+        <div style="font-size:11px;color:#444;margin-bottom:6px">TOP POSTS</div>
+        <div class="reddit-posts">
+          ${c.posts.slice(0,3).map(p => `<div class="reddit-post">
+            <span class="post-score">▲${fmtScore(p.score)}</span>
+            <span style="flex:1">${p.title.length>90?p.title.slice(0,87)+'...':p.title}</span>
+            <span class="post-sub">r/${p.sub}</span>
+          </div>`).join('')}
         </div>
-        <div class="card-meta">
-          <div class="meta-item">Vol <span>${fmtVol(vol)}</span></div>
-          ${m.close_time ? `<div class="meta-item">Resolves <span>${new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</span></div>` : ''}
-        </div>
+        <div class="divider"></div>
+        <div style="font-size:11px;color:#444;margin-bottom:6px">KALSHI CONTRACTS</div>
+        ${kalshiHtml}
       </div>`;
     });
     html += '</div>';
   }
-  if (!html) html = '<div class="empty">No financial markets found in this category.</div>';
-  document.getElementById('content').innerHTML = html;
-}
-
-function renderSummary(markets) {
-  const bull = markets.filter(m => { const p = getProb(m); return p !== null && p >= 65; }).length;
-  const bear = markets.filter(m => { const p = getProb(m); return p !== null && p <= 35; }).length;
-  const events = markets.filter(m => m._cat === 'distressed' || m._cat === 'event').length;
-  const totalVol = markets.reduce((s,m) => s + getVolume(m), 0);
-  document.getElementById('summary').innerHTML = `
-    <div class="metric"><div class="metric-label">Markets tracked</div><div class="metric-value">${markets.length}</div><div class="metric-sub">financial contracts</div></div>
-    <div class="metric"><div class="metric-label">Bullish bias</div><div class="metric-value" style="color:#639922">${bull}</div><div class="metric-sub">contracts &gt;65%</div></div>
-    <div class="metric"><div class="metric-label">Bearish bias</div><div class="metric-value" style="color:#E24B4A">${bear}</div><div class="metric-sub">contracts ≤35%</div></div>
-    <div class="metric"><div class="metric-label">Event / distressed</div><div class="metric-value" style="color:#BA7517">${events}</div><div class="metric-sub">M&A + bankruptcy</div></div>
-    <div class="metric"><div class="metric-label">Total volume</div><div class="metric-value">${fmtVol(totalVol)}</div><div class="metric-sub">across all markets</div></div>
-  `;
+  document.getElementById('content').innerHTML = html || '<div class="empty">No topics found.</div>';
 }
 
 function setFilter(cat, el) {
   activeFilter = cat;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-  renderCards(allMarkets);
+  renderCards();
 }
 
-async function loadData() {
-  document.getElementById('status').textContent = 'Fetching live data...';
-  document.getElementById('content').innerHTML = '<div class="loading">Fetching Kalshi markets...</div>';
+// --- SIGNAL LOGIC ---
+function computeSignal(sentiment, kalshiMarkets) {
+  if (!kalshiMarkets.length) return 'reddit';
+  const probs = kalshiMarkets.map(m => getProb(m)).filter(p => p !== null);
+  if (!probs.length) return 'reddit';
+  const avgProb = probs.reduce((a,b)=>a+b,0) / probs.length;
+  const kalshiBull = avgProb >= 55;
+  const kalshiBear = avgProb <= 45;
+  if ((sentiment === 'bull' && kalshiBull) || (sentiment === 'bear' && kalshiBear)) return 'aligned';
+  if ((sentiment === 'bull' && kalshiBear) || (sentiment === 'bear' && kalshiBull)) return 'diverging';
+  return 'reddit';
+}
+
+// --- MAIN ---
+async function init() {
+  document.getElementById('status').textContent = 'Pulling Reddit posts...';
+  document.getElementById('content').innerHTML = '<div class="loading">Pulling Reddit + Kalshi data...</div>';
+  allCards = [];
+
   try {
-    let allFetched = [];
-    let cursor = null;
-    let pages = 0;
+    const posts = await fetchRedditPosts();
+    document.getElementById('status').textContent = `${posts.length} posts fetched — querying Kalshi...`;
 
-    do {
-      const params = new URLSearchParams({ path: '/markets', limit: 200, status: 'open' });
-      if (cursor) params.set('cursor', cursor);
-      const res = await fetch(`https://market-sentiment-db.vercel.app/api/proxy?${params}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      const batch = data.markets || [];
-      allFetched = allFetched.concat(batch);
-      cursor = data.cursor || null;
-      pages++;
-    } while (cursor && pages < 8);
+    const results = await Promise.allSettled(ENTITIES.map(async entity => {
+      const matched = matchPostsToEntity(posts, entity);
+      if (!matched.length) return null;
+      const kalshi = await fetchKalshiForTerm(entity.terms[0]);
+      const allText = matched.map(p => p.title).join(' ');
+      const sentiment = scoreSentiment(allText);
+      const signal = computeSignal(sentiment, kalshi);
+      return { ...entity, posts: matched, kalshi, sentiment, signal };
+    }));
 
-    allMarkets = allFetched
-      .filter(m => isFinancial(m))
-      .map(m => ({...m, _cat: categorize(m.title || m.question || '')}))
-      .sort((a,b) => getVolume(b) - getVolume(a));
+    allCards = results
+      .filter(r => r.status === 'fulfilled' && r.value !== null)
+      .map(r => r.value)
+      .sort((a,b) => b.posts.reduce((s,p)=>s+p.score,0) - a.posts.reduce((s,p)=>s+p.score,0));
 
-    renderSummary(allMarkets);
-    renderCards(allMarkets);
-    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allMarkets.length} financial markets (${allFetched.length} total scanned)`;
+    renderSummary();
+    renderCards();
+    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allCards.length} topics tracked`;
   } catch(e) {
-    document.getElementById('content').innerHTML = `<div class="error-msg"><div style="font-weight:500;margin-bottom:6px">Error loading data</div><div style="font-size:12px">${e.message}</div></div>`;
-    document.getElementById('status').textContent = 'Error — see message below';
+    document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
+    document.getElementById('status').textContent = 'Error loading data';
   }
 }
 
-loadData();
+init();
 </script>
 
 </body>
