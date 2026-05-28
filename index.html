@@ -12,12 +12,31 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .metric-label{font-size:11px;color:#555;margin-bottom:3px}
 .metric-value{font-size:20px;font-weight:500;color:#fff}
 .metric-sub{font-size:10px;color:#444;margin-top:1px}
-.fg-bar{height:6px;border-radius:3px;margin-top:6px;background:linear-gradient(to right,#E24B4A,#E2844A,#888,#639922)}
-.fg-marker{width:10px;height:10px;border-radius:50%;background:#fff;margin-top:-8px;position:relative}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0.5rem 0 1rem}
-.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#666}
-.filter-btn.active{background:#23242a;color:#e8e8e8;border-color:#444}
 .section-label{font-size:11px;font-weight:500;color:#444;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
+
+/* M&A Watchlist */
+.ma-card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem}
+.ma-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.ma-card-title{font-size:15px;font-weight:600;color:#fff}
+.ma-card-sub{font-size:11px;color:#555;margin-bottom:12px}
+.ma-table{width:100%;border-collapse:collapse}
+.ma-table th{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.05em;padding:0 8px 6px;text-align:left;font-weight:500}
+.ma-table th.right{text-align:right}
+.ma-table td{padding:5px 8px;border-top:0.5px solid #1a1b1f;vertical-align:middle}
+.ma-table tr:hover td{background:#23242a}
+.company-name{font-size:13px;font-weight:500;color:#e8e8e8}
+.prob-cell{display:flex;align-items:center;gap:8px}
+.mini-bar-track{width:80px;height:4px;background:#2a2b2f;border-radius:2px;overflow:hidden;flex-shrink:0}
+.mini-bar-fill{height:100%;border-radius:2px}
+.prob-num{font-size:12px;font-weight:600;min-width:32px;text-align:right}
+.bid-ask{font-size:11px;color:#555;text-align:right}
+.vol-cell{font-size:11px;color:#555;text-align:right}
+.delta-up{color:#639922;font-size:11px}
+.delta-down{color:#E24B4A;font-size:11px}
+.delta-flat{color:#555;font-size:11px}
+.hot-badge{font-size:10px;padding:1px 6px;border-radius:10px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:6px}
+
+/* News cards */
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
 .card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem}
 .card:hover{border-color:#3a3b40}
@@ -49,6 +68,9 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .loading{text-align:center;padding:3rem;color:#444}
 .empty{color:#444;font-size:13px;padding:2rem 0;text-align:center}
 .error{text-align:center;padding:2rem;color:#444;font-size:13px;border:0.5px dashed #2a2b2f;border-radius:12px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0.5rem 0 1rem}
+.filter-btn{padding:4px 12px;border-radius:20px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#666}
+.filter-btn.active{background:#23242a;color:#e8e8e8;border-color:#444}
 </style>
 </head>
 <body>
@@ -63,12 +85,35 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 
 <div class="summary-row" id="summary"></div>
 
+<!-- M&A Watchlist always pinned at top -->
+<div class="section-label">M&A Watchlist — Kalshi acquisition probabilities</div>
+<div class="ma-card">
+  <div class="ma-card-header">
+    <div class="ma-card-title">Which companies will be acquired this year?</div>
+    <span style="font-size:11px;color:#555">Resolves Jan 1, 2027</span>
+  </div>
+  <div class="ma-card-sub">Sorted by implied probability · Bid/ask shown · Volume indicates conviction</div>
+  <table class="ma-table">
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Probability</th>
+        <th class="right">Bid / Ask</th>
+        <th class="right">24h Δ</th>
+        <th class="right">Volume</th>
+      </tr>
+    </thead>
+    <tbody id="ma-tbody">
+      <tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
+
 <div class="filters">
   <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
   <button class="filter-btn" onclick="setFilter('macro',this)">Macro</button>
   <button class="filter-btn" onclick="setFilter('equity',this)">Equity</button>
   <button class="filter-btn" onclick="setFilter('crypto',this)">Crypto</button>
-  <button class="filter-btn" onclick="setFilter('event',this)">M&A / events</button>
 </div>
 
 <div id="content"><div class="loading">Pulling news + Kalshi data...</div></div>
@@ -77,37 +122,89 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 const PROXY = "https://market-sentiment-db.vercel.app/api/proxy";
 const NEWS_PROXY = "https://market-sentiment-db.vercel.app/api/news";
 
+// --- M&A WATCHLIST ---
+async function loadMAWatchlist() {
+  try {
+    const params = new URLSearchParams({
+      path: '/markets',
+      status: 'open',
+      event_ticker: 'KXACQANNOUNCEANNUAL-27JAN01',
+      limit: 50
+    });
+    const res = await fetch(`${PROXY}?${params}`);
+    const data = await res.json();
+    const markets = (data.markets || [])
+      .map(m => {
+        const yesBid = parseFloat(m.yes_bid_dollars || 0);
+        const yesAsk = parseFloat(m.yes_ask_dollars || 0);
+        const prevBid = parseFloat(m.previous_yes_bid_dollars || 0);
+        const prob = yesBid > 0 ? Math.round(((yesBid + yesAsk) / 2) * 100) : Math.round(yesAsk * 100);
+        const prevProb = prevBid > 0 ? Math.round(prevBid * 100) : null;
+        const delta = prevProb !== null ? prob - prevProb : null;
+        const vol = parseFloat(m.volume_fp || 0);
+        const company = m.custom_strike?.Target || m.yes_sub_title || m.title.replace('Will any company announce acquisition of ','').replace(' before Jan 1, 2027?','');
+        return { company, prob, yesBid, yesAsk, delta, vol };
+      })
+      .filter(m => m.prob > 0)
+      .sort((a, b) => b.prob - a.prob);
+
+    const tbody = document.getElementById('ma-tbody');
+    if (!markets.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No data</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = markets.map(m => {
+      const barColor = m.prob >= 60 ? '#639922' : m.prob >= 35 ? '#E2844A' : '#555';
+      const deltaHtml = m.delta === null ? '<span class="delta-flat">—</span>'
+        : m.delta > 0 ? `<span class="delta-up">+${m.delta}%</span>`
+        : m.delta < 0 ? `<span class="delta-down">${m.delta}%</span>`
+        : '<span class="delta-flat">—</span>';
+      const volFmt = m.vol >= 1000 ? '$' + (m.vol/1000).toFixed(1) + 'K' : m.vol > 0 ? '$' + Math.round(m.vol) : '—';
+      const isHot = m.vol > 500;
+      return `<tr>
+        <td><span class="company-name">${m.company}</span>${isHot ? '<span class="hot-badge">active</span>' : ''}</td>
+        <td><div class="prob-cell">
+          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${m.prob}%;background:${barColor}"></div></div>
+          <span class="prob-num" style="color:${barColor}">${m.prob}%</span>
+        </div></td>
+        <td class="bid-ask">${Math.round(m.yesBid*100)}¢ / ${Math.round(m.yesAsk*100)}¢</td>
+        <td style="text-align:right">${deltaHtml}</td>
+        <td class="vol-cell">${volFmt}</td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('ma-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#555;padding:1rem">Error: ${e.message}</td></tr>`;
+  }
+}
+
+// --- NEWS + KALSHI SENTIMENT ---
 const ENTITIES = [
-  {id:'fed-rate', label:'Fed rate decision', terms:['fed','federal reserve','rate cut','rate hike','fomc','interest rate','powell'], cat:'macro', kalshiSearch:'fed rate'},
-  {id:'inflation', label:'Inflation / CPI', terms:['inflation','cpi','pce','consumer price'], cat:'macro', kalshiSearch:'inflation'},
-  {id:'recession', label:'Recession risk', terms:['recession','gdp','economic slowdown'], cat:'macro', kalshiSearch:'recession'},
-  {id:'tariffs', label:'Tariffs / trade', terms:['tariff','trade war','trade deal','trade policy'], cat:'macro', kalshiSearch:'tariff'},
-  {id:'jobs', label:'Jobs / unemployment', terms:['jobs report','unemployment','payroll','nonfarm','labor'], cat:'macro', kalshiSearch:'unemployment'},
-  {id:'yields', label:'Treasury yields', terms:['treasury yield','bond yield','yield curve','10 year'], cat:'macro', kalshiSearch:'treasury'},
-  {id:'NVDA', label:'Nvidia $NVDA', terms:['nvda','nvidia'], cat:'equity', kalshiSearch:'nvidia'},
-  {id:'AAPL', label:'Apple $AAPL', terms:['aapl','apple stock','apple earnings'], cat:'equity', kalshiSearch:'apple'},
-  {id:'TSLA', label:'Tesla $TSLA', terms:['tsla','tesla'], cat:'equity', kalshiSearch:'tesla'},
-  {id:'MSFT', label:'Microsoft $MSFT', terms:['msft','microsoft'], cat:'equity', kalshiSearch:'microsoft'},
-  {id:'SPY', label:'S&P 500', terms:['s&p 500','sp500','s&p','market rally','market selloff','stock market'], cat:'equity', kalshiSearch:'s&p'},
-  {id:'BTC', label:'Bitcoin', terms:['bitcoin','btc'], cat:'crypto', kalshiSearch:'bitcoin'},
-  {id:'ETH', label:'Ethereum', terms:['ethereum','eth'], cat:'crypto', kalshiSearch:'ethereum'},
-  {id:'crypto', label:'Crypto market', terms:['crypto','cryptocurrency'], cat:'crypto', kalshiSearch:'crypto'},
-  {id:'ma', label:'M&A activity', terms:['acquisition','merger','takeover','buyout','acquired'], cat:'event', kalshiSearch:'acquisition'},
-  {id:'ipo', label:'IPO market', terms:['ipo','initial public offering','going public'], cat:'event', kalshiSearch:'ipo'},
-  {id:'bankruptcy', label:'Bankruptcy / distress', terms:['bankruptcy','chapter 11','default','restructuring'], cat:'event', kalshiSearch:'bankruptcy'},
+  {id:'fed', label:'Fed rate decision', terms:['federal reserve','rate cut','rate hike','fomc','interest rate','powell'], cat:'macro', ks:'fed rate'},
+  {id:'inflation', label:'Inflation / CPI', terms:['inflation','cpi','pce','consumer price'], cat:'macro', ks:'inflation'},
+  {id:'recession', label:'Recession risk', terms:['recession','gdp','economic slowdown'], cat:'macro', ks:'recession'},
+  {id:'tariffs', label:'Tariffs / trade', terms:['tariff','trade war','trade deal'], cat:'macro', ks:'tariff'},
+  {id:'jobs', label:'Jobs / unemployment', terms:['jobs report','unemployment','payroll','nonfarm'], cat:'macro', ks:'unemployment'},
+  {id:'yields', label:'Treasury yields', terms:['treasury yield','bond yield','yield curve'], cat:'macro', ks:'treasury'},
+  {id:'NVDA', label:'Nvidia $NVDA', terms:['nvda','nvidia'], cat:'equity', ks:'nvidia'},
+  {id:'AAPL', label:'Apple $AAPL', terms:['aapl','apple stock','apple earnings'], cat:'equity', ks:'apple'},
+  {id:'TSLA', label:'Tesla $TSLA', terms:['tsla','tesla'], cat:'equity', ks:'tesla'},
+  {id:'MSFT', label:'Microsoft $MSFT', terms:['msft','microsoft'], cat:'equity', ks:'microsoft'},
+  {id:'SPY', label:'S&P 500', terms:['s&p 500','sp500','stock market','market rally','market selloff'], cat:'equity', ks:'s&p'},
+  {id:'BTC', label:'Bitcoin', terms:['bitcoin','btc'], cat:'crypto', ks:'bitcoin'},
+  {id:'ETH', label:'Ethereum', terms:['ethereum','eth'], cat:'crypto', ks:'ethereum'},
+  {id:'crypto', label:'Crypto market', terms:['crypto','cryptocurrency'], cat:'crypto', ks:'crypto'},
 ];
 
-const BULL_WORDS = ['surge','rally','rise','gain','jump','beat','strong','bullish','buy','upside','outperform','growth','record','high','boost'];
-const BEAR_WORDS = ['crash','fall','drop','decline','miss','weak','bearish','sell','downside','underperform','recession','risk','concern','warn','low','cut'];
+const BULL_WORDS = ['surge','rally','rise','gain','jump','beat','strong','bullish','buy','upside','record','high','boost','soar'];
+const BEAR_WORDS = ['crash','fall','drop','decline','miss','weak','bearish','sell','downside','recession','risk','warn','low','cut','plunge'];
 
 function scoreSentiment(texts) {
   let score = 0;
-  const combined = texts.join(' ').toLowerCase();
-  BULL_WORDS.forEach(w => { if (combined.includes(w)) score++; });
-  BEAR_WORDS.forEach(w => { if (combined.includes(w)) score--; });
-  if (score > 0) return 'bull';
-  if (score < 0) return 'bear';
-  return 'neut';
+  const t = texts.join(' ').toLowerCase();
+  BULL_WORDS.forEach(w => { if (t.includes(w)) score++; });
+  BEAR_WORDS.forEach(w => { if (t.includes(w)) score--; });
+  return score > 0 ? 'bull' : score < 0 ? 'bear' : 'neut';
 }
 
 function getProb(m) {
@@ -133,29 +230,27 @@ function barColor(p) {
   return '#555';
 }
 
-function computeSignal(sentiment, kalshiMarkets) {
-  if (!kalshiMarkets.length) return 'news';
-  const probs = kalshiMarkets.map(m => getProb(m)).filter(p => p !== null);
+function computeSignal(sentiment, markets) {
+  if (!markets.length) return 'news';
+  const probs = markets.map(m => getProb(m)).filter(p => p !== null);
   if (!probs.length) return 'news';
   const avg = probs.reduce((a,b)=>a+b,0)/probs.length;
-  if ((sentiment==='bull' && avg>=55)||(sentiment==='bear' && avg<=45)) return 'aligned';
-  if ((sentiment==='bull' && avg<=45)||(sentiment==='bear' && avg>=55)) return 'diverging';
+  if ((sentiment==='bull'&&avg>=55)||(sentiment==='bear'&&avg<=45)) return 'aligned';
+  if ((sentiment==='bull'&&avg<=45)||(sentiment==='bear'&&avg>=55)) return 'diverging';
   return 'news';
 }
 
 async function fetchNews() {
   const res = await fetch(`${NEWS_PROXY}?type=news`);
-  if (!res.ok) throw new Error(`News proxy ${res.status}`);
-  const data = await res.json();
-  return data.items || [];
+  if (!res.ok) throw new Error(`News ${res.status}`);
+  return (await res.json()).items || [];
 }
 
 async function fetchFearGreed() {
   try {
     const res = await fetch(`${NEWS_PROXY}?type=feargreed`);
     if (!res.ok) return null;
-    const data = await res.json();
-    return data?.fear_and_greed || data?.fng_value || null;
+    return (await res.json())?.fear_and_greed || null;
   } catch(e) { return null; }
 }
 
@@ -163,9 +258,8 @@ async function fetchKalshi(term) {
   try {
     const params = new URLSearchParams({ path:'/markets', status:'open', search:term, limit:3 });
     const res = await fetch(`${PROXY}?${params}`);
-    if (!res.ok) return [];
     const data = await res.json();
-    const SPORTS = ['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXTENNIS','KXUFC','KXSOCCER','KXGOLF'];
+    const SPORTS = ['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXTENNIS','KXUFC'];
     return (data.markets||[]).filter(m => {
       const ev = (m.event_ticker||'').toUpperCase();
       return !SPORTS.some(p => ev.startsWith(p));
@@ -175,9 +269,9 @@ async function fetchKalshi(term) {
 
 function matchNews(items, entity) {
   return items.filter(item => {
-    const t = (item.title + ' ' + item.description).toLowerCase();
-    return entity.terms.some(term => t.includes(term.toLowerCase()));
-  }).slice(0, 5);
+    const t = (item.title+' '+(item.description||'')).toLowerCase();
+    return entity.terms.some(term => t.includes(term));
+  }).slice(0,5);
 }
 
 let allCards = [];
@@ -188,18 +282,9 @@ function renderSummary(fg) {
   const bear = allCards.filter(c=>c.sentiment==='bear').length;
   const aligned = allCards.filter(c=>c.signal==='aligned').length;
   const diverging = allCards.filter(c=>c.signal==='diverging').length;
-
-  let fgHtml = '';
-  if (fg) {
-    const score = parseInt(fg.score || fg.value || 50);
-    const label = fg.rating || fg.value_classification || '';
-    const color = score >= 60 ? '#639922' : score <= 40 ? '#E24B4A' : '#888';
-    fgHtml = `<div class="metric">
-      <div class="metric-label">Fear & Greed</div>
-      <div class="metric-value" style="color:${color}">${score}</div>
-      <div class="metric-sub">${label}</div>
-    </div>`;
-  }
+  const fgScore = fg ? parseInt(fg.score||fg.value||50) : null;
+  const fgLabel = fg ? (fg.rating||fg.value_classification||'') : '';
+  const fgColor = fgScore ? (fgScore>=60?'#639922':fgScore<=40?'#E24B4A':'#888') : '#888';
 
   document.getElementById('summary').innerHTML = `
     <div class="metric"><div class="metric-label">Topics tracked</div><div class="metric-value">${allCards.length}</div><div class="metric-sub">with news activity</div></div>
@@ -207,18 +292,18 @@ function renderSummary(fg) {
     <div class="metric"><div class="metric-label">Bearish tilt</div><div class="metric-value" style="color:#E24B4A">${bear}</div><div class="metric-sub">topics</div></div>
     <div class="metric"><div class="metric-label">Aligned</div><div class="metric-value" style="color:#639922">${aligned}</div><div class="metric-sub">news = Kalshi</div></div>
     <div class="metric"><div class="metric-label">Diverging</div><div class="metric-value" style="color:#E2844A">${diverging}</div><div class="metric-sub">news ≠ Kalshi</div></div>
-    ${fgHtml}
+    ${fgScore ? `<div class="metric"><div class="metric-label">Fear & Greed</div><div class="metric-value" style="color:${fgColor}">${fgScore}</div><div class="metric-sub">${fgLabel}</div></div>` : ''}
   `;
 }
 
 function renderCards() {
-  const filtered = activeFilter === 'all' ? allCards : allCards.filter(c=>c.cat===activeFilter);
+  const filtered = activeFilter==='all' ? allCards : allCards.filter(c=>c.cat===activeFilter);
   if (!filtered.length) {
     document.getElementById('content').innerHTML = '<div class="empty">No topics with news activity in this category.</div>';
     return;
   }
   const sections = activeFilter==='all'
-    ? [['event','M&A, distressed & events'],['equity','Equity & sector'],['crypto','Crypto'],['macro','Macro & economic']]
+    ? [['equity','Equity & sector'],['crypto','Crypto'],['macro','Macro & economic']]
     : [[activeFilter,'']];
 
   let html = '';
@@ -249,10 +334,7 @@ function renderCards() {
 
       html += `<div class="card">
         <div class="card-header">
-          <div>
-            <div class="card-entity">${c.label}</div>
-            <div class="card-count">${c.news.length} headline${c.news.length>1?'s':''}</div>
-          </div>
+          <div><div class="card-entity">${c.label}</div><div class="card-count">${c.news.length} headline${c.news.length>1?'s':''}</div></div>
           <span class="signal-badge ${sigCls}">${sigLabel}</span>
         </div>
         <span class="sent-tag ${sentCls}">${sentLabel}</span>
@@ -282,18 +364,21 @@ function setFilter(cat, el) {
 }
 
 async function init() {
-  document.getElementById('status').textContent = 'Pulling news...';
+  document.getElementById('status').textContent = 'Loading...';
   document.getElementById('content').innerHTML = '<div class="loading">Pulling news + Kalshi data...</div>';
   allCards = [];
 
+  // Load M&A watchlist immediately
+  loadMAWatchlist();
+
   try {
     const [newsItems, fg] = await Promise.all([fetchNews(), fetchFearGreed()]);
-    document.getElementById('status').textContent = `${newsItems.length} headlines — querying Kalshi...`;
+    document.getElementById('status').textContent = `${newsItems.length} headlines fetched...`;
 
     const results = await Promise.allSettled(ENTITIES.map(async entity => {
       const matched = matchNews(newsItems, entity);
       if (!matched.length) return null;
-      const kalshi = await fetchKalshi(entity.kalshiSearch);
+      const kalshi = await fetchKalshi(entity.ks);
       const sentiment = scoreSentiment(matched.map(n=>n.title+' '+(n.description||'')));
       const signal = computeSignal(sentiment, kalshi);
       return { ...entity, news: matched, kalshi, sentiment, signal };
@@ -306,7 +391,7 @@ async function init() {
 
     renderSummary(fg);
     renderCards();
-    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allCards.length} topics tracked`;
+    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allCards.length} topics · M&A watchlist live`;
   } catch(e) {
     document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
     document.getElementById('status').textContent = 'Error loading data';
