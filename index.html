@@ -13,28 +13,62 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .metric-value{font-size:20px;font-weight:500;color:#fff}
 .metric-sub{font-size:10px;color:#444;margin-top:1px}
 .section-label{font-size:11px;font-weight:500;color:#444;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
+.pinned-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:0.5rem}
 
-/* M&A Watchlist */
-.ma-card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem}
-.ma-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.ma-card-title{font-size:15px;font-weight:600;color:#fff}
-.ma-card-sub{font-size:11px;color:#555;margin-bottom:12px}
-.ma-table{width:100%;border-collapse:collapse}
-.ma-table th{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.05em;padding:0 8px 6px;text-align:left;font-weight:500}
-.ma-table th.right{text-align:right}
-.ma-table td{padding:5px 8px;border-top:0.5px solid #1a1b1f;vertical-align:middle}
-.ma-table tr:hover td{background:#23242a}
-.company-name{font-size:13px;font-weight:500;color:#e8e8e8}
-.prob-cell{display:flex;align-items:center;gap:8px}
-.mini-bar-track{width:80px;height:4px;background:#2a2b2f;border-radius:2px;overflow:hidden;flex-shrink:0}
+/* Shared card styles */
+.pcard{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem}
+.pcard-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px}
+.pcard-sub{font-size:11px;color:#555;margin-bottom:10px}
+.divider{height:0.5px;background:#2a2b2f;margin:8px 0}
+
+/* Table styles */
+.watch-table{width:100%;border-collapse:collapse}
+.watch-table th{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.04em;padding:0 6px 5px;text-align:left;font-weight:500}
+.watch-table th.r{text-align:right}
+.watch-table td{padding:4px 6px;border-top:0.5px solid #1a1b1f;vertical-align:middle}
+.watch-table tr:hover td{background:#23242a}
+.co-name{font-size:12px;font-weight:500;color:#e8e8e8}
+.mini-bar-wrap{display:flex;align-items:center;gap:6px}
+.mini-bar{width:60px;height:4px;background:#2a2b2f;border-radius:2px;overflow:hidden;flex-shrink:0}
 .mini-bar-fill{height:100%;border-radius:2px}
-.prob-num{font-size:12px;font-weight:600;min-width:32px;text-align:right}
-.bid-ask{font-size:11px;color:#555;text-align:right}
-.vol-cell{font-size:11px;color:#555;text-align:right}
-.delta-up{color:#639922;font-size:11px}
-.delta-down{color:#E24B4A;font-size:11px}
-.delta-flat{color:#555;font-size:11px}
-.hot-badge{font-size:10px;padding:1px 6px;border-radius:10px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:6px}
+.pct{font-size:12px;font-weight:600;min-width:28px;text-align:right}
+.ba{font-size:10px;color:#444;text-align:right}
+.vol-sm{font-size:10px;color:#444;text-align:right}
+.hot{font-size:9px;padding:1px 5px;border-radius:8px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:4px}
+.delta-up{color:#639922;font-size:10px}
+.delta-dn{color:#E24B4A;font-size:10px}
+.delta-fl{color:#444;font-size:10px}
+
+/* Fed hike timeframes */
+.hike-rows{display:flex;flex-direction:column;gap:6px}
+.hike-row{display:flex;align-items:center;gap:8px}
+.hike-label{font-size:12px;color:#aaa;min-width:130px}
+.hike-bar-wrap{flex:1;display:flex;align-items:center;gap:6px}
+.hike-bar{flex:1;height:6px;background:#2a2b2f;border-radius:3px;overflow:hidden}
+.hike-bar-fill{height:100%;border-radius:3px}
+.hike-pct{font-size:12px;font-weight:600;min-width:34px;text-align:right}
+.hike-vol{font-size:10px;color:#444;min-width:48px;text-align:right}
+
+/* Rate cut distribution */
+.cut-dist{display:flex;align-items:flex-end;gap:3px;height:60px;margin:8px 0 4px}
+.cut-bar-col{display:flex;flex-direction:column;align-items:center;flex:1}
+.cut-bar-seg{width:100%;border-radius:2px 2px 0 0;transition:height 0.3s;cursor:default}
+.cut-bar-seg:hover{opacity:0.8}
+.cut-label{font-size:9px;color:#444;margin-top:3px}
+.cut-pct-label{font-size:9px;color:#888;margin-bottom:2px}
+.cut-highlight{background:#23242a;border-radius:4px;padding:6px 8px;font-size:11px;color:#aaa;margin-top:4px}
+
+/* Pinterest acquirer */
+.pins-rows{display:flex;flex-direction:column;gap:5px}
+.pins-row{display:flex;align-items:center;gap:8px}
+.pins-acquirer{font-size:12px;color:#aaa;min-width:120px}
+.pins-bar-wrap{flex:1;display:flex;align-items:center;gap:6px}
+.pins-bar{flex:1;height:5px;background:#2a2b2f;border-radius:3px;overflow:hidden}
+.pins-bar-fill{height:100%;border-radius:3px}
+.pins-pct{font-size:12px;font-weight:600;min-width:30px;text-align:right}
+.delta-badge{font-size:9px;padding:1px 4px;border-radius:4px;margin-left:3px}
+.up-badge{background:#1a2e0a;color:#639922}
+.dn-badge{background:#2e0a0a;color:#E24B4A}
 
 /* News cards */
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
@@ -47,14 +81,13 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .signal-aligned{background:#1a2e0a;color:#639922;border:0.5px solid #3B6D11}
 .signal-diverging{background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513}
 .signal-news{background:#23242a;color:#888;border:0.5px solid #333}
-.divider{height:0.5px;background:#2a2b2f;margin:10px 0}
 .sent-tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
 .bull{background:#1a2e0a;color:#639922;border:0.5px solid #3B6D11}
 .bear{background:#2e0a0a;color:#E24B4A;border:0.5px solid #A32D2D}
 .neut{background:#23242a;color:#666;border:0.5px solid #333}
 .news-list{display:flex;flex-direction:column;gap:6px}
-.news-item{font-size:12px;color:#aaa;line-height:1.4;display:flex;gap:6px;align-items:flex-start}
-.news-src{font-size:10px;color:#444;white-space:nowrap;padding-top:1px;min-width:80px}
+.news-item{font-size:12px;color:#aaa;line-height:1.4;display:flex;gap:6px}
+.news-src{font-size:10px;color:#444;white-space:nowrap;min-width:80px}
 .kalshi-block{background:#141518;border-radius:8px;padding:8px 10px;margin-top:4px}
 .kalshi-title{font-size:12px;color:#aaa;line-height:1.4;margin-bottom:6px}
 .prob-row{display:flex;align-items:center;gap:8px}
@@ -76,325 +109,370 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 <body>
 
 <div class="header">
-  <div>
-    <h1>Market sentiment dashboard</h1>
-    <div class="status" id="status">Loading...</div>
-  </div>
+  <div><h1>Market sentiment dashboard</h1><div class="status" id="status">Loading...</div></div>
   <button class="refresh-btn" onclick="init()">Refresh</button>
 </div>
 
 <div class="summary-row" id="summary"></div>
 
-<!-- M&A Watchlist always pinned at top -->
-<div class="section-label">M&A Watchlist — Kalshi acquisition probabilities</div>
-<div class="ma-card">
-  <div class="ma-card-header">
-    <div class="ma-card-title">Which companies will be acquired this year?</div>
-    <span style="font-size:11px;color:#555">Resolves Jan 1, 2027</span>
+<!-- PINNED MARKETS -->
+<div class="section-label">Pinned Kalshi markets</div>
+<div class="pinned-grid">
+
+  <!-- Fed Rate Hike -->
+  <div class="pcard">
+    <div class="pcard-title">Will the Fed hike rates?</div>
+    <div class="pcard-sub">Probability by timeframe · Resolves on date</div>
+    <div class="hike-rows" id="fed-hike-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
   </div>
-  <div class="ma-card-sub">Sorted by implied probability · Bid/ask shown · Volume indicates conviction</div>
-  <table class="ma-table">
-    <thead>
-      <tr>
-        <th>Company</th>
-        <th>Probability</th>
-        <th class="right">Bid / Ask</th>
-        <th class="right">24h Δ</th>
-        <th class="right">Volume</th>
-      </tr>
-    </thead>
-    <tbody id="ma-tbody">
-      <tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">Loading...</td></tr>
-    </tbody>
-  </table>
+
+  <!-- Rate Cut Distribution -->
+  <div class="pcard">
+    <div class="pcard-title">How many rate cuts in 2026?</div>
+    <div class="pcard-sub">Kalshi-implied probability distribution · Resolves Dec 31, 2026</div>
+    <div class="cut-dist" id="cut-dist"></div>
+    <div style="display:flex;justify-content:space-between;padding:0 2px">
+      <span style="font-size:9px;color:#444">1 cut</span>
+      <span style="font-size:9px;color:#444">9+ cuts</span>
+    </div>
+    <div class="cut-highlight" id="cut-highlight">Loading...</div>
+  </div>
+
+  <!-- US Govt Stakes -->
+  <div class="pcard" style="grid-column:span 2">
+    <div class="pcard-title">Which companies will the US govt take a stake in?</div>
+    <div class="pcard-sub">Sorted by implied probability · Resolves Jan 1, 2027</div>
+    <table class="watch-table">
+      <thead><tr>
+        <th>Company</th><th>Probability</th>
+        <th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th>
+      </tr></thead>
+      <tbody id="stake-tbody"><tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- M&A Watchlist -->
+  <div class="pcard" style="grid-column:span 2">
+    <div class="pcard-title">Which companies will be acquired this year?</div>
+    <div class="pcard-sub">Sorted by implied probability · Resolves Jan 1, 2027</div>
+    <table class="watch-table">
+      <thead><tr>
+        <th>Company</th><th>Probability</th>
+        <th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th>
+      </tr></thead>
+      <tbody id="ma-tbody"><tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Pinterest acquirer -->
+  <div class="pcard">
+    <div class="pcard-title">Who acquires Pinterest?</div>
+    <div class="pcard-sub">By prospective acquirer · Resolves Jan 1, 2027</div>
+    <div class="pins-rows" id="pins-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
+  </div>
+
 </div>
 
+<!-- NEWS SENTIMENT -->
 <div class="filters">
   <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
   <button class="filter-btn" onclick="setFilter('macro',this)">Macro</button>
   <button class="filter-btn" onclick="setFilter('equity',this)">Equity</button>
   <button class="filter-btn" onclick="setFilter('crypto',this)">Crypto</button>
 </div>
-
 <div id="content"><div class="loading">Pulling news + Kalshi data...</div></div>
 
 <script>
 const PROXY = "https://market-sentiment-db.vercel.app/api/proxy";
 const NEWS_PROXY = "https://market-sentiment-db.vercel.app/api/news";
 
-// --- M&A WATCHLIST ---
-async function loadMAWatchlist() {
-  try {
-    const params = new URLSearchParams({
-      path: '/markets',
-      status: 'open',
-      event_ticker: 'KXACQANNOUNCEANNUAL-27JAN01',
-      limit: 50
-    });
-    const res = await fetch(`${PROXY}?${params}`);
-    const data = await res.json();
-    const markets = (data.markets || [])
-      .map(m => {
-        const yesBid = parseFloat(m.yes_bid_dollars || 0);
-        const yesAsk = parseFloat(m.yes_ask_dollars || 0);
-        const prevBid = parseFloat(m.previous_yes_bid_dollars || 0);
-        const prob = yesBid > 0 ? Math.round(((yesBid + yesAsk) / 2) * 100) : Math.round(yesAsk * 100);
-        const prevProb = prevBid > 0 ? Math.round(prevBid * 100) : null;
-        const delta = prevProb !== null ? prob - prevProb : null;
-        const vol = parseFloat(m.volume_fp || 0);
-        const company = m.custom_strike?.Target || m.yes_sub_title || m.title.replace('Will any company announce acquisition of ','').replace(' before Jan 1, 2027?','');
-        return { company, prob, yesBid, yesAsk, delta, vol };
-      })
-      .filter(m => m.prob > 0)
-      .sort((a, b) => b.prob - a.prob);
+function bc(p){return p>=60?'#639922':p>=35?'#E2844A':'#E24B4A'}
+function fv(v){if(!v||v==0)return'—';if(v>=1000000)return'$'+(v/1000000).toFixed(1)+'M';if(v>=1000)return'$'+Math.round(v/1000)+'K';return'$'+Math.round(v)}
+function fmtDate(s){return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}
 
-    const tbody = document.getElementById('ma-tbody');
-    if (!markets.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No data</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = markets.map(m => {
-      const barColor = m.prob >= 60 ? '#639922' : m.prob >= 35 ? '#E2844A' : '#555';
-      const deltaHtml = m.delta === null ? '<span class="delta-flat">—</span>'
-        : m.delta > 0 ? `<span class="delta-up">+${m.delta}%</span>`
-        : m.delta < 0 ? `<span class="delta-down">${m.delta}%</span>`
-        : '<span class="delta-flat">—</span>';
-      const volFmt = m.vol >= 1000 ? '$' + (m.vol/1000).toFixed(1) + 'K' : m.vol > 0 ? '$' + Math.round(m.vol) : '—';
-      const isHot = m.vol > 500;
-      return `<tr>
-        <td><span class="company-name">${m.company}</span>${isHot ? '<span class="hot-badge">active</span>' : ''}</td>
-        <td><div class="prob-cell">
-          <div class="mini-bar-track"><div class="mini-bar-fill" style="width:${m.prob}%;background:${barColor}"></div></div>
-          <span class="prob-num" style="color:${barColor}">${m.prob}%</span>
-        </div></td>
-        <td class="bid-ask">${Math.round(m.yesBid*100)}¢ / ${Math.round(m.yesAsk*100)}¢</td>
-        <td style="text-align:right">${deltaHtml}</td>
-        <td class="vol-cell">${volFmt}</td>
-      </tr>`;
-    }).join('');
-  } catch(e) {
-    document.getElementById('ma-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:#555;padding:1rem">Error: ${e.message}</td></tr>`;
-  }
+function tableRows(markets, nameKey){
+  return markets.map(m => {
+    const yb = parseFloat(m.yes_bid_dollars||0), ya = parseFloat(m.yes_ask_dollars||0);
+    const prob = yb>0 ? Math.round(((yb+ya)/2)*100) : Math.round(ya*100);
+    const prev = parseFloat(m.previous_yes_bid_dollars||0);
+    const prevP = prev>0 ? Math.round(prev*100) : null;
+    const delta = prevP!==null ? prob-prevP : null;
+    const vol = parseFloat(m.volume_fp||0);
+    const name = m.custom_strike?.[nameKey] || m.yes_sub_title || m.no_sub_title || '—';
+    const isHot = vol>500;
+    const dHtml = delta===null?`<span class="delta-fl">—</span>`:delta>0?`<span class="delta-up">+${delta}%</span>`:delta<0?`<span class="delta-dn">${delta}%</span>`:`<span class="delta-fl">—</span>`;
+    return `<tr>
+      <td><span class="co-name">${name}</span>${isHot?'<span class="hot">active</span>':''}</td>
+      <td><div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:${prob}%;background:${bc(prob)}"></div></div><span class="pct" style="color:${bc(prob)}">${prob}%</span></div></td>
+      <td class="ba">${Math.round(yb*100)}¢ / ${Math.round(ya*100)}¢</td>
+      <td style="text-align:right">${dHtml}</td>
+      <td class="vol-sm">${fv(vol)}</td>
+    </tr>`;
+  }).join('');
 }
 
-// --- NEWS + KALSHI SENTIMENT ---
+async function fetchPinned(eventTicker, limit=50){
+  const p = new URLSearchParams({path:'/markets',status:'open',event_ticker:eventTicker,limit});
+  const r = await fetch(`${PROXY}?${p}`);
+  return (await r.json()).markets||[];
+}
+
+async function loadFedHike(){
+  const markets = await fetchPinned('FEDHIKE',10);
+  const show = markets
+    .filter(m=>m.close_time)
+    .sort((a,b)=>new Date(a.close_time)-new Date(b.close_time))
+    .slice(0,4);
+  document.getElementById('fed-hike-rows').innerHTML = show.map(m=>{
+    const p = Math.round(parseFloat(m.yes_bid_dollars||0)*100) || Math.round(parseFloat(m.last_price_dollars||0)*100);
+    const vol = parseFloat(m.volume_fp||0);
+    return `<div class="hike-row">
+      <span class="hike-label">${m.subtitle||fmtDate(m.close_time)}</span>
+      <div class="hike-bar-wrap">
+        <div class="hike-bar"><div class="hike-bar-fill" style="width:${p}%;background:${bc(p)}"></div></div>
+        <span class="hike-pct" style="color:${bc(p)}">${p}%</span>
+        <span class="hike-vol">${fv(vol)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadRateCuts(){
+  const markets = await fetchPinned('KXRATECUTCOUNT-26DEC31',25);
+  const relevant = markets
+    .filter(m=>m.floor_strike>=1&&m.floor_strike<=9)
+    .sort((a,b)=>a.floor_strike-b.floor_strike);
+  const maxP = Math.max(...relevant.map(m=>parseFloat(m.last_price_dollars||0)*100),1);
+  const dist = document.getElementById('cut-dist');
+  dist.innerHTML = relevant.map(m=>{
+    const p = Math.round(parseFloat(m.last_price_dollars||0)*100);
+    const h = Math.max(4, Math.round((p/maxP)*56));
+    const color = m.floor_strike<=2?'#E24B4A':m.floor_strike<=4?'#E2844A':m.floor_strike<=6?'#639922':'#3a5c8a';
+    return `<div class="cut-bar-col">
+      <div class="cut-pct-label">${p>0?p+'%':''}</div>
+      <div class="cut-bar-seg" style="height:${h}px;background:${color}" title="${m.floor_strike} cuts: ${p}%"></div>
+      <div class="cut-label">${m.floor_strike}</div>
+    </div>`;
+  }).join('');
+  const peak = relevant.sort((a,b)=>parseFloat(b.last_price_dollars||0)-parseFloat(a.last_price_dollars||0))[0];
+  const peakP = Math.round(parseFloat(peak?.last_price_dollars||0)*100);
+  document.getElementById('cut-highlight').innerHTML = `Most likely: <strong style="color:#e8e8e8">${peak?.floor_strike} cut${peak?.floor_strike>1?'s':''}</strong> at ${peakP}% probability · 2-cut probability: ${Math.round(parseFloat(relevant.find(m=>m.floor_strike===2)?.last_price_dollars||0)*100)}%`;
+}
+
+async function loadStakes(){
+  const markets = await fetchPinned('KXUSACOMPANYSTAKE-27JAN01',25);
+  const sorted = markets
+    .map(m=>({...m,_prob:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)}))
+    .sort((a,b)=>b._prob-a._prob);
+  document.getElementById('stake-tbody').innerHTML = tableRows(sorted,'entity');
+}
+
+async function loadMA(){
+  const markets = await fetchPinned('KXACQANNOUNCEANNUAL-27JAN01',50);
+  const sorted = markets
+    .map(m=>({...m,_prob:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)}))
+    .filter(m=>m._prob>0)
+    .sort((a,b)=>b._prob-a._prob);
+  document.getElementById('ma-tbody').innerHTML = tableRows(sorted,'Target');
+}
+
+async function loadPinterest(){
+  const markets = await fetchPinned('KXACQUANNOUNCEPINS-27JAN01',10);
+  const sorted = markets
+    .map(m=>{
+      const yb=parseFloat(m.yes_bid_dollars||0), ya=parseFloat(m.yes_ask_dollars||0);
+      const prob = yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+      const prev = parseFloat(m.previous_yes_bid_dollars||0);
+      const prevP = prev>0?Math.round(prev*100):null;
+      const delta = prevP!==null?prob-prevP:null;
+      return {name:m.yes_sub_title||m.no_sub_title||'—', prob, delta, vol:parseFloat(m.volume_fp||0)};
+    })
+    .sort((a,b)=>b.prob-a.prob);
+  document.getElementById('pins-rows').innerHTML = sorted.map(m=>{
+    const dBadge = m.delta===null?'':m.delta>0?`<span class="delta-badge up-badge">+${m.delta}%</span>`:m.delta<0?`<span class="delta-badge dn-badge">${m.delta}%</span>`:'';
+    return `<div class="pins-row">
+      <span class="pins-acquirer">${m.name}${dBadge}</span>
+      <div class="pins-bar-wrap">
+        <div class="pins-bar"><div class="pins-bar-fill" style="width:${m.prob*5}%;background:${bc(m.prob)}"></div></div>
+        <span class="pins-pct" style="color:${bc(m.prob)}">${m.prob}%</span>
+        <span style="font-size:10px;color:#444">${fv(m.vol)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// --- NEWS SENTIMENT ---
 const ENTITIES = [
   {id:'fed', label:'Fed rate decision', terms:['federal reserve','rate cut','rate hike','fomc','interest rate','powell'], cat:'macro', ks:'fed rate'},
   {id:'inflation', label:'Inflation / CPI', terms:['inflation','cpi','pce','consumer price'], cat:'macro', ks:'inflation'},
   {id:'recession', label:'Recession risk', terms:['recession','gdp','economic slowdown'], cat:'macro', ks:'recession'},
   {id:'tariffs', label:'Tariffs / trade', terms:['tariff','trade war','trade deal'], cat:'macro', ks:'tariff'},
   {id:'jobs', label:'Jobs / unemployment', terms:['jobs report','unemployment','payroll','nonfarm'], cat:'macro', ks:'unemployment'},
-  {id:'yields', label:'Treasury yields', terms:['treasury yield','bond yield','yield curve'], cat:'macro', ks:'treasury'},
   {id:'NVDA', label:'Nvidia $NVDA', terms:['nvda','nvidia'], cat:'equity', ks:'nvidia'},
   {id:'AAPL', label:'Apple $AAPL', terms:['aapl','apple stock','apple earnings'], cat:'equity', ks:'apple'},
   {id:'TSLA', label:'Tesla $TSLA', terms:['tsla','tesla'], cat:'equity', ks:'tesla'},
   {id:'MSFT', label:'Microsoft $MSFT', terms:['msft','microsoft'], cat:'equity', ks:'microsoft'},
-  {id:'SPY', label:'S&P 500', terms:['s&p 500','sp500','stock market','market rally','market selloff'], cat:'equity', ks:'s&p'},
+  {id:'SPY', label:'S&P 500', terms:['s&p 500','sp500','stock market','market rally','selloff'], cat:'equity', ks:'s&p'},
   {id:'BTC', label:'Bitcoin', terms:['bitcoin','btc'], cat:'crypto', ks:'bitcoin'},
   {id:'ETH', label:'Ethereum', terms:['ethereum','eth'], cat:'crypto', ks:'ethereum'},
   {id:'crypto', label:'Crypto market', terms:['crypto','cryptocurrency'], cat:'crypto', ks:'crypto'},
 ];
 
-const BULL_WORDS = ['surge','rally','rise','gain','jump','beat','strong','bullish','buy','upside','record','high','boost','soar'];
-const BEAR_WORDS = ['crash','fall','drop','decline','miss','weak','bearish','sell','downside','recession','risk','warn','low','cut','plunge'];
+const BULL=['surge','rally','rise','gain','jump','beat','strong','bullish','buy','upside','record','high','boost','soar'];
+const BEAR=['crash','fall','drop','decline','miss','weak','bearish','sell','downside','recession','risk','warn','low','cut','plunge'];
 
-function scoreSentiment(texts) {
-  let score = 0;
-  const t = texts.join(' ').toLowerCase();
-  BULL_WORDS.forEach(w => { if (t.includes(w)) score++; });
-  BEAR_WORDS.forEach(w => { if (t.includes(w)) score--; });
-  return score > 0 ? 'bull' : score < 0 ? 'bear' : 'neut';
+function scoreSent(texts){
+  let s=0; const t=texts.join(' ').toLowerCase();
+  BULL.forEach(w=>{if(t.includes(w))s++});
+  BEAR.forEach(w=>{if(t.includes(w))s--});
+  return s>0?'bull':s<0?'bear':'neut';
 }
 
-function getProb(m) {
-  const fields = ['yes_bid_dollars','last_price_dollars','yes_ask_dollars'];
-  for (const f of fields) {
-    const v = parseFloat(m[f]);
-    if (!isNaN(v) && v > 0) return v <= 1 ? Math.round(v*100) : Math.round(v);
+function getProb(m){
+  for(const f of['yes_bid_dollars','last_price_dollars','yes_ask_dollars']){
+    const v=parseFloat(m[f]);
+    if(!isNaN(v)&&v>0)return v<=1?Math.round(v*100):Math.round(v);
   }
   return null;
 }
 
-function fmtVol(m) {
-  const v = parseFloat(m.volume_dollars || m.volume_fp || 0);
-  if (v >= 1000000) return '$'+(v/1000000).toFixed(1)+'M';
-  if (v >= 1000) return '$'+Math.round(v/1000)+'K';
-  if (v > 0) return '$'+Math.round(v);
+function fmtVol2(m){
+  const v=parseFloat(m.volume_dollars||m.volume_fp||0);
+  if(v>=1000000)return'$'+(v/1000000).toFixed(1)+'M';
+  if(v>=1000)return'$'+Math.round(v/1000)+'K';
+  if(v>0)return'$'+Math.round(v);
   return null;
 }
 
-function barColor(p) {
-  if (p >= 65) return '#639922';
-  if (p <= 35) return '#E24B4A';
-  return '#555';
+function barC(p){return p>=65?'#639922':p<=35?'#E24B4A':'#555'}
+
+function computeSig(sent,markets){
+  if(!markets.length)return'news';
+  const probs=markets.map(m=>getProb(m)).filter(p=>p!==null);
+  if(!probs.length)return'news';
+  const avg=probs.reduce((a,b)=>a+b,0)/probs.length;
+  if((sent==='bull'&&avg>=55)||(sent==='bear'&&avg<=45))return'aligned';
+  if((sent==='bull'&&avg<=45)||(sent==='bear'&&avg>=55))return'diverging';
+  return'news';
 }
 
-function computeSignal(sentiment, markets) {
-  if (!markets.length) return 'news';
-  const probs = markets.map(m => getProb(m)).filter(p => p !== null);
-  if (!probs.length) return 'news';
-  const avg = probs.reduce((a,b)=>a+b,0)/probs.length;
-  if ((sentiment==='bull'&&avg>=55)||(sentiment==='bear'&&avg<=45)) return 'aligned';
-  if ((sentiment==='bull'&&avg<=45)||(sentiment==='bear'&&avg>=55)) return 'diverging';
-  return 'news';
+async function fetchNews(){
+  const r=await fetch(`${NEWS_PROXY}?type=news`);
+  if(!r.ok)throw new Error(`News ${r.status}`);
+  return(await r.json()).items||[];
 }
 
-async function fetchNews() {
-  const res = await fetch(`${NEWS_PROXY}?type=news`);
-  if (!res.ok) throw new Error(`News ${res.status}`);
-  return (await res.json()).items || [];
+async function fetchFG(){
+  try{const r=await fetch(`${NEWS_PROXY}?type=feargreed`);if(!r.ok)return null;return(await r.json())?.fear_and_greed||null;}catch{return null;}
 }
 
-async function fetchFearGreed() {
-  try {
-    const res = await fetch(`${NEWS_PROXY}?type=feargreed`);
-    if (!res.ok) return null;
-    return (await res.json())?.fear_and_greed || null;
-  } catch(e) { return null; }
+async function fetchK(term){
+  try{
+    const p=new URLSearchParams({path:'/markets',status:'open',search:term,limit:3});
+    const r=await fetch(`${PROXY}?${p}`);
+    const d=await r.json();
+    const SP=['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXTENNIS','KXUFC'];
+    return(d.markets||[]).filter(m=>!SP.some(s=>(m.event_ticker||'').toUpperCase().startsWith(s))).slice(0,2);
+  }catch{return[];}
 }
 
-async function fetchKalshi(term) {
-  try {
-    const params = new URLSearchParams({ path:'/markets', status:'open', search:term, limit:3 });
-    const res = await fetch(`${PROXY}?${params}`);
-    const data = await res.json();
-    const SPORTS = ['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXTENNIS','KXUFC'];
-    return (data.markets||[]).filter(m => {
-      const ev = (m.event_ticker||'').toUpperCase();
-      return !SPORTS.some(p => ev.startsWith(p));
-    }).slice(0,2);
-  } catch(e) { return []; }
-}
-
-function matchNews(items, entity) {
-  return items.filter(item => {
-    const t = (item.title+' '+(item.description||'')).toLowerCase();
-    return entity.terms.some(term => t.includes(term));
+function matchNews(items,entity){
+  return items.filter(item=>{
+    const t=(item.title+' '+(item.description||'')).toLowerCase();
+    return entity.terms.some(term=>t.includes(term));
   }).slice(0,5);
 }
 
-let allCards = [];
-let activeFilter = 'all';
+let allCards=[], activeFilter='all';
 
-function renderSummary(fg) {
-  const bull = allCards.filter(c=>c.sentiment==='bull').length;
-  const bear = allCards.filter(c=>c.sentiment==='bear').length;
-  const aligned = allCards.filter(c=>c.signal==='aligned').length;
-  const diverging = allCards.filter(c=>c.signal==='diverging').length;
-  const fgScore = fg ? parseInt(fg.score||fg.value||50) : null;
-  const fgLabel = fg ? (fg.rating||fg.value_classification||'') : '';
-  const fgColor = fgScore ? (fgScore>=60?'#639922':fgScore<=40?'#E24B4A':'#888') : '#888';
-
-  document.getElementById('summary').innerHTML = `
+function renderSummary(fg){
+  const bull=allCards.filter(c=>c.sentiment==='bull').length;
+  const bear=allCards.filter(c=>c.sentiment==='bear').length;
+  const aligned=allCards.filter(c=>c.signal==='aligned').length;
+  const diverging=allCards.filter(c=>c.signal==='diverging').length;
+  const fgScore=fg?parseInt(fg.score||fg.value||50):null;
+  const fgLabel=fg?(fg.rating||fg.value_classification||''):'';
+  const fgC=fgScore?(fgScore>=60?'#639922':fgScore<=40?'#E24B4A':'#888'):'#888';
+  document.getElementById('summary').innerHTML=`
     <div class="metric"><div class="metric-label">Topics tracked</div><div class="metric-value">${allCards.length}</div><div class="metric-sub">with news activity</div></div>
     <div class="metric"><div class="metric-label">Bullish tilt</div><div class="metric-value" style="color:#639922">${bull}</div><div class="metric-sub">topics</div></div>
     <div class="metric"><div class="metric-label">Bearish tilt</div><div class="metric-value" style="color:#E24B4A">${bear}</div><div class="metric-sub">topics</div></div>
     <div class="metric"><div class="metric-label">Aligned</div><div class="metric-value" style="color:#639922">${aligned}</div><div class="metric-sub">news = Kalshi</div></div>
     <div class="metric"><div class="metric-label">Diverging</div><div class="metric-value" style="color:#E2844A">${diverging}</div><div class="metric-sub">news ≠ Kalshi</div></div>
-    ${fgScore ? `<div class="metric"><div class="metric-label">Fear & Greed</div><div class="metric-value" style="color:${fgColor}">${fgScore}</div><div class="metric-sub">${fgLabel}</div></div>` : ''}
+    ${fgScore?`<div class="metric"><div class="metric-label">Fear & Greed</div><div class="metric-value" style="color:${fgC}">${fgScore}</div><div class="metric-sub">${fgLabel}</div></div>`:''}
   `;
 }
 
-function renderCards() {
-  const filtered = activeFilter==='all' ? allCards : allCards.filter(c=>c.cat===activeFilter);
-  if (!filtered.length) {
-    document.getElementById('content').innerHTML = '<div class="empty">No topics with news activity in this category.</div>';
-    return;
-  }
-  const sections = activeFilter==='all'
-    ? [['equity','Equity & sector'],['crypto','Crypto'],['macro','Macro & economic']]
-    : [[activeFilter,'']];
-
-  let html = '';
-  for (const [cat, label] of sections) {
-    const list = activeFilter==='all' ? filtered.filter(c=>c.cat===cat) : filtered;
-    if (!list.length) continue;
-    if (label) html += `<div class="section-label">${label}</div>`;
-    html += '<div class="card-grid">';
-    list.forEach(c => {
-      const sentCls = c.sentiment==='bull'?'bull':c.sentiment==='bear'?'bear':'neut';
-      const sentLabel = c.sentiment==='bull'?'bullish':c.sentiment==='bear'?'bearish':'neutral';
-      const sigCls = c.signal==='aligned'?'signal-aligned':c.signal==='diverging'?'signal-diverging':'signal-news';
-      const sigLabel = c.signal==='aligned'?'⬆ aligned':c.signal==='diverging'?'⚡ diverging':'news only';
-
-      const kalshiHtml = c.kalshi.length ? c.kalshi.map(m => {
-        const prob = getProb(m);
-        const vol = fmtVol(m);
-        const title = (m.title||m.question||'').slice(0,90);
-        return `<div class="kalshi-block">
-          <div class="kalshi-title">${title}</div>
-          ${prob!==null?`<div class="prob-row">
-            <div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barColor(prob)}"></div></div>
-            <div class="prob-pct" style="color:${barColor(prob)}">${prob}%</div>
-          </div>`:''}
-          <div class="kalshi-meta">${vol?'Vol '+vol+' · ':''}Resolves ${m.close_time?new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}</div>
-        </div>`;
-      }).join('') : '<div class="no-kalshi">No Kalshi contract found</div>';
-
-      html += `<div class="card">
-        <div class="card-header">
-          <div><div class="card-entity">${c.label}</div><div class="card-count">${c.news.length} headline${c.news.length>1?'s':''}</div></div>
-          <span class="signal-badge ${sigCls}">${sigLabel}</span>
-        </div>
-        <span class="sent-tag ${sentCls}">${sentLabel}</span>
+function renderCards(){
+  const filtered=activeFilter==='all'?allCards:allCards.filter(c=>c.cat===activeFilter);
+  if(!filtered.length){document.getElementById('content').innerHTML='<div class="empty">No topics with news activity in this category.</div>';return;}
+  const sections=activeFilter==='all'?[['equity','Equity & sector'],['crypto','Crypto'],['macro','Macro & economic']]:[[activeFilter,'']];
+  let html='';
+  for(const[cat,label] of sections){
+    const list=activeFilter==='all'?filtered.filter(c=>c.cat===cat):filtered;
+    if(!list.length)continue;
+    if(label)html+=`<div class="section-label">${label}</div>`;
+    html+='<div class="card-grid">';
+    list.forEach(c=>{
+      const sC=c.sentiment==='bull'?'bull':c.sentiment==='bear'?'bear':'neut';
+      const sL=c.sentiment==='bull'?'bullish':c.sentiment==='bear'?'bearish':'neutral';
+      const sigC=c.signal==='aligned'?'signal-aligned':c.signal==='diverging'?'signal-diverging':'signal-news';
+      const sigL=c.signal==='aligned'?'⬆ aligned':c.signal==='diverging'?'⚡ diverging':'news only';
+      const kHtml=c.kalshi.length?c.kalshi.map(m=>{
+        const prob=getProb(m);const vol=fmtVol2(m);const title=(m.title||m.question||'').slice(0,90);
+        return`<div class="kalshi-block"><div class="kalshi-title">${title}</div>
+          ${prob!==null?`<div class="prob-row"><div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barC(prob)}"></div></div><div class="prob-pct" style="color:${barC(prob)}">${prob}%</div></div>`:''}
+          <div class="kalshi-meta">${vol?'Vol '+vol+' · ':''}Resolves ${m.close_time?new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}</div></div>`;
+      }).join(''):'<div class="no-kalshi">No Kalshi contract found</div>';
+      html+=`<div class="card">
+        <div class="card-header"><div><div class="card-entity">${c.label}</div><div class="card-count">${c.news.length} headline${c.news.length>1?'s':''}</div></div><span class="signal-badge ${sigC}">${sigL}</span></div>
+        <span class="sent-tag ${sC}">${sL}</span>
         <div class="divider"></div>
         <div style="font-size:11px;color:#444;margin-bottom:6px">TOP HEADLINES</div>
-        <div class="news-list">
-          ${c.news.slice(0,3).map(n=>`<div class="news-item">
-            <span class="news-src">${n.source||'Yahoo'}</span>
-            <span>${n.title.length>90?n.title.slice(0,87)+'...':n.title}</span>
-          </div>`).join('')}
-        </div>
+        <div class="news-list">${c.news.slice(0,3).map(n=>`<div class="news-item"><span class="news-src">${n.source||'Yahoo'}</span><span>${n.title.length>90?n.title.slice(0,87)+'...':n.title}</span></div>`).join('')}</div>
         <div class="divider"></div>
         <div style="font-size:11px;color:#444;margin-bottom:6px">KALSHI CONTRACTS</div>
-        ${kalshiHtml}
+        ${kHtml}
       </div>`;
     });
-    html += '</div>';
+    html+='</div>';
   }
-  document.getElementById('content').innerHTML = html || '<div class="empty">No topics found.</div>';
+  document.getElementById('content').innerHTML=html||'<div class="empty">No topics found.</div>';
 }
 
-function setFilter(cat, el) {
-  activeFilter = cat;
+function setFilter(cat,el){
+  activeFilter=cat;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   renderCards();
 }
 
-async function init() {
-  document.getElementById('status').textContent = 'Loading...';
-  document.getElementById('content').innerHTML = '<div class="loading">Pulling news + Kalshi data...</div>';
-  allCards = [];
+async function init(){
+  document.getElementById('status').textContent='Loading...';
+  document.getElementById('content').innerHTML='<div class="loading">Pulling news + Kalshi data...</div>';
+  allCards=[];
 
-  // Load M&A watchlist immediately
-  loadMAWatchlist();
+  // Load all pinned markets in parallel
+  Promise.all([loadFedHike(), loadRateCuts(), loadStakes(), loadMA(), loadPinterest()]);
 
-  try {
-    const [newsItems, fg] = await Promise.all([fetchNews(), fetchFearGreed()]);
-    document.getElementById('status').textContent = `${newsItems.length} headlines fetched...`;
-
-    const results = await Promise.allSettled(ENTITIES.map(async entity => {
-      const matched = matchNews(newsItems, entity);
-      if (!matched.length) return null;
-      const kalshi = await fetchKalshi(entity.ks);
-      const sentiment = scoreSentiment(matched.map(n=>n.title+' '+(n.description||'')));
-      const signal = computeSignal(sentiment, kalshi);
-      return { ...entity, news: matched, kalshi, sentiment, signal };
+  try{
+    const[newsItems,fg]=await Promise.all([fetchNews(),fetchFG()]);
+    document.getElementById('status').textContent=`${newsItems.length} headlines fetched...`;
+    const results=await Promise.allSettled(ENTITIES.map(async entity=>{
+      const matched=matchNews(newsItems,entity);
+      if(!matched.length)return null;
+      const kalshi=await fetchK(entity.ks);
+      const sentiment=scoreSent(matched.map(n=>n.title+' '+(n.description||'')));
+      const signal=computeSig(sentiment,kalshi);
+      return{...entity,news:matched,kalshi,sentiment,signal};
     }));
-
-    allCards = results
-      .filter(r=>r.status==='fulfilled'&&r.value!==null)
-      .map(r=>r.value)
-      .sort((a,b)=>b.news.length-a.news.length);
-
+    allCards=results.filter(r=>r.status==='fulfilled'&&r.value!==null).map(r=>r.value).sort((a,b)=>b.news.length-a.news.length);
     renderSummary(fg);
     renderCards();
-    document.getElementById('status').textContent = `Last updated ${new Date().toLocaleTimeString()} — ${allCards.length} topics · M&A watchlist live`;
-  } catch(e) {
-    document.getElementById('content').innerHTML = `<div class="error">Error: ${e.message}</div>`;
-    document.getElementById('status').textContent = 'Error loading data';
+    document.getElementById('status').textContent=`Last updated ${new Date().toLocaleTimeString()} — ${allCards.length} topics tracked`;
+  }catch(e){
+    document.getElementById('content').innerHTML=`<div class="error">Error: ${e.message}</div>`;
+    document.getElementById('status').textContent='Error loading data';
   }
 }
 
