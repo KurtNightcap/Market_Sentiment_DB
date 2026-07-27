@@ -14,14 +14,10 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .metric-sub{font-size:10px;color:#444;margin-top:1px}
 .section-label{font-size:11px;font-weight:500;color:#444;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
 .pinned-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:0.5rem}
-
-/* Shared card styles */
 .pcard{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem}
 .pcard-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px}
 .pcard-sub{font-size:11px;color:#555;margin-bottom:10px}
 .divider{height:0.5px;background:#2a2b2f;margin:8px 0}
-
-/* Table styles */
 .watch-table{width:100%;border-collapse:collapse}
 .watch-table th{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.04em;padding:0 6px 5px;text-align:left;font-weight:500}
 .watch-table th.r{text-align:right}
@@ -38,8 +34,6 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .delta-up{color:#639922;font-size:10px}
 .delta-dn{color:#E24B4A;font-size:10px}
 .delta-fl{color:#444;font-size:10px}
-
-/* Fed hike timeframes */
 .hike-rows{display:flex;flex-direction:column;gap:6px}
 .hike-row{display:flex;align-items:center;gap:8px}
 .hike-label{font-size:12px;color:#aaa;min-width:130px}
@@ -48,17 +42,12 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .hike-bar-fill{height:100%;border-radius:3px}
 .hike-pct{font-size:12px;font-weight:600;min-width:34px;text-align:right}
 .hike-vol{font-size:10px;color:#444;min-width:48px;text-align:right}
-
-/* Rate cut distribution */
 .cut-dist{display:flex;align-items:flex-end;gap:3px;height:60px;margin:8px 0 4px}
 .cut-bar-col{display:flex;flex-direction:column;align-items:center;flex:1}
-.cut-bar-seg{width:100%;border-radius:2px 2px 0 0;transition:height 0.3s;cursor:default}
-.cut-bar-seg:hover{opacity:0.8}
+.cut-bar-seg{width:100%;border-radius:2px 2px 0 0}
 .cut-label{font-size:9px;color:#444;margin-top:3px}
 .cut-pct-label{font-size:9px;color:#888;margin-bottom:2px}
 .cut-highlight{background:#23242a;border-radius:4px;padding:6px 8px;font-size:11px;color:#aaa;margin-top:4px}
-
-/* Pinterest acquirer */
 .pins-rows{display:flex;flex-direction:column;gap:5px}
 .pins-row{display:flex;align-items:center;gap:8px}
 .pins-acquirer{font-size:12px;color:#aaa;min-width:120px}
@@ -69,8 +58,21 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .delta-badge{font-size:9px;padding:1px 4px;border-radius:4px;margin-left:3px}
 .up-badge{background:#1a2e0a;color:#639922}
 .dn-badge{background:#2e0a0a;color:#E24B4A}
-
-/* News cards */
+/* Oil price scale */
+.oil-rows{display:flex;flex-direction:column;gap:5px}
+.oil-row{display:flex;align-items:center;gap:8px}
+.oil-label{font-size:12px;color:#aaa;min-width:90px}
+.oil-bar-wrap{flex:1;display:flex;align-items:center;gap:6px}
+.oil-bar{flex:1;height:5px;background:#2a2b2f;border-radius:3px;overflow:hidden}
+.oil-bar-fill{height:100%;border-radius:3px}
+.oil-pct{font-size:12px;font-weight:600;min-width:32px;text-align:right}
+/* Gold */
+.gold-rows{display:flex;flex-direction:column;gap:5px}
+/* Single stat card */
+.single-stat{display:flex;align-items:center;gap:16px;padding:8px 0}
+.stat-num{font-size:36px;font-weight:600}
+.stat-detail{font-size:12px;color:#555;line-height:1.6}
+/* News */
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
 .card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem}
 .card:hover{border-color:#3a3b40}
@@ -115,65 +117,94 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 
 <div class="summary-row" id="summary"></div>
 
-<!-- PINNED MARKETS -->
-<div class="section-label">Pinned Kalshi markets</div>
+<div class="section-label">Pinned Kalshi markets — rates & macro</div>
 <div class="pinned-grid">
 
-  <!-- Fed Rate Hike -->
   <div class="pcard">
     <div class="pcard-title">Will the Fed hike rates?</div>
-    <div class="pcard-sub">Probability by timeframe · Resolves on date</div>
+    <div class="pcard-sub">Probability by timeframe</div>
     <div class="hike-rows" id="fed-hike-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
   </div>
 
-  <!-- Rate Cut Distribution -->
   <div class="pcard">
     <div class="pcard-title">How many rate cuts in 2026?</div>
-    <div class="pcard-sub">Kalshi-implied probability distribution · Resolves Dec 31, 2026</div>
+    <div class="pcard-sub">Kalshi-implied distribution · Resolves Dec 31, 2026</div>
     <div class="cut-dist" id="cut-dist"></div>
-    <div style="display:flex;justify-content:space-between;padding:0 2px">
-      <span style="font-size:9px;color:#444">1 cut</span>
-      <span style="font-size:9px;color:#444">9+ cuts</span>
-    </div>
+    <div style="display:flex;justify-content:space-between;padding:0 2px"><span style="font-size:9px;color:#444">1 cut</span><span style="font-size:9px;color:#444">9+ cuts</span></div>
     <div class="cut-highlight" id="cut-highlight">Loading...</div>
   </div>
 
-  <!-- US Govt Stakes -->
-  <div class="pcard" style="grid-column:span 2">
-    <div class="pcard-title">Which companies will the US govt take a stake in?</div>
-    <div class="pcard-sub">Sorted by implied probability · Resolves Jan 1, 2027</div>
-    <table class="watch-table">
-      <thead><tr>
-        <th>Company</th><th>Probability</th>
-        <th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th>
-      </tr></thead>
-      <tbody id="stake-tbody"><tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">Loading...</td></tr></tbody>
-    </table>
+  <div class="pcard">
+    <div class="pcard-title">Which central banks will hike this year?</div>
+    <div class="pcard-sub">Probability of rate hike before Jan 1, 2027</div>
+    <div class="hike-rows" id="cb-hike-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
   </div>
 
-  <!-- M&A Watchlist -->
+  <div class="pcard">
+    <div class="pcard-title">WTI oil max price by Dec 31, 2026</div>
+    <div class="pcard-sub">Probability oil hits each price level this year</div>
+    <div class="oil-rows" id="wti-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
+  </div>
+
+</div>
+
+<div class="section-label">Pinned Kalshi markets — corporate events</div>
+<div class="pinned-grid">
+
   <div class="pcard" style="grid-column:span 2">
     <div class="pcard-title">Which companies will be acquired this year?</div>
     <div class="pcard-sub">Sorted by implied probability · Resolves Jan 1, 2027</div>
     <table class="watch-table">
-      <thead><tr>
-        <th>Company</th><th>Probability</th>
-        <th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th>
-      </tr></thead>
+      <thead><tr><th>Company</th><th>Probability</th><th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th></tr></thead>
       <tbody id="ma-tbody"><tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">Loading...</td></tr></tbody>
     </table>
   </div>
 
-  <!-- Pinterest acquirer -->
+  <div class="pcard" style="grid-column:span 2">
+    <div class="pcard-title">Which companies will the US govt take a stake in?</div>
+    <div class="pcard-sub">Sorted by implied probability · Resolves Jan 1, 2027</div>
+    <table class="watch-table">
+      <thead><tr><th>Company</th><th>Probability</th><th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th></tr></thead>
+      <tbody id="stake-tbody"><tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="pcard" style="grid-column:span 2">
+    <div class="pcard-title">Which companies will be removed from the DJIA in 2026?</div>
+    <div class="pcard-sub">Sorted by implied probability · Resolves Jan 1, 2027</div>
+    <table class="watch-table">
+      <thead><tr><th>Company</th><th>Probability</th><th class="r">Bid / Ask</th><th class="r">24h Δ</th><th class="r">Volume</th></tr></thead>
+      <tbody id="djia-tbody"><tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
   <div class="pcard">
     <div class="pcard-title">Who acquires Pinterest?</div>
     <div class="pcard-sub">By prospective acquirer · Resolves Jan 1, 2027</div>
     <div class="pins-rows" id="pins-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
   </div>
 
+  <div class="pcard">
+    <div class="pcard-title">Who acquires Letterboxd?</div>
+    <div class="pcard-sub">By prospective acquirer · Resolves Jan 1, 2028</div>
+    <div class="pins-rows" id="lbox-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
+  </div>
+
+  <div class="pcard">
+    <div class="pcard-title">Warner Brothers takeover · Before July 2027</div>
+    <div class="pcard-sub">By acquirer probability</div>
+    <div class="pins-rows" id="wb-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
+  </div>
+
+  <div class="pcard">
+    <div class="pcard-title">Will JPMorgan acquire any company?</div>
+    <div class="pcard-sub">Before Jan 1, 2028</div>
+    <div id="jpm-stat"><div style="color:#444;font-size:12px">Loading...</div></div>
+  </div>
+
 </div>
 
-<!-- NEWS SENTIMENT -->
+<div class="section-label">News sentiment — topics with Kalshi signal</div>
 <div class="filters">
   <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
   <button class="filter-btn" onclick="setFilter('macro',this)">Macro</button>
@@ -188,208 +219,187 @@ const NEWS_PROXY = "https://market-sentiment-db.vercel.app/api/news";
 
 function bc(p){return p>=60?'#639922':p>=35?'#E2844A':'#E24B4A'}
 function fv(v){if(!v||v==0)return'—';if(v>=1000000)return'$'+(v/1000000).toFixed(1)+'M';if(v>=1000)return'$'+Math.round(v/1000)+'K';return'$'+Math.round(v)}
-function fmtDate(s){return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}
 
-function tableRows(markets, nameKey){
-  return markets.map(m => {
-    const yb = parseFloat(m.yes_bid_dollars||0), ya = parseFloat(m.yes_ask_dollars||0);
-    const prob = yb>0 ? Math.round(((yb+ya)/2)*100) : Math.round(ya*100);
-    const prev = parseFloat(m.previous_yes_bid_dollars||0);
-    const prevP = prev>0 ? Math.round(prev*100) : null;
-    const delta = prevP!==null ? prob-prevP : null;
-    const vol = parseFloat(m.volume_fp||0);
-    const name = m.custom_strike?.[nameKey] || m.yes_sub_title || m.no_sub_title || '—';
-    const isHot = vol>500;
-    const dHtml = delta===null?`<span class="delta-fl">—</span>`:delta>0?`<span class="delta-up">+${delta}%</span>`:delta<0?`<span class="delta-dn">${delta}%</span>`:`<span class="delta-fl">—</span>`;
-    return `<tr>
-      <td><span class="co-name">${name}</span>${isHot?'<span class="hot">active</span>':''}</td>
+async function fetchPinned(ev,limit=50){
+  const p=new URLSearchParams({path:'/markets',status:'open',event_ticker:ev,limit});
+  return((await(await fetch(`${PROXY}?${p}`)).json()).markets||[]);
+}
+
+function tableRows(markets,nameKey){
+  return markets.map(m=>{
+    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+    const prob=yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+    const prev=parseFloat(m.previous_yes_bid_dollars||0);
+    const prevP=prev>0?Math.round(prev*100):null;
+    const delta=prevP!==null?prob-prevP:null;
+    const vol=parseFloat(m.volume_fp||0);
+    const name=m.custom_strike?.[nameKey]||m.yes_sub_title||'—';
+    const isHot=vol>500;
+    const dH=delta===null?`<span class="delta-fl">—</span>`:delta>0?`<span class="delta-up">+${delta}%</span>`:delta<0?`<span class="delta-dn">${delta}%</span>`:`<span class="delta-fl">—</span>`;
+    return`<tr><td><span class="co-name">${name}</span>${isHot?'<span class="hot">active</span>':''}</td>
       <td><div class="mini-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:${prob}%;background:${bc(prob)}"></div></div><span class="pct" style="color:${bc(prob)}">${prob}%</span></div></td>
       <td class="ba">${Math.round(yb*100)}¢ / ${Math.round(ya*100)}¢</td>
-      <td style="text-align:right">${dHtml}</td>
-      <td class="vol-sm">${fv(vol)}</td>
-    </tr>`;
+      <td style="text-align:right">${dH}</td><td class="vol-sm">${fv(vol)}</td></tr>`;
   }).join('');
 }
 
-async function fetchPinned(eventTicker, limit=50){
-  const p = new URLSearchParams({path:'/markets',status:'open',event_ticker:eventTicker,limit});
-  const r = await fetch(`${PROXY}?${p}`);
-  return (await r.json()).markets||[];
+function acquirerRows(markets, nameKey){
+  return markets.filter(m=>m.yes_sub_title!=='None before July 2027').map(m=>{
+    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+    const prob=yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+    const prev=parseFloat(m.previous_yes_bid_dollars||0);
+    const prevP=prev>0?Math.round(prev*100):null;
+    const delta=prevP!==null?prob-prevP:null;
+    const dBadge=delta===null?'':delta>0?`<span class="delta-badge up-badge">+${delta}%</span>`:delta<0?`<span class="delta-badge dn-badge">${delta}%</span>`:'';
+    const name=m.custom_strike?.[nameKey]||m.yes_sub_title||'—';
+    return`<div class="pins-row">
+      <span class="pins-acquirer">${name}${dBadge}</span>
+      <div class="pins-bar-wrap">
+        <div class="pins-bar"><div class="pins-bar-fill" style="width:${Math.min(prob*3,100)}%;background:${bc(prob)}"></div></div>
+        <span class="pins-pct" style="color:${bc(prob)}">${prob}%</span>
+        <span style="font-size:10px;color:#444">${fv(parseFloat(m.volume_fp||0))}</span>
+      </div></div>`;
+  }).join('');
 }
 
 async function loadFedHike(){
-  const markets = await fetchPinned('FEDHIKE',10);
-  const show = markets
-    .filter(m=>m.close_time)
-    .sort((a,b)=>new Date(a.close_time)-new Date(b.close_time))
-    .slice(0,4);
-  document.getElementById('fed-hike-rows').innerHTML = show.map(m=>{
-    const p = Math.round(parseFloat(m.yes_bid_dollars||0)*100) || Math.round(parseFloat(m.last_price_dollars||0)*100);
-    const vol = parseFloat(m.volume_fp||0);
-    return `<div class="hike-row">
-      <span class="hike-label">${m.subtitle||fmtDate(m.close_time)}</span>
-      <div class="hike-bar-wrap">
-        <div class="hike-bar"><div class="hike-bar-fill" style="width:${p}%;background:${bc(p)}"></div></div>
-        <span class="hike-pct" style="color:${bc(p)}">${p}%</span>
-        <span class="hike-vol">${fv(vol)}</span>
-      </div>
-    </div>`;
+  const markets=(await fetchPinned('FEDHIKE',10)).filter(m=>m.close_time).sort((a,b)=>new Date(a.close_time)-new Date(b.close_time)).slice(0,4);
+  document.getElementById('fed-hike-rows').innerHTML=markets.map(m=>{
+    const p=Math.round(parseFloat(m.yes_bid_dollars||0)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+    return`<div class="hike-row"><span class="hike-label">${m.subtitle||''}</span><div class="hike-bar-wrap"><div class="hike-bar"><div class="hike-bar-fill" style="width:${p}%;background:${bc(p)}"></div></div><span class="hike-pct" style="color:${bc(p)}">${p}%</span><span class="hike-vol">${fv(parseFloat(m.volume_fp||0))}</span></div></div>`;
   }).join('');
 }
 
 async function loadRateCuts(){
-  const markets = await fetchPinned('KXRATECUTCOUNT-26DEC31',25);
-  const relevant = markets
-    .filter(m=>m.floor_strike>=1&&m.floor_strike<=9)
-    .sort((a,b)=>a.floor_strike-b.floor_strike);
-  const maxP = Math.max(...relevant.map(m=>parseFloat(m.last_price_dollars||0)*100),1);
-  const dist = document.getElementById('cut-dist');
-  dist.innerHTML = relevant.map(m=>{
-    const p = Math.round(parseFloat(m.last_price_dollars||0)*100);
-    const h = Math.max(4, Math.round((p/maxP)*56));
-    const color = m.floor_strike<=2?'#E24B4A':m.floor_strike<=4?'#E2844A':m.floor_strike<=6?'#639922':'#3a5c8a';
-    return `<div class="cut-bar-col">
-      <div class="cut-pct-label">${p>0?p+'%':''}</div>
-      <div class="cut-bar-seg" style="height:${h}px;background:${color}" title="${m.floor_strike} cuts: ${p}%"></div>
-      <div class="cut-label">${m.floor_strike}</div>
-    </div>`;
+  const markets=(await fetchPinned('KXRATECUTCOUNT-26DEC31',25)).filter(m=>m.floor_strike>=1&&m.floor_strike<=9).sort((a,b)=>a.floor_strike-b.floor_strike);
+  const maxP=Math.max(...markets.map(m=>parseFloat(m.last_price_dollars||0)*100),1);
+  document.getElementById('cut-dist').innerHTML=markets.map(m=>{
+    const p=Math.round(parseFloat(m.last_price_dollars||0)*100);
+    const h=Math.max(4,Math.round((p/maxP)*56));
+    const color=m.floor_strike<=2?'#E24B4A':m.floor_strike<=4?'#E2844A':m.floor_strike<=6?'#639922':'#3a5c8a';
+    return`<div class="cut-bar-col"><div class="cut-pct-label">${p>0?p+'%':''}</div><div class="cut-bar-seg" style="height:${h}px;background:${color}"></div><div class="cut-label">${m.floor_strike}</div></div>`;
   }).join('');
-  const peak = relevant.sort((a,b)=>parseFloat(b.last_price_dollars||0)-parseFloat(a.last_price_dollars||0))[0];
-  const peakP = Math.round(parseFloat(peak?.last_price_dollars||0)*100);
-  document.getElementById('cut-highlight').innerHTML = `Most likely: <strong style="color:#e8e8e8">${peak?.floor_strike} cut${peak?.floor_strike>1?'s':''}</strong> at ${peakP}% probability · 2-cut probability: ${Math.round(parseFloat(relevant.find(m=>m.floor_strike===2)?.last_price_dollars||0)*100)}%`;
+  const peak=markets.slice().sort((a,b)=>parseFloat(b.last_price_dollars||0)-parseFloat(a.last_price_dollars||0))[0];
+  const peakP=Math.round(parseFloat(peak?.last_price_dollars||0)*100);
+  document.getElementById('cut-highlight').innerHTML=`Most likely: <strong style="color:#e8e8e8">${peak?.floor_strike} cut${peak?.floor_strike>1?'s':''}</strong> at ${peakP}% · 1-cut: ${Math.round(parseFloat(markets.find(m=>m.floor_strike===1)?.last_price_dollars||0)*100)}% · 2-cut: ${Math.round(parseFloat(markets.find(m=>m.floor_strike===2)?.last_price_dollars||0)*100)}%`;
 }
 
-async function loadStakes(){
-  const markets = await fetchPinned('KXUSACOMPANYSTAKE-27JAN01',25);
-  const sorted = markets
-    .map(m=>({...m,_prob:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)}))
-    .sort((a,b)=>b._prob-a._prob);
-  document.getElementById('stake-tbody').innerHTML = tableRows(sorted,'entity');
+async function loadCBHikes(){
+  const markets=(await fetchPinned('KXCBRATEHIKE-27',10)).sort((a,b)=>{
+    const pa=parseFloat(b.yes_bid_dollars||0)||parseFloat(b.last_price_dollars||0);
+    const pb=parseFloat(a.yes_bid_dollars||0)||parseFloat(a.last_price_dollars||0);
+    return pa-pb;
+  });
+  document.getElementById('cb-hike-rows').innerHTML=markets.map(m=>{
+    const p=Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+    const name=m.yes_sub_title||m.no_sub_title||'—';
+    return`<div class="hike-row"><span class="hike-label">${name}</span><div class="hike-bar-wrap"><div class="hike-bar"><div class="hike-bar-fill" style="width:${p}%;background:${bc(p)}"></div></div><span class="hike-pct" style="color:${bc(p)}">${p}%</span><span class="hike-vol">${fv(parseFloat(m.volume_fp||0))}</span></div></div>`;
+  }).join('');
+}
+
+async function loadWTI(){
+  const markets=(await fetchPinned('KXWTIMAX-26DEC31',15)).filter(m=>m.floor_strike).sort((a,b)=>a.floor_strike-b.floor_strike).slice(0,7);
+  document.getElementById('wti-rows').innerHTML=markets.map(m=>{
+    const p=Math.round(parseFloat(m.last_price_dollars||0)*100);
+    return`<div class="oil-row"><span class="oil-label">≥$${m.floor_strike}</span><div class="oil-bar-wrap"><div class="oil-bar"><div class="oil-bar-fill" style="width:${p}%;background:${bc(p)}"></div></div><span class="oil-pct" style="color:${bc(p)}">${p}%</span><span style="font-size:10px;color:#444">${fv(parseFloat(m.volume_fp||0))}</span></div></div>`;
+  }).join('');
 }
 
 async function loadMA(){
-  const markets = await fetchPinned('KXACQANNOUNCEANNUAL-27JAN01',50);
-  const sorted = markets
-    .map(m=>({...m,_prob:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)}))
-    .filter(m=>m._prob>0)
-    .sort((a,b)=>b._prob-a._prob);
-  document.getElementById('ma-tbody').innerHTML = tableRows(sorted,'Target');
+  const markets=(await fetchPinned('KXACQANNOUNCEANNUAL-27JAN01',50)).map(m=>({...m,_p:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)})).filter(m=>m._p>0).sort((a,b)=>b._p-a._p);
+  document.getElementById('ma-tbody').innerHTML=tableRows(markets,'Target');
+}
+
+async function loadStakes(){
+  const markets=(await fetchPinned('KXUSACOMPANYSTAKE-27JAN01',25)).map(m=>({...m,_p:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)})).sort((a,b)=>b._p-a._p);
+  document.getElementById('stake-tbody').innerHTML=tableRows(markets,'entity');
+}
+
+async function loadDJIA(){
+  const markets=(await fetchPinned('KXDJIAREMOVE-27JAN01',30)).map(m=>({...m,_p:Math.round(((parseFloat(m.yes_bid_dollars||0)+parseFloat(m.yes_ask_dollars||0))/2)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)})).filter(m=>m._p>0).sort((a,b)=>b._p-a._p);
+  document.getElementById('djia-tbody').innerHTML=markets.length?tableRows(markets,'Company'):'<tr><td colspan="5" style="text-align:center;color:#444;padding:0.75rem">No significant probabilities found</td></tr>';
 }
 
 async function loadPinterest(){
-  const markets = await fetchPinned('KXACQUANNOUNCEPINS-27JAN01',10);
-  const sorted = markets
-    .map(m=>{
-      const yb=parseFloat(m.yes_bid_dollars||0), ya=parseFloat(m.yes_ask_dollars||0);
-      const prob = yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
-      const prev = parseFloat(m.previous_yes_bid_dollars||0);
-      const prevP = prev>0?Math.round(prev*100):null;
-      const delta = prevP!==null?prob-prevP:null;
-      return {name:m.yes_sub_title||m.no_sub_title||'—', prob, delta, vol:parseFloat(m.volume_fp||0)};
-    })
-    .sort((a,b)=>b.prob-a.prob);
-  document.getElementById('pins-rows').innerHTML = sorted.map(m=>{
-    const dBadge = m.delta===null?'':m.delta>0?`<span class="delta-badge up-badge">+${m.delta}%</span>`:m.delta<0?`<span class="delta-badge dn-badge">${m.delta}%</span>`:'';
-    return `<div class="pins-row">
-      <span class="pins-acquirer">${m.name}${dBadge}</span>
-      <div class="pins-bar-wrap">
-        <div class="pins-bar"><div class="pins-bar-fill" style="width:${m.prob*5}%;background:${bc(m.prob)}"></div></div>
-        <span class="pins-pct" style="color:${bc(m.prob)}">${m.prob}%</span>
-        <span style="font-size:10px;color:#444">${fv(m.vol)}</span>
-      </div>
-    </div>`;
+  const markets=(await fetchPinned('KXACQUANNOUNCEPINS-27JAN01',10)).map(m=>{
+    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+    return{...m,_p:yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)};
+  }).sort((a,b)=>b._p-a._p);
+  document.getElementById('pins-rows').innerHTML=acquirerRows(markets,'Acquirer');
+}
+
+async function loadLetterboxd(){
+  const markets=(await fetchPinned('KXACQLETTERBOXD-28JAN01',10)).map(m=>{
+    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+    return{...m,_p:yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)};
+  }).sort((a,b)=>b._p-a._p);
+  document.getElementById('lbox-rows').innerHTML=acquirerRows(markets,'Acquirer');
+}
+
+async function loadWarnerBros(){
+  const markets=(await fetchPinned('KXTAKEOVERACQWB-27JUN30',10)).map(m=>{
+    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+    return{...m,_p:yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)};
+  }).sort((a,b)=>b._p-a._p);
+  document.getElementById('wb-rows').innerHTML=markets.map(m=>{
+    const prev=parseFloat(m.previous_yes_bid_dollars||0);
+    const prevP=prev>0?Math.round(prev*100):null;
+    const delta=prevP!==null?m._p-prevP:null;
+    const dBadge=delta===null?'':delta>0?`<span class="delta-badge up-badge">+${delta}%</span>`:delta<0?`<span class="delta-badge dn-badge">${delta}%</span>`:'';
+    const name=m.custom_strike?.Acquirer||m.yes_sub_title||'—';
+    return`<div class="pins-row"><span class="pins-acquirer">${name}${dBadge}</span><div class="pins-bar-wrap"><div class="pins-bar"><div class="pins-bar-fill" style="width:${m._p}%;background:${bc(m._p)}"></div></div><span class="pins-pct" style="color:${bc(m._p)}">${m._p}%</span><span style="font-size:10px;color:#444">${fv(parseFloat(m.volume_fp||0))}</span></div></div>`;
   }).join('');
 }
 
-// --- NEWS SENTIMENT ---
-const ENTITIES = [
-  {id:'fed', label:'Fed rate decision', terms:['federal reserve','rate cut','rate hike','fomc','interest rate','powell'], cat:'macro', ks:'fed rate'},
-  {id:'inflation', label:'Inflation / CPI', terms:['inflation','cpi','pce','consumer price'], cat:'macro', ks:'inflation'},
-  {id:'recession', label:'Recession risk', terms:['recession','gdp','economic slowdown'], cat:'macro', ks:'recession'},
-  {id:'tariffs', label:'Tariffs / trade', terms:['tariff','trade war','trade deal'], cat:'macro', ks:'tariff'},
-  {id:'jobs', label:'Jobs / unemployment', terms:['jobs report','unemployment','payroll','nonfarm'], cat:'macro', ks:'unemployment'},
-  {id:'NVDA', label:'Nvidia $NVDA', terms:['nvda','nvidia'], cat:'equity', ks:'nvidia'},
-  {id:'AAPL', label:'Apple $AAPL', terms:['aapl','apple stock','apple earnings'], cat:'equity', ks:'apple'},
-  {id:'TSLA', label:'Tesla $TSLA', terms:['tsla','tesla'], cat:'equity', ks:'tesla'},
-  {id:'MSFT', label:'Microsoft $MSFT', terms:['msft','microsoft'], cat:'equity', ks:'microsoft'},
-  {id:'SPY', label:'S&P 500', terms:['s&p 500','sp500','stock market','market rally','selloff'], cat:'equity', ks:'s&p'},
-  {id:'BTC', label:'Bitcoin', terms:['bitcoin','btc'], cat:'crypto', ks:'bitcoin'},
-  {id:'ETH', label:'Ethereum', terms:['ethereum','eth'], cat:'crypto', ks:'ethereum'},
-  {id:'crypto', label:'Crypto market', terms:['crypto','cryptocurrency'], cat:'crypto', ks:'crypto'},
-];
+async function loadJPM(){
+  const markets=await fetchPinned('KXACQANNOUNCEJPM-28JAN01',5);
+  const m=markets[0];
+  if(!m){document.getElementById('jpm-stat').innerHTML='<div style="color:#444;font-size:12px">No data</div>';return;}
+  const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+  const prob=yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+  const prev=parseFloat(m.previous_yes_bid_dollars||0);
+  const prevP=prev>0?Math.round(prev*100):null;
+  const delta=prevP!==null?prob-prevP:null;
+  document.getElementById('jpm-stat').innerHTML=`
+    <div class="single-stat">
+      <div class="stat-num" style="color:${bc(prob)}">${prob}%</div>
+      <div class="stat-detail">probability JPMorgan announces<br>an acquisition before Jan 1, 2028<br>${delta!==null?(delta>0?`<span style="color:#639922">+${delta}% vs prior</span>`:`<span style="color:#E24B4A">${delta}% vs prior</span>`):''}
+      <br>Vol: ${fv(parseFloat(m.volume_fp||0))}</div>
+    </div>
+    <div style="font-size:11px;color:#444;line-height:1.5">${m.rules_primary||''}</div>`;
+}
 
+// NEWS SENTIMENT
+const ENTITIES=[
+  {id:'fed',label:'Fed rate decision',terms:['federal reserve','rate cut','rate hike','fomc','interest rate','powell'],cat:'macro',ks:'fed rate'},
+  {id:'inflation',label:'Inflation / CPI',terms:['inflation','cpi','pce','consumer price'],cat:'macro',ks:'inflation'},
+  {id:'recession',label:'Recession risk',terms:['recession','gdp','economic slowdown'],cat:'macro',ks:'recession'},
+  {id:'tariffs',label:'Tariffs / trade',terms:['tariff','trade war','trade deal'],cat:'macro',ks:'tariff'},
+  {id:'jobs',label:'Jobs / unemployment',terms:['jobs report','unemployment','payroll','nonfarm'],cat:'macro',ks:'unemployment'},
+  {id:'NVDA',label:'Nvidia $NVDA',terms:['nvda','nvidia'],cat:'equity',ks:'nvidia'},
+  {id:'AAPL',label:'Apple $AAPL',terms:['aapl','apple stock','apple earnings'],cat:'equity',ks:'apple'},
+  {id:'TSLA',label:'Tesla $TSLA',terms:['tsla','tesla'],cat:'equity',ks:'tesla'},
+  {id:'MSFT',label:'Microsoft $MSFT',terms:['msft','microsoft'],cat:'equity',ks:'microsoft'},
+  {id:'SPY',label:'S&P 500',terms:['s&p 500','sp500','stock market','market rally','selloff'],cat:'equity',ks:'s&p'},
+  {id:'BTC',label:'Bitcoin',terms:['bitcoin','btc'],cat:'crypto',ks:'bitcoin'},
+  {id:'ETH',label:'Ethereum',terms:['ethereum','eth'],cat:'crypto',ks:'ethereum'},
+  {id:'crypto',label:'Crypto market',terms:['crypto','cryptocurrency'],cat:'crypto',ks:'crypto'},
+];
 const BULL=['surge','rally','rise','gain','jump','beat','strong','bullish','buy','upside','record','high','boost','soar'];
 const BEAR=['crash','fall','drop','decline','miss','weak','bearish','sell','downside','recession','risk','warn','low','cut','plunge'];
-
-function scoreSent(texts){
-  let s=0; const t=texts.join(' ').toLowerCase();
-  BULL.forEach(w=>{if(t.includes(w))s++});
-  BEAR.forEach(w=>{if(t.includes(w))s--});
-  return s>0?'bull':s<0?'bear':'neut';
-}
-
-function getProb(m){
-  for(const f of['yes_bid_dollars','last_price_dollars','yes_ask_dollars']){
-    const v=parseFloat(m[f]);
-    if(!isNaN(v)&&v>0)return v<=1?Math.round(v*100):Math.round(v);
-  }
-  return null;
-}
-
-function fmtVol2(m){
-  const v=parseFloat(m.volume_dollars||m.volume_fp||0);
-  if(v>=1000000)return'$'+(v/1000000).toFixed(1)+'M';
-  if(v>=1000)return'$'+Math.round(v/1000)+'K';
-  if(v>0)return'$'+Math.round(v);
-  return null;
-}
-
+function scoreSent(texts){let s=0;const t=texts.join(' ').toLowerCase();BULL.forEach(w=>{if(t.includes(w))s++});BEAR.forEach(w=>{if(t.includes(w))s--});return s>0?'bull':s<0?'bear':'neut';}
+function getProb(m){for(const f of['yes_bid_dollars','last_price_dollars','yes_ask_dollars']){const v=parseFloat(m[f]);if(!isNaN(v)&&v>0)return v<=1?Math.round(v*100):Math.round(v);}return null;}
+function fmtVol2(m){const v=parseFloat(m.volume_dollars||m.volume_fp||0);if(v>=1000000)return'$'+(v/1000000).toFixed(1)+'M';if(v>=1000)return'$'+Math.round(v/1000)+'K';if(v>0)return'$'+Math.round(v);return null;}
 function barC(p){return p>=65?'#639922':p<=35?'#E24B4A':'#555'}
-
-function computeSig(sent,markets){
-  if(!markets.length)return'news';
-  const probs=markets.map(m=>getProb(m)).filter(p=>p!==null);
-  if(!probs.length)return'news';
-  const avg=probs.reduce((a,b)=>a+b,0)/probs.length;
-  if((sent==='bull'&&avg>=55)||(sent==='bear'&&avg<=45))return'aligned';
-  if((sent==='bull'&&avg<=45)||(sent==='bear'&&avg>=55))return'diverging';
-  return'news';
-}
-
-async function fetchNews(){
-  const r=await fetch(`${NEWS_PROXY}?type=news`);
-  if(!r.ok)throw new Error(`News ${r.status}`);
-  return(await r.json()).items||[];
-}
-
-async function fetchFG(){
-  try{const r=await fetch(`${NEWS_PROXY}?type=feargreed`);if(!r.ok)return null;return(await r.json())?.fear_and_greed||null;}catch{return null;}
-}
-
-async function fetchK(term){
-  try{
-    const p=new URLSearchParams({path:'/markets',status:'open',search:term,limit:3});
-    const r=await fetch(`${PROXY}?${p}`);
-    const d=await r.json();
-    const SP=['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXTENNIS','KXUFC'];
-    return(d.markets||[]).filter(m=>!SP.some(s=>(m.event_ticker||'').toUpperCase().startsWith(s))).slice(0,2);
-  }catch{return[];}
-}
-
-function matchNews(items,entity){
-  return items.filter(item=>{
-    const t=(item.title+' '+(item.description||'')).toLowerCase();
-    return entity.terms.some(term=>t.includes(term));
-  }).slice(0,5);
-}
-
-let allCards=[], activeFilter='all';
-
+function computeSig(sent,markets){if(!markets.length)return'news';const probs=markets.map(m=>getProb(m)).filter(p=>p!==null);if(!probs.length)return'news';const avg=probs.reduce((a,b)=>a+b,0)/probs.length;if((sent==='bull'&&avg>=55)||(sent==='bear'&&avg<=45))return'aligned';if((sent==='bull'&&avg<=45)||(sent==='bear'&&avg>=55))return'diverging';return'news';}
+async function fetchNews(){const r=await fetch(`${NEWS_PROXY}?type=news`);if(!r.ok)throw new Error(`News ${r.status}`);return(await r.json()).items||[];}
+async function fetchFG(){try{const r=await fetch(`${NEWS_PROXY}?type=feargreed`);if(!r.ok)return null;return(await r.json())?.fear_and_greed||null;}catch{return null;}}
+async function fetchK(term){try{const p=new URLSearchParams({path:'/markets',status:'open',search:term,limit:3});const r=await fetch(`${PROXY}?${p}`);const d=await r.json();const SP=['KXNBA','KXMLB','KXNFL','KXNHL','KXMVE','KXTENNIS','KXUFC'];return(d.markets||[]).filter(m=>!SP.some(s=>(m.event_ticker||'').toUpperCase().startsWith(s))).slice(0,2);}catch{return[];}}
+function matchNews(items,entity){return items.filter(item=>{const t=(item.title+' '+(item.description||'')).toLowerCase();return entity.terms.some(term=>t.includes(term));}).slice(0,5);}
+let allCards=[],activeFilter='all';
 function renderSummary(fg){
-  const bull=allCards.filter(c=>c.sentiment==='bull').length;
-  const bear=allCards.filter(c=>c.sentiment==='bear').length;
-  const aligned=allCards.filter(c=>c.signal==='aligned').length;
-  const diverging=allCards.filter(c=>c.signal==='diverging').length;
+  const bull=allCards.filter(c=>c.sentiment==='bull').length,bear=allCards.filter(c=>c.sentiment==='bear').length;
+  const aligned=allCards.filter(c=>c.signal==='aligned').length,diverging=allCards.filter(c=>c.signal==='diverging').length;
   const fgScore=fg?parseInt(fg.score||fg.value||50):null;
   const fgLabel=fg?(fg.rating||fg.value_classification||''):'';
   const fgC=fgScore?(fgScore>=60?'#639922':fgScore<=40?'#E24B4A':'#888'):'#888';
@@ -402,7 +412,6 @@ function renderSummary(fg){
     ${fgScore?`<div class="metric"><div class="metric-label">Fear & Greed</div><div class="metric-value" style="color:${fgC}">${fgScore}</div><div class="metric-sub">${fgLabel}</div></div>`:''}
   `;
 }
-
 function renderCards(){
   const filtered=activeFilter==='all'?allCards:allCards.filter(c=>c.cat===activeFilter);
   if(!filtered.length){document.getElementById('content').innerHTML='<div class="empty">No topics with news activity in this category.</div>';return;}
@@ -418,43 +427,25 @@ function renderCards(){
       const sL=c.sentiment==='bull'?'bullish':c.sentiment==='bear'?'bearish':'neutral';
       const sigC=c.signal==='aligned'?'signal-aligned':c.signal==='diverging'?'signal-diverging':'signal-news';
       const sigL=c.signal==='aligned'?'⬆ aligned':c.signal==='diverging'?'⚡ diverging':'news only';
-      const kHtml=c.kalshi.length?c.kalshi.map(m=>{
-        const prob=getProb(m);const vol=fmtVol2(m);const title=(m.title||m.question||'').slice(0,90);
-        return`<div class="kalshi-block"><div class="kalshi-title">${title}</div>
-          ${prob!==null?`<div class="prob-row"><div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barC(prob)}"></div></div><div class="prob-pct" style="color:${barC(prob)}">${prob}%</div></div>`:''}
-          <div class="kalshi-meta">${vol?'Vol '+vol+' · ':''}Resolves ${m.close_time?new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}</div></div>`;
-      }).join(''):'<div class="no-kalshi">No Kalshi contract found</div>';
-      html+=`<div class="card">
-        <div class="card-header"><div><div class="card-entity">${c.label}</div><div class="card-count">${c.news.length} headline${c.news.length>1?'s':''}</div></div><span class="signal-badge ${sigC}">${sigL}</span></div>
+      const kH=c.kalshi.length?c.kalshi.map(m=>{const prob=getProb(m);const vol=fmtVol2(m);const title=(m.title||m.question||'').slice(0,90);return`<div class="kalshi-block"><div class="kalshi-title">${title}</div>${prob!==null?`<div class="prob-row"><div class="prob-bar-track"><div class="prob-bar-fill" style="width:${prob}%;background:${barC(prob)}"></div></div><div class="prob-pct" style="color:${barC(prob)}">${prob}%</div></div>`:''}
+        <div class="kalshi-meta">${vol?'Vol '+vol+' · ':''}Resolves ${m.close_time?new Date(m.close_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—'}</div></div>`;}).join(''):'<div class="no-kalshi">No Kalshi contract found</div>';
+      html+=`<div class="card"><div class="card-header"><div><div class="card-entity">${c.label}</div><div class="card-count">${c.news.length} headline${c.news.length>1?'s':''}</div></div><span class="signal-badge ${sigC}">${sigL}</span></div>
         <span class="sent-tag ${sC}">${sL}</span>
-        <div class="divider"></div>
-        <div style="font-size:11px;color:#444;margin-bottom:6px">TOP HEADLINES</div>
+        <div class="divider"></div><div style="font-size:11px;color:#444;margin-bottom:6px">TOP HEADLINES</div>
         <div class="news-list">${c.news.slice(0,3).map(n=>`<div class="news-item"><span class="news-src">${n.source||'Yahoo'}</span><span>${n.title.length>90?n.title.slice(0,87)+'...':n.title}</span></div>`).join('')}</div>
-        <div class="divider"></div>
-        <div style="font-size:11px;color:#444;margin-bottom:6px">KALSHI CONTRACTS</div>
-        ${kHtml}
-      </div>`;
+        <div class="divider"></div><div style="font-size:11px;color:#444;margin-bottom:6px">KALSHI CONTRACTS</div>${kH}</div>`;
     });
     html+='</div>';
   }
   document.getElementById('content').innerHTML=html||'<div class="empty">No topics found.</div>';
 }
-
-function setFilter(cat,el){
-  activeFilter=cat;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderCards();
-}
+function setFilter(cat,el){activeFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderCards();}
 
 async function init(){
   document.getElementById('status').textContent='Loading...';
   document.getElementById('content').innerHTML='<div class="loading">Pulling news + Kalshi data...</div>';
   allCards=[];
-
-  // Load all pinned markets in parallel
-  Promise.all([loadFedHike(), loadRateCuts(), loadStakes(), loadMA(), loadPinterest()]);
-
+  Promise.all([loadFedHike(),loadRateCuts(),loadCBHikes(),loadWTI(),loadMA(),loadStakes(),loadDJIA(),loadPinterest(),loadLetterboxd(),loadWarnerBros(),loadJPM()]);
   try{
     const[newsItems,fg]=await Promise.all([fetchNews(),fetchFG()]);
     document.getElementById('status').textContent=`${newsItems.length} headlines fetched...`;
@@ -467,15 +458,10 @@ async function init(){
       return{...entity,news:matched,kalshi,sentiment,signal};
     }));
     allCards=results.filter(r=>r.status==='fulfilled'&&r.value!==null).map(r=>r.value).sort((a,b)=>b.news.length-a.news.length);
-    renderSummary(fg);
-    renderCards();
+    renderSummary(fg);renderCards();
     document.getElementById('status').textContent=`Last updated ${new Date().toLocaleTimeString()} — ${allCards.length} topics tracked`;
-  }catch(e){
-    document.getElementById('content').innerHTML=`<div class="error">Error: ${e.message}</div>`;
-    document.getElementById('status').textContent='Error loading data';
-  }
+  }catch(e){document.getElementById('content').innerHTML=`<div class="error">Error: ${e.message}</div>`;document.getElementById('status').textContent='Error loading data';}
 }
-
 init();
 </script>
 </body>
