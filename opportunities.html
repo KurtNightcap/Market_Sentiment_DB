@@ -142,7 +142,7 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 </div>
 
 <script>
-const EDGAR_BASE = "https://efts.sec.gov/LATEST/search-index";
+const EDGAR_BASE = "https://market-sentiment-db.vercel.app/api/edgar";
 
 const SIC_LABELS = {
   "2834":"Pharma","2836":"Biotech","7372":"Software","7374":"IT Services","6770":"SPAC/Holding","6199":"Finance","6798":"REIT","6500":"Real Estate","6282":"Investment Mgmt","5961":"Retail","4899":"Telecom","3841":"Med Devices","3674":"Semiconductors","3690":"Electronics","4911":"Electric Utilities","1311":"Oil & Gas","2834":"Pharma","5500":"Auto Dealer","7389":"Business Svcs","6552":"Land Dev","4832":"Radio","8071":"Medical Labs","3742":"Rail Cars","7373":"IT Systems"
@@ -181,10 +181,10 @@ function filingUrl(adsh){
 }
 
 // --- FETCH ---
-async function fetchEdgar(params){
-  const url=`${EDGAR_BASE}?${new URLSearchParams(params)}`;
-  const r=await fetch(url,{headers:{'Accept':'application/json'}});
-  if(!r.ok)throw new Error(`EDGAR ${r.status}`);
+async function fetchEdgar(type, startdt, enddt){
+  const params = new URLSearchParams({ type, startdt, enddt });
+  const r = await fetch(`${EDGAR_BASE}?${params}`);
+  if(!r.ok) throw new Error(`EDGAR ${r.status}`);
   return r.json();
 }
 
