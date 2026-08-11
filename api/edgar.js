@@ -8,8 +8,8 @@ function fetchUrl(url) {
       path: urlObj.pathname + urlObj.search,
       method: "GET",
       headers: {
-        "User-Agent": "MarketSentimentDashboard/1.0 contact@example.com",
-        "Accept": "application/json"
+        "User-Agent": "Mozilla/5.0 MarketSentimentDashboard/1.0",
+        "Accept": "application/json, text/plain, */*"
       }
     }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
@@ -31,52 +31,30 @@ module.exports = async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   const type = req.query.type || "13d";
-  const startdt = req.query.startdt || "";
-  const enddt = req.query.enddt || "";
+  const startdt = req.query.startdt || "2026-06-01";
+  const enddt = req.query.enddt || new Date().toISOString().split("T")[0];
 
-  const EDGAR = "https://efts.sec.gov/LATEST/search-index";
+  let url = "";
 
-  const configs = {
-    "13d": {
-      q: '"Schedule 13D"',
-      dateRange: "custom",
-      startdt,
-      enddt,
-      "hits.hits._source": "display_names,file_date,form,adsh,biz_locations,sics",
-      size: 200
-    },
-    "bankruptcy": {
-      q: '"bankruptcy"',
-      forms: "8-K",
-      dateRange: "custom",
-      startdt,
-      enddt,
-      "hits.hits._source": "display_names,file_date,form,adsh,biz_locations,sics,items",
-      size: 200
-    },
-    "spinoff": {
-      forms: "10-12G,10-12G/A",
-      dateRange: "custom",
-      startdt,
-      enddt,
-      "hits.hits._source": "display_names,file_date,form,adsh,biz_locations,sics",
-      size: 100
-    }
-  };
-
-  const config = configs[type];
-  if (!config) return res.status(400).json({ error: "Unknown type" });
-
-  const params = new URLSearchParams(config);
-  const url = `${EDGAR}?${params}`;
+  if (type === "13d") {
+    url = `https://efts.sec.gov/LATEST/search-index?q=%22Schedule+13D%22&dateRange=custom&startdt=${startdt}&enddt=${enddt}&hits.hits._source=display_names,file_date,form,adsh,biz_locations,sics&size=200`;
+  } else if (type === "bankruptcy") {
+    url = `https://efts.sec.gov/LATEST/search-index?q=%22bankruptcy%22&forms=8-K&dateRange=custom&startdt=${startdt}&enddt=${enddt}&hits.hits._source=display_names,file_date,form,adsh,biz_locations,sics,items&size=200`;
+  } else if (type === "spinoff") {
+    url = `https://efts.sec.gov/LATEST/search-index?forms=10-12G%2C10-12G%2FA&dateRange=custom&startdt=${startdt}&enddt=${enddt}&hits.hits._source=display_names,file_date,form,adsh,biz_locations,sics&size=100`;
+  } else {
+    return res.status(400).json({ error: "Unknown type. Use 13d, bankruptcy, or spinoff." });
+  }
 
   try {
     const { status, body } = await fetchUrl(url);
-    if (status !== 200) return res.status(status).json({ error: `EDGAR returned ${status}` });
+    if (status !== 200) {
+      return res.status(status).json({ error: `EDGAR returned ${status}`, url, body: body.slice(0, 300) });
+    }
     const data = JSON.parse(body);
     res.setHeader("Cache-Control", "public, max-age=300");
     return res.status(200).json(data);
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    return res.status(500).json({ error: e.message, url });
   }
 };
