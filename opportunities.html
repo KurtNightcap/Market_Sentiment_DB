@@ -4,7 +4,10 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size:14px;min-height:100vh;padding:1rem 1.25rem 3rem}
-.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:0.5px solid #2a2b2f;padding-bottom:0.75rem;margin-bottom:0.75rem}
+.nav{display:flex;gap:16px;padding:0.6rem 0;border-bottom:0.5px solid #2a2b2f;margin-bottom:1rem}
+.nav a{font-size:12px;color:#555;text-decoration:none}
+.nav a.active{color:#e8e8e8;font-weight:500}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:0.75rem}
 .header h1{font-size:16px;font-weight:500;color:#fff}
 .status{font-size:12px;color:#555;margin-top:2px}
 .refresh-btn{padding:4px 12px;border-radius:8px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#555}
@@ -14,12 +17,10 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .metric-label{font-size:11px;color:#555;margin-bottom:3px}
 .metric-value{font-size:20px;font-weight:500;color:#fff}
 .metric-sub{font-size:10px;color:#444;margin-top:1px}
-.section-label{font-size:11px;font-weight:500;color:#444;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem;display:flex;align-items:center;justify-content:space-between}
-.tab-row{display:flex;gap:6px;margin:0.75rem 0}
+.section-label{font-size:11px;font-weight:500;color:#444;text-transform:uppercase;letter-spacing:0.05em;margin:1.25rem 0 0.5rem}
+.tab-row{display:flex;gap:6px;margin:0.75rem 0;flex-wrap:wrap}
 .tab-btn{padding:5px 14px;border-radius:20px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#666}
 .tab-btn.active{background:#23242a;color:#e8e8e8;border-color:#444}
-
-/* Filing table */
 .filing-table{width:100%;border-collapse:collapse;font-size:12px}
 .filing-table th{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.04em;padding:0 8px 6px;text-align:left;font-weight:500;border-bottom:0.5px solid #2a2b2f}
 .filing-table td{padding:7px 8px;border-bottom:0.5px solid #1a1b1f;vertical-align:top}
@@ -34,19 +35,12 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .badge-13da{background:#23242a;color:#777;border:0.5px solid #333}
 .badge-bk{background:#2e0a0a;color:#E24B4A;border:0.5px solid #A32D2D}
 .badge-spinoff{background:#0C447C;color:#B5D4F4;border:0.5px solid #0C447C}
-.edgar-link{font-size:10px;color:#555;text-decoration:none;margin-left:6px}
-.edgar-link:hover{color:#888}
-.cat-badge{font-size:10px;padding:1px 5px;border-radius:4px;margin-right:4px}
-.cat-activist{background:#633806;color:#FAC775}
-.cat-bankrupt{background:#2e0a0a;color:#E24B4A}
-.cat-spinoff{background:#0C447C;color:#B5D4F4}
-.loading{text-align:center;padding:3rem;color:#444;font-size:13px}
-.error-msg{text-align:center;padding:2rem;color:#555;font-size:12px}
-
-/* Watchlist */
+.new-badge{font-size:9px;padding:1px 5px;border-radius:8px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:4px}
+.sic-label{font-size:10px;color:#444;margin-left:4px}
+.loading{text-align:center;padding:2rem;color:#444;font-size:13px}
+.error-msg{text-align:center;padding:2rem;color:#E24B4A;font-size:12px}
 .watchlist-input{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
-.watchlist-input input,.watchlist-input select{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:6px;padding:6px 10px;color:#e8e8e8;font-size:12px;outline:none}
-.watchlist-input input{flex:1;min-width:120px}
+.watchlist-input input,.watchlist-input select{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:6px;padding:6px 10px;color:#e8e8e8;font-size:12px;outline:none;flex:1;min-width:100px}
 .watchlist-input input:focus,.watchlist-input select:focus{border-color:#444}
 .add-btn{padding:6px 14px;border-radius:6px;background:#23242a;border:0.5px solid #444;color:#aaa;cursor:pointer;font-size:12px;white-space:nowrap}
 .add-btn:hover{background:#2a2b2f;color:#e8e8e8}
@@ -61,11 +55,15 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .remove-btn{font-size:10px;color:#444;background:none;border:none;cursor:pointer;padding:2px 4px}
 .remove-btn:hover{color:#E24B4A}
 .empty-watch{color:#444;font-size:13px;text-align:center;padding:2rem 0}
-.new-badge{font-size:9px;padding:1px 5px;border-radius:8px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:4px}
-.sic-label{font-size:10px;color:#444;margin-left:4px}
+.single-stat{font-size:13px;color:#555;padding:1rem 0}
 </style>
 </head>
 <body>
+
+<div class="nav">
+  <a href="/">← Dashboard</a>
+  <a href="/opportunities.html" class="active">Opportunities</a>
+</div>
 
 <div class="header">
   <div><h1>Investment opportunities monitor</h1><div class="status" id="status">Loading SEC EDGAR data...</div></div>
@@ -82,40 +80,31 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 </div>
 
 <div id="panel-activist" class="panel">
-  <div class="section-label">Schedule 13D filings — last 40 days <span style="color:#444;font-weight:400;font-size:10px">activist investors taking >5% stake</span></div>
+  <div class="section-label">Schedule 13D filings — last 40 days · activist investors taking >5% stake</div>
   <table class="filing-table">
-    <thead><tr>
-      <th>Target company</th><th>Activist filer</th>
-      <th>Type</th><th>Filed</th><th>Location</th>
-    </tr></thead>
+    <thead><tr><th>Target company</th><th>Activist filer</th><th>Type</th><th>Filed</th><th>Location</th></tr></thead>
     <tbody id="activist-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
   </table>
 </div>
 
 <div id="panel-bankruptcy" class="panel" style="display:none">
-  <div class="section-label">8-K bankruptcy & distress filings — last 40 days <span style="color:#444;font-weight:400;font-size:10px">item 1.03 = bankruptcy or receivership</span></div>
+  <div class="section-label">8-K bankruptcy & distress filings — last 40 days · item 1.03 = bankruptcy or receivership</div>
   <table class="filing-table">
-    <thead><tr>
-      <th>Company</th><th>Items</th>
-      <th>Filed</th><th>Location</th><th>Industry</th>
-    </tr></thead>
+    <thead><tr><th>Company</th><th>Items</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
     <tbody id="bankruptcy-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
   </table>
 </div>
 
 <div id="panel-spinoff" class="panel" style="display:none">
-  <div class="section-label">Form 10-12G spinoff registrations — last 90 days <span style="color:#444;font-weight:400;font-size:10px">new independent companies</span></div>
+  <div class="section-label">Form 10-12G spinoff registrations — last 90 days · new independent companies</div>
   <table class="filing-table">
-    <thead><tr>
-      <th>Company</th><th>Form</th>
-      <th>Filed</th><th>Location</th><th>Industry</th>
-    </tr></thead>
+    <thead><tr><th>Company</th><th>Form</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
     <tbody id="spinoff-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
   </table>
 </div>
 
 <div id="panel-watchlist" class="panel" style="display:none">
-  <div class="section-label">My watchlist <span style="color:#444;font-weight:400;font-size:10px">tracks across sessions</span></div>
+  <div class="section-label">My watchlist · tracks across sessions</div>
   <div class="watchlist-input">
     <input id="wl-ticker" placeholder="Ticker (e.g. GOCOQ)" />
     <input id="wl-name" placeholder="Company name" />
@@ -131,9 +120,10 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
       <option value="PIPE">PIPE</option>
       <option value="Post-merger">Post-merger indigestion</option>
       <option value="Out-of-court">Out-of-court restruc.</option>
+      <option value="Faded fad IPO">Faded fad IPO</option>
       <option value="Other">Other</option>
     </select>
-    <input id="wl-notes" placeholder="Notes / thesis" />
+    <input id="wl-notes" placeholder="Thesis / notes" />
     <button class="add-btn" onclick="addWatchItem()">+ Add</button>
   </div>
   <div class="watchlist-grid" id="watchlist-grid">
@@ -142,51 +132,13 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 </div>
 
 <script>
-const EDGAR_BASE = "https://market-sentiment-db.vercel.app/api/edgar";
+const PROXY = "https://market-sentiment-db.vercel.app/api/edgar";
 
-const SIC_LABELS = {
-  "2834":"Pharma","2836":"Biotech","7372":"Software","7374":"IT Services","6770":"SPAC/Holding","6199":"Finance","6798":"REIT","6500":"Real Estate","6282":"Investment Mgmt","5961":"Retail","4899":"Telecom","3841":"Med Devices","3674":"Semiconductors","3690":"Electronics","4911":"Electric Utilities","1311":"Oil & Gas","2834":"Pharma","5500":"Auto Dealer","7389":"Business Svcs","6552":"Land Dev","4832":"Radio","8071":"Medical Labs","3742":"Rail Cars","7373":"IT Systems"
-};
+const SIC_LABELS = {"2834":"Pharma","2836":"Biotech","7372":"Software","7374":"IT Services","6770":"Holding","6199":"Finance","6798":"REIT","6500":"Real Estate","6282":"Invest. Mgmt","3841":"Med Devices","3674":"Semiconductors","3690":"Electronics","4911":"Utilities","1311":"Oil & Gas","7389":"Business Svcs","4832":"Radio","8071":"Med Labs","7373":"IT Systems","5961":"Retail","4899":"Telecom"};
 
 function sicLabel(sic){return SIC_LABELS[sic]||`SIC ${sic}`}
-
-function fmtDate(s){if(!s)return'—';const d=new Date(s);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}
-
-function isRecent(dateStr,days=7){const d=new Date(dateStr);const now=new Date();return(now-d)<days*86400000}
-
-function parseNames(displayNames){
-  // display_names contains company(ticker) and filer
-  const names=displayNames||[];
-  const companies=names.filter(n=>n.match(/\([A-Z]+\)/)||n.match(/\(CIK/));
-  const first=names[0]||'';
-  const second=names[1]||'';
-  // Extract ticker from first name
-  const tickerMatch=first.match(/\(([A-Z,]+)\)\s+\(CIK/);
-  const ticker=tickerMatch?tickerMatch[1].split(',')[0]:'';
-  // Clean name
-  const cleanName=first.replace(/\s+\([A-Z,]+\)\s+\(CIK.+/,'').replace(/\s+\(CIK.+/,'').trim();
-  const cleanFiler=second.replace(/\s+\(CIK.+/,'').trim();
-  return{name:cleanName,ticker,filer:cleanFiler};
-}
-
-function edgarUrl(adsh){
-  const clean=adsh.replace(/-/g,'');
-  const cik=clean.slice(0,10);
-  return`https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${cik}&type=SC+13D&dateb=&owner=include&count=10`;
-}
-
-function filingUrl(adsh){
-  const path=adsh.replace(/-/g,'/');
-  return`https://www.sec.gov/Archives/edgar/full-index/`;
-}
-
-// --- FETCH ---
-async function fetchEdgar(type, startdt, enddt){
-  const params = new URLSearchParams({ type, startdt, enddt });
-  const r = await fetch(`${EDGAR_BASE}?${params}`);
-  if(!r.ok) throw new Error(`EDGAR ${r.status}`);
-  return r.json();
-}
+function fmtDate(s){if(!s)return'—';return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}
+function isRecent(dateStr,days){return(new Date()-new Date(dateStr))<days*86400000}
 
 function getStartDate(daysBack){
   const d=new Date();
@@ -194,64 +146,49 @@ function getStartDate(daysBack){
   return d.toISOString().split('T')[0];
 }
 
+function parseName(raw){
+  if(!raw)return{name:'Unknown',ticker:''};
+  const tickerMatch=raw.match(/\(([A-Z,]+)\)\s+\(CIK/);
+  const ticker=tickerMatch?tickerMatch[1].split(',')[0]:'';
+  const name=raw.replace(/\s+\([A-Z,]+\)\s+\(CIK.+/,'').replace(/\s+\(CIK.+/,'').trim();
+  return{name,ticker};
+}
+
+async function fetchEdgar(type,startdt,enddt){
+  const params=new URLSearchParams({type,startdt,enddt});
+  const r=await fetch(`${PROXY}?${params}`);
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||`EDGAR ${r.status}`);}
+  return r.json();
+}
+
 async function load13D(){
-  const data=await fetchEdgar({
-    'q':'"Schedule 13D"',
-    'dateRange':'custom',
-    'startdt':getStartDate(40),
-    'enddt':new Date().toISOString().split('T')[0],
-    'hits.hits.total.value':'true',
-    'hits.hits._source':'display_names,file_date,form,adsh,biz_locations,sics',
-    'size':200
-  });
+  const data=await fetchEdgar('13d',getStartDate(40),new Date().toISOString().split('T')[0]);
   return(data.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0);
 }
 
 async function loadBankruptcy(){
-  const data=await fetchEdgar({
-    'q':'"bankruptcy"',
-    'forms':'8-K',
-    'dateRange':'custom',
-    'startdt':getStartDate(40),
-    'enddt':new Date().toISOString().split('T')[0],
-    'hits.hits.total.value':'true',
-    'hits.hits._source':'display_names,file_date,form,adsh,biz_locations,sics,items',
-    'size':200
-  });
-  return(data.hits?.hits||[]).map(h=>h._source).filter(m=>{
-    // Prioritize item 1.03 = bankruptcy/receivership
-    const items=(m.items||[]);
-    return items.some?.(i=>typeof i==='string'&&i.includes('1.03'))||true;
-  }).filter(m=>m.display_names?.length>0);
-}
-
-async function loadSpinoffs(){
-  const data=await fetchEdgar({
-    'forms':'10-12G,10-12G/A',
-    'dateRange':'custom',
-    'startdt':getStartDate(90),
-    'enddt':new Date().toISOString().split('T')[0],
-    'hits.hits._source':'display_names,file_date,form,adsh,biz_locations,sics',
-    'size':100
-  });
+  const data=await fetchEdgar('bankruptcy',getStartDate(40),new Date().toISOString().split('T')[0]);
   return(data.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0);
 }
 
-// --- RENDER ---
+async function loadSpinoffs(){
+  const data=await fetchEdgar('spinoff',getStartDate(90),new Date().toISOString().split('T')[0]);
+  return(data.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0);
+}
+
 function renderActivist(filings){
-  // Deduplicate by company name + filer
   const seen=new Set();
-  const unique=filings.filter(m=>{
-    const {name,filer}=parseNames(m.display_names);
+  const rows=filings.filter(m=>{
+    const{name}=parseName(m.display_names?.[0]);
+    const filer=parseName(m.display_names?.[1]).name;
     const key=name+'|'+filer;
     if(seen.has(key))return false;
     seen.add(key);return true;
-  });
-
-  document.getElementById('activist-tbody').innerHTML=unique.slice(0,80).map(m=>{
-    const{name,ticker,filer}=parseNames(m.display_names);
+  }).slice(0,100).map(m=>{
+    const{name,ticker}=parseName(m.display_names?.[0]);
+    const{name:filer}=parseName(m.display_names?.[1]);
     const isNew=isRecent(m.file_date,5);
-    const isAmend=m.form==='SCHEDULE 13D/A';
+    const isAmend=(m.form||'').includes('/A');
     const loc=(m.biz_locations||[''])[0]||'';
     const sic=(m.sics||[])[0]||'';
     return`<tr>
@@ -262,20 +199,17 @@ function renderActivist(filings){
       <td class="loc-cell">${loc.split(',')[0]||'—'}${sic?`<span class="sic-label">${sicLabel(sic)}</span>`:''}</td>
     </tr>`;
   }).join('');
+  document.getElementById('activist-tbody').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>';
 }
 
 function renderBankruptcy(filings){
   const seen=new Set();
-  const unique=filings.filter(m=>{
-    const name=(m.display_names||[''])[0];
+  const rows=filings.filter(m=>{
+    const{name}=parseName(m.display_names?.[0]);
     if(seen.has(name))return false;
     seen.add(name);return true;
-  });
-
-  document.getElementById('bankruptcy-tbody').innerHTML=unique.slice(0,80).map(m=>{
-    const name=(m.display_names||['Unknown'])[0].replace(/\s+\([A-Z,]+\)\s+\(CIK.+/,'').replace(/\s+\(CIK.+/,'').trim();
-    const tickerMatch=(m.display_names||[''])[0].match(/\(([A-Z,]+)\)\s+\(CIK/);
-    const ticker=tickerMatch?tickerMatch[1].split(',')[0]:'';
+  }).slice(0,100).map(m=>{
+    const{name,ticker}=parseName(m.display_names?.[0]);
     const isNew=isRecent(m.file_date,5);
     const loc=(m.biz_locations||[''])[0]||'';
     const sic=(m.sics||[])[0]||'';
@@ -289,13 +223,12 @@ function renderBankruptcy(filings){
       <td class="loc-cell">${sic?sicLabel(sic):'—'}</td>
     </tr>`;
   }).join('');
+  document.getElementById('bankruptcy-tbody').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>';
 }
 
 function renderSpinoffs(filings){
-  document.getElementById('spinoff-tbody').innerHTML=filings.slice(0,60).map(m=>{
-    const name=(m.display_names||['Unknown'])[0].replace(/\s+\([A-Z,]+\)\s+\(CIK.+/,'').replace(/\s+\(CIK.+/,'').trim();
-    const tickerMatch=(m.display_names||[''])[0].match(/\(([A-Z,]+)\)\s+\(CIK/);
-    const ticker=tickerMatch?tickerMatch[1].split(',')[0]:'';
+  const rows=filings.slice(0,60).map(m=>{
+    const{name,ticker}=parseName(m.display_names?.[0]);
     const isNew=isRecent(m.file_date,14);
     const loc=(m.biz_locations||[''])[0]||'';
     const sic=(m.sics||[])[0]||'';
@@ -307,29 +240,31 @@ function renderSpinoffs(filings){
       <td class="loc-cell">${sic?sicLabel(sic):'—'}</td>
     </tr>`;
   }).join('');
+  document.getElementById('spinoff-tbody').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>';
 }
 
-// --- WATCHLIST (persistent) ---
-const WATCH_COLORS={
-  'Turnaround':'#633806','Broken IPO':'#791F1F','Collapsed SPAC':'#0C447C',
-  'Post-bankruptcy':'#2e0a0a','Fallen angel':'#1a2e3a','Activist':'#1a2e0a',
-  'Broken spinoff':'#2a1a3a','Orphaned stock':'#2a2a1a','PIPE':'#1a3a2a',
-  'Post-merger':'#3a1a1a','Out-of-court':'#1a1a3a','Other':'#23242a'
-};
-const WATCH_TEXT={
-  'Turnaround':'#FAC775','Broken IPO':'#F7C1C1','Collapsed SPAC':'#B5D4F4',
-  'Post-bankruptcy':'#E24B4A','Fallen angel':'#7db8d4','Activist':'#639922',
-  'Broken spinoff':'#c4a4f4','Orphaned stock':'#d4c87d','PIPE':'#7dc4a4',
-  'Post-merger':'#d47d7d','Out-of-court':'#7d9cd4','Other':'#888'
-};
+function renderSummary(activist,bankruptcy,spinoffs){
+  const newA=activist.filter(m=>isRecent(m.file_date,7)).length;
+  const newB=bankruptcy.filter(m=>isRecent(m.file_date,7)).length;
+  const item103=bankruptcy.filter(m=>{const i=Array.isArray(m.items)?m.items:[];return i.some(x=>typeof x==='string'&&x.includes('1.03'));}).length;
+  document.getElementById('summary').innerHTML=`
+    <div class="metric"><div class="metric-label">13D filings</div><div class="metric-value">${activist.length}</div><div class="metric-sub">last 40 days</div></div>
+    <div class="metric"><div class="metric-label">New this week</div><div class="metric-value" style="color:#639922">${newA}</div><div class="metric-sub">activist (13D)</div></div>
+    <div class="metric"><div class="metric-label">Distress 8-Ks</div><div class="metric-value" style="color:#E24B4A">${bankruptcy.length}</div><div class="metric-sub">last 40 days</div></div>
+    <div class="metric"><div class="metric-label">Item 1.03</div><div class="metric-value" style="color:#E24B4A">${item103}</div><div class="metric-sub">bankruptcy events</div></div>
+    <div class="metric"><div class="metric-label">Spinoffs</div><div class="metric-value" style="color:#B5D4F4">${spinoffs.length}</div><div class="metric-sub">last 90 days</div></div>
+    <div class="metric"><div class="metric-label">Watchlist</div><div class="metric-value">${watchItems.length}</div><div class="metric-sub">tracked ideas</div></div>
+  `;
+}
+
+// WATCHLIST
+const WATCH_COLORS={'Turnaround':'#633806','Broken IPO':'#791F1F','Collapsed SPAC':'#0C447C','Post-bankruptcy':'#2e0a0a','Fallen angel':'#1a2e3a','Activist':'#1a2e0a','Broken spinoff':'#2a1a3a','Orphaned stock':'#2a2a1a','PIPE':'#1a3a2a','Post-merger':'#3a1a1a','Out-of-court':'#1a1a3a','Faded fad IPO':'#2a1a2a','Other':'#23242a'};
+const WATCH_TEXT={'Turnaround':'#FAC775','Broken IPO':'#F7C1C1','Collapsed SPAC':'#B5D4F4','Post-bankruptcy':'#E24B4A','Fallen angel':'#7db8d4','Activist':'#639922','Broken spinoff':'#c4a4f4','Orphaned stock':'#d4c87d','PIPE':'#7dc4a4','Post-merger':'#d47d7d','Out-of-court':'#7d9cd4','Faded fad IPO':'#c47dd4','Other':'#888'};
 
 let watchItems=[];
 
 async function loadWatchlist(){
-  try{
-    const r=await window.storage?.get('opp-watchlist');
-    if(r?.value)watchItems=JSON.parse(r.value);
-  }catch(e){watchItems=[];}
+  try{const r=await window.storage?.get('opp-watchlist');if(r?.value)watchItems=JSON.parse(r.value);}catch(e){watchItems=[];}
   renderWatchlist();
 }
 
@@ -339,8 +274,7 @@ async function addWatchItem(){
   const cat=document.getElementById('wl-cat').value;
   const notes=document.getElementById('wl-notes').value.trim();
   if(!ticker)return;
-  const item={id:Date.now(),ticker,name,cat,notes,added:new Date().toISOString().split('T')[0]};
-  watchItems.unshift(item);
+  watchItems.unshift({id:Date.now(),ticker,name,cat,notes,added:new Date().toISOString().split('T')[0]});
   await saveWatchlist();
   renderWatchlist();
   document.getElementById('wl-ticker').value='';
@@ -360,52 +294,23 @@ async function saveWatchlist(){
 
 function renderWatchlist(){
   const grid=document.getElementById('watchlist-grid');
-  if(!watchItems.length){
-    grid.innerHTML='<div class="empty-watch">No items yet. Add a ticker above to start tracking.</div>';
-    return;
-  }
-  grid.innerHTML=watchItems.map(w=>`
-    <div class="watch-card">
-      <div class="watch-card-top">
-        <div>
-          <span class="watch-ticker">${w.ticker}</span>
-          <span class="watch-cat" style="background:${WATCH_COLORS[w.cat]||'#23242a'};color:${WATCH_TEXT[w.cat]||'#888'}">${w.cat}</span>
-        </div>
-        <button class="remove-btn" onclick="removeWatchItem(${w.id})">✕</button>
-      </div>
-      ${w.name?`<div class="watch-name">${w.name}</div>`:''}
-      ${w.notes?`<div class="watch-notes">${w.notes}</div>`:''}
-      <div class="watch-date">Added ${w.added}</div>
+  if(!watchItems.length){grid.innerHTML='<div class="empty-watch">No items yet. Add a ticker above to start tracking.</div>';return;}
+  grid.innerHTML=watchItems.map(w=>`<div class="watch-card">
+    <div class="watch-card-top">
+      <div><span class="watch-ticker">${w.ticker}</span><br><span class="watch-cat" style="background:${WATCH_COLORS[w.cat]||'#23242a'};color:${WATCH_TEXT[w.cat]||'#888'}">${w.cat}</span></div>
+      <button class="remove-btn" onclick="removeWatchItem(${w.id})">✕</button>
     </div>
-  `).join('');
+    ${w.name?`<div class="watch-name">${w.name}</div>`:''}
+    ${w.notes?`<div class="watch-notes">${w.notes}</div>`:''}
+    <div class="watch-date">Added ${w.added}</div>
+  </div>`).join('');
 }
 
-// --- TABS ---
-let activeTab='activist';
 function setTab(tab,el){
-  activeTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
   document.getElementById(`panel-${tab}`).style.display='';
-}
-
-// --- SUMMARY ---
-function renderSummary(activist,bankruptcy,spinoffs){
-  const newActivist=activist.filter(m=>isRecent(m.file_date,7)).length;
-  const newBankruptcy=bankruptcy.filter(m=>isRecent(m.file_date,7)).length;
-  const item103=bankruptcy.filter(m=>{
-    const items=Array.isArray(m.items)?m.items:[];
-    return items.some(i=>typeof i==='string'&&i.includes('1.03'));
-  }).length;
-  document.getElementById('summary').innerHTML=`
-    <div class="metric"><div class="metric-label">13D filings</div><div class="metric-value">${activist.length}</div><div class="metric-sub">last 40 days</div></div>
-    <div class="metric"><div class="metric-label">New this week</div><div class="metric-value" style="color:#639922">${newActivist}</div><div class="metric-sub">activist (13D)</div></div>
-    <div class="metric"><div class="metric-label">Distress 8-Ks</div><div class="metric-value" style="color:#E24B4A">${bankruptcy.length}</div><div class="metric-sub">last 40 days</div></div>
-    <div class="metric"><div class="metric-label">Item 1.03</div><div class="metric-value" style="color:#E24B4A">${item103}</div><div class="metric-sub">bankruptcy events</div></div>
-    <div class="metric"><div class="metric-label">Spinoffs</div><div class="metric-value" style="color:#B5D4F4">${spinoffs.length}</div><div class="metric-sub">last 90 days</div></div>
-    <div class="metric"><div class="metric-label">Watchlist</div><div class="metric-value">${watchItems.length}</div><div class="metric-sub">tracked ideas</div></div>
-  `;
 }
 
 async function init(){
@@ -420,6 +325,7 @@ async function init(){
     document.getElementById('status').textContent=`Last updated ${new Date().toLocaleTimeString()} · ${activist.length} activist · ${bankruptcy.length} distress · ${spinoffs.length} spinoffs`;
   }catch(e){
     document.getElementById('status').textContent=`Error: ${e.message}`;
+    document.querySelectorAll('tbody').forEach(t=>t.innerHTML=`<tr><td colspan="5" class="error-msg">${e.message}</td></tr>`);
   }
 }
 
