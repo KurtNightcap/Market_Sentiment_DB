@@ -35,8 +35,14 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .badge-13da{background:#23242a;color:#777;border:0.5px solid #333}
 .badge-bk{background:#2e0a0a;color:#E24B4A;border:0.5px solid #A32D2D}
 .badge-spinoff{background:#0C447C;color:#B5D4F4;border:0.5px solid #0C447C}
+.badge-ipo{background:#633806;color:#FAC775;border:0.5px solid #633806}
+.badge-spac{background:#2a1a3a;color:#c4a4f4;border:0.5px solid #5a3a8a}
+.badge-angel{background:#2e0a0a;color:#E24B4A;border:0.5px solid #A32D2D}
+.badge-pipe{background:#1a3a2a;color:#7dc4a4;border:0.5px solid #2a6a4a}
+.badge-restruc{background:#1a1a3a;color:#7d9cd4;border:0.5px solid #2a3a6a}
 .new-badge{font-size:9px;padding:1px 5px;border-radius:8px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:4px}
 .sic-label{font-size:10px;color:#444;margin-left:4px}
+.tab-desc{font-size:11px;color:#555;margin-bottom:10px;line-height:1.5;background:#1e1f24;border-radius:8px;padding:8px 10px;border:0.5px solid #2a2b2f}
 .loading{text-align:center;padding:2rem;color:#444;font-size:13px}
 .error-msg{text-align:center;padding:2rem;color:#E24B4A;font-size:12px}
 .watchlist-input{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
@@ -55,7 +61,6 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .remove-btn{font-size:10px;color:#444;background:none;border:none;cursor:pointer;padding:2px 4px}
 .remove-btn:hover{color:#E24B4A}
 .empty-watch{color:#444;font-size:13px;text-align:center;padding:2rem 0}
-.single-stat{font-size:13px;color:#555;padding:1rem 0}
 </style>
 </head>
 <body>
@@ -66,7 +71,7 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 </div>
 
 <div class="header">
-  <div><h1>Investment opportunities monitor</h1><div class="status" id="status">Loading SEC EDGAR data...</div></div>
+  <div><h1>Investment opportunities monitor</h1><div class="status" id="status">Loading...</div></div>
   <button class="refresh-btn" onclick="init()">Refresh</button>
 </div>
 
@@ -74,37 +79,91 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 
 <div class="tab-row">
   <button class="tab-btn active" onclick="setTab('activist',this)">🎯 Activist (13D)</button>
-  <button class="tab-btn" onclick="setTab('bankruptcy',this)">⚡ Bankruptcy / Distress</button>
+  <button class="tab-btn" onclick="setTab('bankruptcy',this)">⚡ Distress</button>
   <button class="tab-btn" onclick="setTab('spinoff',this)">🔄 Spinoffs</button>
+  <button class="tab-btn" onclick="setTab('fadedipos',this)">📉 Faded IPOs</button>
+  <button class="tab-btn" onclick="setTab('spacs',this)">💀 Collapsed SPACs</button>
+  <button class="tab-btn" onclick="setTab('fallenangels',this)">😇 Fallen Angels</button>
+  <button class="tab-btn" onclick="setTab('pipes',this)">🔧 PIPEs</button>
+  <button class="tab-btn" onclick="setTab('restructuring',this)">⚖️ Restructuring</button>
   <button class="tab-btn" onclick="setTab('watchlist',this)">📋 My Watchlist</button>
 </div>
 
+<!-- ACTIVIST -->
 <div id="panel-activist" class="panel">
-  <div class="section-label">Schedule 13D filings — last 40 days · activist investors taking >5% stake</div>
+  <div class="tab-desc">Schedule 13D filings — activist investors acquiring >5% stake with intent to influence management. New 13D filings are the earliest public signal of activist involvement.</div>
   <table class="filing-table">
-    <thead><tr><th>Target company</th><th>Activist filer</th><th>Type</th><th>Filed</th><th>Location</th></tr></thead>
+    <thead><tr><th>Target company</th><th>Activist filer</th><th>Type</th><th>Filed</th><th>Location / Industry</th></tr></thead>
     <tbody id="activist-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
   </table>
 </div>
 
+<!-- BANKRUPTCY -->
 <div id="panel-bankruptcy" class="panel" style="display:none">
-  <div class="section-label">8-K bankruptcy & distress filings — last 40 days · item 1.03 = bankruptcy or receivership</div>
+  <div class="tab-desc">8-K filings mentioning bankruptcy — item 1.03 specifically denotes bankruptcy or receivership events. Post-bankruptcy equities can offer asymmetric returns once reorganization plans are confirmed.</div>
   <table class="filing-table">
-    <thead><tr><th>Company</th><th>Items</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
+    <thead><tr><th>Company</th><th>8-K Items</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
     <tbody id="bankruptcy-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
   </table>
 </div>
 
+<!-- SPINOFFS -->
 <div id="panel-spinoff" class="panel" style="display:none">
-  <div class="section-label">Form 10-12G spinoff registrations — last 90 days · new independent companies</div>
+  <div class="tab-desc">Form 10-12G registrations — newly independent companies filing to become standalone public entities. Broken spinoffs often trade down initially as index funds sell and dedicated research is sparse.</div>
   <table class="filing-table">
     <thead><tr><th>Company</th><th>Form</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
     <tbody id="spinoff-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
   </table>
 </div>
 
+<!-- FADED IPOs -->
+<div id="panel-fadedipos" class="panel" style="display:none">
+  <div class="tab-desc">S-1 filings from 2020–2022 — companies that went public during the boom period. Many are now trading significantly below IPO price with minimal analyst coverage. Classic "faded fad" candidates with $50M–$1B market cap.</div>
+  <table class="filing-table">
+    <thead><tr><th>Company</th><th>Form</th><th>IPO Filed</th><th>Location</th><th>Industry</th></tr></thead>
+    <tbody id="fadedipos-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- SPACs -->
+<div id="panel-spacs" class="panel" style="display:none">
+  <div class="tab-desc">S-4 filings from 2020–2022 mentioning "blank check" — SPAC merger registrations from the boom era. Many post-merger SPACs trade well below NAV and are overlooked by institutional investors.</div>
+  <table class="filing-table">
+    <thead><tr><th>Company</th><th>Form</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
+    <tbody id="spacs-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- FALLEN ANGELS -->
+<div id="panel-fallenangels" class="panel" style="display:none">
+  <div class="tab-desc">8-K filings citing significant decline or impairment — emerging growth stocks after a major earnings or guidance disappointment. Often oversold as momentum investors exit, creating entry opportunities.</div>
+  <table class="filing-table">
+    <thead><tr><th>Company</th><th>8-K Items</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
+    <tbody id="fallenangels-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- PIPEs -->
+<div id="panel-pipes" class="panel" style="display:none">
+  <div class="tab-desc">8-K filings announcing private placements — PIPE transactions indicate institutional interest in a company at a negotiated price. Can signal upcoming catalysts or balance sheet repair.</div>
+  <table class="filing-table">
+    <thead><tr><th>Company</th><th>8-K Items</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
+    <tbody id="pipes-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- RESTRUCTURING -->
+<div id="panel-restructuring" class="panel" style="display:none">
+  <div class="tab-desc">8-K filings announcing out-of-court restructurings — companies addressing debt obligations without formal bankruptcy. Often overlooked and undervalued during the restructuring process.</div>
+  <table class="filing-table">
+    <thead><tr><th>Company</th><th>8-K Items</th><th>Filed</th><th>Location</th><th>Industry</th></tr></thead>
+    <tbody id="restructuring-tbody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<!-- WATCHLIST -->
 <div id="panel-watchlist" class="panel" style="display:none">
-  <div class="section-label">My watchlist · tracks across sessions</div>
+  <div class="tab-desc">Your personal opportunity tracker — add any ticker you're monitoring with a category and thesis. Persists across sessions.</div>
   <div class="watchlist-input">
     <input id="wl-ticker" placeholder="Ticker (e.g. GOCOQ)" />
     <input id="wl-name" placeholder="Company name" />
@@ -134,137 +193,143 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 <script>
 const PROXY = "https://market-sentiment-db.vercel.app/api/edgar";
 
-const SIC_LABELS = {"2834":"Pharma","2836":"Biotech","7372":"Software","7374":"IT Services","6770":"Holding","6199":"Finance","6798":"REIT","6500":"Real Estate","6282":"Invest. Mgmt","3841":"Med Devices","3674":"Semiconductors","3690":"Electronics","4911":"Utilities","1311":"Oil & Gas","7389":"Business Svcs","4832":"Radio","8071":"Med Labs","7373":"IT Systems","5961":"Retail","4899":"Telecom"};
+const SIC_LABELS = {"2834":"Pharma","2836":"Biotech","7372":"Software","7374":"IT Services","6770":"Holding","6199":"Finance","6798":"REIT","6500":"Real Estate","6282":"Invest. Mgmt","3841":"Med Devices","3674":"Semiconductors","3690":"Electronics","4911":"Utilities","1311":"Oil & Gas","7389":"Business Svcs","4832":"Radio","8071":"Med Labs","7373":"IT Systems","5961":"Retail","4899":"Telecom","2860":"Chemicals","3812":"Defense","7371":"Software Dev","6726":"Investment Offices","3825":"Instruments","5045":"Computers Wholesale"};
 
-function sicLabel(sic){return SIC_LABELS[sic]||`SIC ${sic}`}
+function sicLabel(s){return SIC_LABELS[s]||`SIC ${s}`}
 function fmtDate(s){if(!s)return'—';return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}
-function isRecent(dateStr,days){return(new Date()-new Date(dateStr))<days*86400000}
-
-function getStartDate(daysBack){
-  const d=new Date();
-  d.setDate(d.getDate()-daysBack);
-  return d.toISOString().split('T')[0];
-}
+function isRecent(d,days){return(new Date()-new Date(d))<days*86400000}
+function getStartDate(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().split('T')[0]}
+function today(){return new Date().toISOString().split('T')[0]}
 
 function parseName(raw){
   if(!raw)return{name:'Unknown',ticker:''};
-  const tickerMatch=raw.match(/\(([A-Z,]+)\)\s+\(CIK/);
-  const ticker=tickerMatch?tickerMatch[1].split(',')[0]:'';
+  const tm=raw.match(/\(([A-Z,]+)\)\s+\(CIK/);
+  const ticker=tm?tm[1].split(',')[0]:'';
   const name=raw.replace(/\s+\([A-Z,]+\)\s+\(CIK.+/,'').replace(/\s+\(CIK.+/,'').trim();
   return{name,ticker};
 }
 
 async function fetchEdgar(type,startdt,enddt){
-  const params=new URLSearchParams({type,startdt,enddt});
-  const r=await fetch(`${PROXY}?${params}`);
+  const p=new URLSearchParams({type,startdt:startdt||'',enddt:enddt||today()});
+  const r=await fetch(`${PROXY}?${p}`);
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||`EDGAR ${r.status}`);}
   return r.json();
 }
 
-async function load13D(){
-  const data=await fetchEdgar('13d',getStartDate(40),new Date().toISOString().split('T')[0]);
-  return(data.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0);
-}
-
-async function loadBankruptcy(){
-  const data=await fetchEdgar('bankruptcy',getStartDate(40),new Date().toISOString().split('T')[0]);
-  return(data.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0);
-}
-
-async function loadSpinoffs(){
-  const data=await fetchEdgar('spinoff',getStartDate(90),new Date().toISOString().split('T')[0]);
-  return(data.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0);
-}
-
-function renderActivist(filings){
+function genericRows(filings, badgeClass, badgeLabel, showFiler=false){
   const seen=new Set();
-  const rows=filings.filter(m=>{
-    const{name}=parseName(m.display_names?.[0]);
-    const filer=parseName(m.display_names?.[1]).name;
-    const key=name+'|'+filer;
-    if(seen.has(key))return false;
-    seen.add(key);return true;
-  }).slice(0,100).map(m=>{
-    const{name,ticker}=parseName(m.display_names?.[0]);
-    const{name:filer}=parseName(m.display_names?.[1]);
-    const isNew=isRecent(m.file_date,5);
-    const isAmend=(m.form||'').includes('/A');
-    const loc=(m.biz_locations||[''])[0]||'';
-    const sic=(m.sics||[])[0]||'';
-    return`<tr>
-      <td><div class="company-name">${name}${ticker?`<span class="ticker-badge">${ticker}</span>`:''}${isNew?'<span class="new-badge">NEW</span>':''}</div></td>
-      <td><span class="filer-name">${filer||'—'}</span></td>
-      <td><span class="form-badge ${isAmend?'badge-13da':'badge-13d'}">${isAmend?'13D/A':'13D'}</span></td>
-      <td class="date-cell">${fmtDate(m.file_date)}</td>
-      <td class="loc-cell">${loc.split(',')[0]||'—'}${sic?`<span class="sic-label">${sicLabel(sic)}</span>`:''}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('activist-tbody').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>';
-}
-
-function renderBankruptcy(filings){
-  const seen=new Set();
-  const rows=filings.filter(m=>{
+  return filings.filter(m=>{
     const{name}=parseName(m.display_names?.[0]);
     if(seen.has(name))return false;
     seen.add(name);return true;
   }).slice(0,100).map(m=>{
     const{name,ticker}=parseName(m.display_names?.[0]);
-    const isNew=isRecent(m.file_date,5);
+    const{name:filer}=parseName(m.display_names?.[1]);
+    const isNew=isRecent(m.file_date,7);
     const loc=(m.biz_locations||[''])[0]||'';
     const sic=(m.sics||[])[0]||'';
     const items=Array.isArray(m.items)?m.items.filter(Boolean).join(', '):(m.items||'');
-    const isBankruptcy=items.includes('1.03');
+    const isBk=items.includes('1.03');
     return`<tr>
-      <td><div class="company-name">${name}${ticker?`<span class="ticker-badge">${ticker}</span>`:''}${isNew?'<span class="new-badge">NEW</span>':''}</div></td>
-      <td style="font-size:10px;color:${isBankruptcy?'#E24B4A':'#666'}">${items||'—'}</td>
+      <td><div class="company-name">${name}${ticker?`<span class="ticker-badge">${ticker}</span>`:''}${isNew?'<span class="new-badge">NEW</span>':''}</div>${showFiler&&filer?`<div class="filer-name">${filer}</div>`:''}</td>
+      ${showFiler?`<td><span class="form-badge ${badgeClass}">${badgeLabel}</span></td>`:`<td style="font-size:10px;color:${isBk?'#E24B4A':'#666'}">${items||'—'}</td>`}
       <td class="date-cell">${fmtDate(m.file_date)}</td>
       <td class="loc-cell">${loc.split(',')[0]||'—'}</td>
       <td class="loc-cell">${sic?sicLabel(sic):'—'}</td>
     </tr>`;
   }).join('');
-  document.getElementById('bankruptcy-tbody').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>';
 }
 
-function renderSpinoffs(filings){
-  const rows=filings.slice(0,60).map(m=>{
+function formRows(filings, badgeClass, badgeLabel){
+  const seen=new Set();
+  return filings.filter(m=>{
+    const{name}=parseName(m.display_names?.[0]);
+    if(seen.has(name))return false;
+    seen.add(name);return true;
+  }).slice(0,100).map(m=>{
     const{name,ticker}=parseName(m.display_names?.[0]);
-    const isNew=isRecent(m.file_date,14);
+    const isNew=isRecent(m.file_date,30);
     const loc=(m.biz_locations||[''])[0]||'';
     const sic=(m.sics||[])[0]||'';
     return`<tr>
       <td><div class="company-name">${name}${ticker?`<span class="ticker-badge">${ticker}</span>`:''}${isNew?'<span class="new-badge">NEW</span>':''}</div></td>
-      <td><span class="form-badge badge-spinoff">${m.form||'10-12G'}</span></td>
+      <td><span class="form-badge ${badgeClass}">${m.form||badgeLabel}</span></td>
       <td class="date-cell">${fmtDate(m.file_date)}</td>
       <td class="loc-cell">${loc.split(',')[0]||'—'}</td>
       <td class="loc-cell">${sic?sicLabel(sic):'—'}</td>
     </tr>`;
   }).join('');
-  document.getElementById('spinoff-tbody').innerHTML=rows||'<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>';
 }
 
-function renderSummary(activist,bankruptcy,spinoffs){
-  const newA=activist.filter(m=>isRecent(m.file_date,7)).length;
-  const newB=bankruptcy.filter(m=>isRecent(m.file_date,7)).length;
-  const item103=bankruptcy.filter(m=>{const i=Array.isArray(m.items)?m.items:[];return i.some(x=>typeof x==='string'&&x.includes('1.03'));}).length;
+function setTableHTML(id, html){
+  document.getElementById(id).innerHTML = html || `<tr><td colspan="5" style="text-align:center;color:#444;padding:1rem">No filings found</td></tr>`;
+}
+
+let counts = {};
+
+async function loadAll(){
+  const start40 = getStartDate(40);
+  const start14 = getStartDate(14);
+
+  const [activist, bankruptcy, spinoff, fadedipos, spacs, fallenangels, pipes, restructuring] = await Promise.allSettled([
+    fetchEdgar('13d', start40, today()),
+    fetchEdgar('bankruptcy', start40, today()),
+    fetchEdgar('spinoff', getStartDate(90), today()),
+    fetchEdgar('fadedipos', '', ''),
+    fetchEdgar('spacs', '', ''),
+    fetchEdgar('fallenangels', start40, today()),
+    fetchEdgar('pipes', start40, today()),
+    fetchEdgar('restructuring', start40, today()),
+  ]);
+
+  function hits(r){ return r.status==='fulfilled'?(r.value.hits?.hits||[]).map(h=>h._source).filter(m=>m.display_names?.length>0):[] }
+
+  const a=hits(activist), b=hits(bankruptcy), sp=hits(spinoff);
+  const fi=hits(fadedipos), sc=hits(spacs), fa=hits(fallenangels);
+  const pi=hits(pipes), re=hits(restructuring);
+
+  setTableHTML('activist-tbody', genericRows(a,'badge-13d','13D',true));
+  setTableHTML('bankruptcy-tbody', genericRows(b,'badge-bk','8-K'));
+  setTableHTML('spinoff-tbody', formRows(sp,'badge-spinoff','10-12G'));
+  setTableHTML('fadedipos-tbody', formRows(fi,'badge-ipo','S-1'));
+  setTableHTML('spacs-tbody', formRows(sc,'badge-spac','S-4'));
+  setTableHTML('fallenangels-tbody', genericRows(fa,'badge-angel','8-K'));
+  setTableHTML('pipes-tbody', genericRows(pi,'badge-pipe','8-K'));
+  setTableHTML('restructuring-tbody', genericRows(re,'badge-restruc','8-K'));
+
+  counts = {a:a.length,b:b.length,sp:sp.length,fi:fi.length,sc:sc.length,fa:fa.length,pi:pi.length,re:re.length};
+  renderSummary();
+}
+
+function renderSummary(){
+  const newA = counts.a||0;
   document.getElementById('summary').innerHTML=`
-    <div class="metric"><div class="metric-label">13D filings</div><div class="metric-value">${activist.length}</div><div class="metric-sub">last 40 days</div></div>
-    <div class="metric"><div class="metric-label">New this week</div><div class="metric-value" style="color:#639922">${newA}</div><div class="metric-sub">activist (13D)</div></div>
-    <div class="metric"><div class="metric-label">Distress 8-Ks</div><div class="metric-value" style="color:#E24B4A">${bankruptcy.length}</div><div class="metric-sub">last 40 days</div></div>
-    <div class="metric"><div class="metric-label">Item 1.03</div><div class="metric-value" style="color:#E24B4A">${item103}</div><div class="metric-sub">bankruptcy events</div></div>
-    <div class="metric"><div class="metric-label">Spinoffs</div><div class="metric-value" style="color:#B5D4F4">${spinoffs.length}</div><div class="metric-sub">last 90 days</div></div>
+    <div class="metric"><div class="metric-label">Activist 13D</div><div class="metric-value" style="color:#639922">${counts.a||0}</div><div class="metric-sub">last 40 days</div></div>
+    <div class="metric"><div class="metric-label">Distress 8-K</div><div class="metric-value" style="color:#E24B4A">${counts.b||0}</div><div class="metric-sub">last 40 days</div></div>
+    <div class="metric"><div class="metric-label">Spinoffs</div><div class="metric-value" style="color:#B5D4F4">${counts.sp||0}</div><div class="metric-sub">last 90 days</div></div>
+    <div class="metric"><div class="metric-label">Faded IPOs</div><div class="metric-value" style="color:#FAC775">${counts.fi||0}</div><div class="metric-sub">2020–2022 vintage</div></div>
+    <div class="metric"><div class="metric-label">SPACs</div><div class="metric-value" style="color:#c4a4f4">${counts.sc||0}</div><div class="metric-sub">2020–2022 mergers</div></div>
+    <div class="metric"><div class="metric-label">Fallen Angels</div><div class="metric-value" style="color:#E24B4A">${counts.fa||0}</div><div class="metric-sub">last 40 days</div></div>
+    <div class="metric"><div class="metric-label">PIPEs</div><div class="metric-value" style="color:#7dc4a4">${counts.pi||0}</div><div class="metric-sub">last 40 days</div></div>
+    <div class="metric"><div class="metric-label">Restructuring</div><div class="metric-value" style="color:#7d9cd4">${counts.re||0}</div><div class="metric-sub">last 40 days</div></div>
     <div class="metric"><div class="metric-label">Watchlist</div><div class="metric-value">${watchItems.length}</div><div class="metric-sub">tracked ideas</div></div>
   `;
+}
+
+function setTab(tab,el){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+  document.getElementById(`panel-${tab}`).style.display='';
 }
 
 // WATCHLIST
 const WATCH_COLORS={'Turnaround':'#633806','Broken IPO':'#791F1F','Collapsed SPAC':'#0C447C','Post-bankruptcy':'#2e0a0a','Fallen angel':'#1a2e3a','Activist':'#1a2e0a','Broken spinoff':'#2a1a3a','Orphaned stock':'#2a2a1a','PIPE':'#1a3a2a','Post-merger':'#3a1a1a','Out-of-court':'#1a1a3a','Faded fad IPO':'#2a1a2a','Other':'#23242a'};
 const WATCH_TEXT={'Turnaround':'#FAC775','Broken IPO':'#F7C1C1','Collapsed SPAC':'#B5D4F4','Post-bankruptcy':'#E24B4A','Fallen angel':'#7db8d4','Activist':'#639922','Broken spinoff':'#c4a4f4','Orphaned stock':'#d4c87d','PIPE':'#7dc4a4','Post-merger':'#d47d7d','Out-of-court':'#7d9cd4','Faded fad IPO':'#c47dd4','Other':'#888'};
-
 let watchItems=[];
 
 async function loadWatchlist(){
-  try{const r=await window.storage?.get('opp-watchlist');if(r?.value)watchItems=JSON.parse(r.value);}catch(e){watchItems=[];}
+  try{const r=await window.storage?.get('opp-watchlist');if(r?.value)watchItems=JSON.parse(r.value);}catch{watchItems=[];}
   renderWatchlist();
 }
 
@@ -277,19 +342,19 @@ async function addWatchItem(){
   watchItems.unshift({id:Date.now(),ticker,name,cat,notes,added:new Date().toISOString().split('T')[0]});
   await saveWatchlist();
   renderWatchlist();
-  document.getElementById('wl-ticker').value='';
-  document.getElementById('wl-name').value='';
-  document.getElementById('wl-notes').value='';
+  renderSummary();
+  ['wl-ticker','wl-name','wl-notes'].forEach(id=>document.getElementById(id).value='');
 }
 
 async function removeWatchItem(id){
   watchItems=watchItems.filter(w=>w.id!==id);
   await saveWatchlist();
   renderWatchlist();
+  renderSummary();
 }
 
 async function saveWatchlist(){
-  try{await window.storage?.set('opp-watchlist',JSON.stringify(watchItems));}catch(e){}
+  try{await window.storage?.set('opp-watchlist',JSON.stringify(watchItems));}catch{}
 }
 
 function renderWatchlist(){
@@ -306,26 +371,14 @@ function renderWatchlist(){
   </div>`).join('');
 }
 
-function setTab(tab,el){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
-  document.getElementById(`panel-${tab}`).style.display='';
-}
-
 async function init(){
-  document.getElementById('status').textContent='Fetching SEC EDGAR filings...';
+  document.getElementById('status').textContent='Loading...';
   await loadWatchlist();
   try{
-    const[activist,bankruptcy,spinoffs]=await Promise.all([load13D(),loadBankruptcy(),loadSpinoffs()]);
-    renderActivist(activist);
-    renderBankruptcy(bankruptcy);
-    renderSpinoffs(spinoffs);
-    renderSummary(activist,bankruptcy,spinoffs);
-    document.getElementById('status').textContent=`Last updated ${new Date().toLocaleTimeString()} · ${activist.length} activist · ${bankruptcy.length} distress · ${spinoffs.length} spinoffs`;
+    await loadAll();
+    document.getElementById('status').textContent=`Last updated ${new Date().toLocaleTimeString()}`;
   }catch(e){
     document.getElementById('status').textContent=`Error: ${e.message}`;
-    document.querySelectorAll('tbody').forEach(t=>t.innerHTML=`<tr><td colspan="5" class="error-msg">${e.message}</td></tr>`);
   }
 }
 
