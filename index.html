@@ -4,6 +4,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size:14px;min-height:100vh;padding:1rem 1.25rem 3rem}
+.nav{display:flex;gap:16px;padding:0.6rem 0;border-bottom:0.5px solid #2a2b2f;margin-bottom:1rem}
+.nav a{font-size:12px;color:#555;text-decoration:none}
+.nav a.active{color:#e8e8e8;font-weight:500}
 .header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:0.5px solid #2a2b2f;padding-bottom:0.75rem;margin-bottom:0.75rem}
 .header h1{font-size:16px;font-weight:500;color:#fff}
 .status{font-size:12px;color:#555;margin-top:2px}
@@ -58,7 +61,6 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .delta-badge{font-size:9px;padding:1px 4px;border-radius:4px;margin-left:3px}
 .up-badge{background:#1a2e0a;color:#639922}
 .dn-badge{background:#2e0a0a;color:#E24B4A}
-/* Oil price scale */
 .oil-rows{display:flex;flex-direction:column;gap:5px}
 .oil-row{display:flex;align-items:center;gap:8px}
 .oil-label{font-size:12px;color:#aaa;min-width:90px}
@@ -66,13 +68,18 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 .oil-bar{flex:1;height:5px;background:#2a2b2f;border-radius:3px;overflow:hidden}
 .oil-bar-fill{height:100%;border-radius:3px}
 .oil-pct{font-size:12px;font-weight:600;min-width:32px;text-align:right}
-/* Gold */
-.gold-rows{display:flex;flex-direction:column;gap:5px}
-/* Single stat card */
 .single-stat{display:flex;align-items:center;gap:16px;padding:8px 0}
 .stat-num{font-size:36px;font-weight:600}
 .stat-detail{font-size:12px;color:#555;line-height:1.6}
-/* News */
+.gen-rows{display:flex;flex-direction:column;gap:5px}
+.gen-row{display:flex;align-items:center;gap:8px}
+.gen-label{font-size:12px;color:#aaa;flex:0 0 42%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gen-bar-wrap{flex:1;display:flex;align-items:center;gap:6px}
+.gen-bar{flex:1;height:5px;background:#2a2b2f;border-radius:3px;overflow:hidden}
+.gen-bar-fill{height:100%;border-radius:3px}
+.gen-pct{font-size:12px;font-weight:600;min-width:34px;text-align:right}
+.gen-vol{font-size:10px;color:#444;min-width:44px;text-align:right}
+.gen-empty{font-size:11px;color:#555;font-style:italic;line-height:1.5}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
 .card{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:12px;padding:1rem 1.1rem}
 .card:hover{border-color:#3a3b40}
@@ -109,11 +116,11 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 </style>
 </head>
 <body>
-  <div style="display:flex;gap:16px;padding:0.6rem 0;border-bottom:0.5px solid #2a2b2f;margin-bottom:1rem">
-  <a href="/" style="font-size:12px;color:#e8e8e8;text-decoration:none;font-weight:500">Dashboard</a>
-  <a href="/opportunities.html" style="font-size:12px;color:#555;text-decoration:none">Opportunities →</a>
-</div>
 
+<div class="nav">
+  <a href="/" class="active">Dashboard</a>
+  <a href="/opportunities.html">Opportunities →</a>
+</div>
 
 <div class="header">
   <div><h1>Market sentiment dashboard</h1><div class="status" id="status">Loading...</div></div>
@@ -122,14 +129,8 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 
 <div class="summary-row" id="summary"></div>
 
-<div class="section-label">Pinned Kalshi markets — rates & macro</div>
+<div class="section-label">Pinned Kalshi markets — rates &amp; macro</div>
 <div class="pinned-grid">
-
-  <div class="pcard">
-    <div class="pcard-title">Will the Fed hike rates?</div>
-    <div class="pcard-sub">Probability by timeframe</div>
-    <div class="hike-rows" id="fed-hike-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
-  </div>
 
   <div class="pcard">
     <div class="pcard-title">How many rate cuts in 2026?</div>
@@ -152,6 +153,9 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
   </div>
 
 </div>
+
+<div class="section-label">Pinned Kalshi markets — macro, politics &amp; IPOs</div>
+<div class="pinned-grid" id="generic-grid"></div>
 
 <div class="section-label">Pinned Kalshi markets — corporate events</div>
 <div class="pinned-grid">
@@ -196,12 +200,6 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
   </div>
 
   <div class="pcard">
-    <div class="pcard-title">Warner Brothers takeover · Before July 2027</div>
-    <div class="pcard-sub">By acquirer probability</div>
-    <div class="pins-rows" id="wb-rows"><div style="color:#444;font-size:12px">Loading...</div></div>
-  </div>
-
-  <div class="pcard">
     <div class="pcard-title">Will JPMorgan acquire any company?</div>
     <div class="pcard-sub">Before Jan 1, 2028</div>
     <div id="jpm-stat"><div style="color:#444;font-size:12px">Loading...</div></div>
@@ -222,14 +220,89 @@ body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size
 const PROXY = "https://market-sentiment-db.vercel.app/api/proxy";
 const NEWS_PROXY = "https://market-sentiment-db.vercel.app/api/news";
 
+// ---- ADD A NEW PINNED MARKET: add one line here ----
+// [event ticker, card title, subtitle]
+const GENERIC_MARKETS = [
+  ['KXBRPRES-26','Brazil presidential election winner?','Resolves 2026'],
+  ['KXHORMUZNORM-26MAR17','When will Strait of Hormuz traffic return to normal?','Probability by date'],
+  ['KXCRYPTOSTRUCTURE-26JAN','Will the Clarity Act become law?','Crypto market structure bill'],
+  ['KXFEDFUNDSYEAR-28JAN01','Fed funds rate at end of 2027','Probability by rate level'],
+  ['KXRECSSNBER-27','Recession next year?','NBER-defined recession'],
+  ['KXMBAAPPS-26OCT28','US mortgage applications — next MBA report','Weekly change · resolves Oct 28, 2026'],
+  ['KXFEDHIKE-2','Next Fed rate hike?','Timing of next hike'],
+  ['KXCITRINI-28JUL01','Will the Citrini scenario happen?','Resolves Jul 1, 2028'],
+  ['KXIPOANTHROPIC-DATE','When will Anthropic officially announce an IPO?','Probability by date'],
+  ['KXUST10YRRATE27-27DEC31','10Y US Treasury yield on Dec 31, 2027','Probability by yield level'],
+  ['KXINXY-26DEC31H1600','S&P 500 close price, end of 2026','Probability by index level'],
+  ['KXIPO-26','Which companies will announce an IPO this year?','Resolves 2026'],
+];
+
 function bc(p){return p>=60?'#639922':p>=35?'#E2844A':'#E24B4A'}
 function fv(v){if(!v||v==0)return'—';if(v>=1000000)return'$'+(v/1000000).toFixed(1)+'M';if(v>=1000)return'$'+Math.round(v/1000)+'K';return'$'+Math.round(v)}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 async function fetchPinned(ev,limit=50){
   const p=new URLSearchParams({path:'/markets',status:'open',event_ticker:ev,limit});
   return((await(await fetch(`${PROXY}?${p}`)).json()).markets||[]);
 }
 
+function midProb(m){
+  const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
+  if(yb>0&&ya>0)return Math.round(((yb+ya)/2)*100);
+  const lp=parseFloat(m.last_price_dollars||0);
+  if(lp>0)return Math.round(lp*100);
+  return Math.round(ya*100);
+}
+
+// ---------- Generic pinned market card ----------
+function marketLabel(m){
+  if(m.yes_sub_title)return m.yes_sub_title;
+  if(m.custom_strike){const v=Object.values(m.custom_strike).find(x=>x);if(v)return v;}
+  return m.subtitle||m.title||m.ticker||'—';
+}
+
+async function loadGeneric(cfg,container){
+  const [ticker,title,sub]=cfg;
+  const card=document.createElement('div');
+  card.className='pcard';
+  card.innerHTML=`<div class="pcard-title">${esc(title)}</div><div class="pcard-sub">${esc(sub)}</div><div class="gen-rows"><div style="color:#444;font-size:12px">Loading...</div></div>`;
+  container.appendChild(card);
+  const rows=card.querySelector('.gen-rows');
+  try{
+    const markets=await fetchPinned(ticker,60);
+    if(!markets.length){rows.innerHTML=`<div class="gen-empty">No open markets found for event ticker ${esc(ticker)}. Check the ticker in the Kalshi URL.</div>`;return;}
+    let items=markets.map(m=>({
+      label:marketLabel(m),
+      prob:midProb(m),
+      vol:parseFloat(m.volume_fp||0),
+      strike:(m.floor_strike!=null?m.floor_strike:(m.cap_strike!=null?m.cap_strike:null)),
+      close:m.close_time?new Date(m.close_time).getTime():0,
+      prev:(()=>{const p=parseFloat(m.previous_yes_bid_dollars||0);return p>0?Math.round(p*100):null})()
+    }));
+    const hasStrike=items.every(i=>i.strike!==null);
+    const hasDates=!hasStrike&&markets.length>1&&new Set(items.map(i=>i.close)).size>1&&/by|before|date/i.test(sub);
+    if(hasStrike)items.sort((a,b)=>a.strike-b.strike);
+    else if(hasDates)items.sort((a,b)=>a.close-b.close);
+    else items.sort((a,b)=>b.prob-a.prob);
+    const shown=items.filter(i=>i.prob>0||hasStrike).slice(0,12);
+    if(!shown.length){rows.innerHTML='<div class="gen-empty">Market is open but has no priced outcomes yet.</div>';return;}
+    rows.innerHTML=shown.map(i=>{
+      const d=i.prev!==null?i.prob-i.prev:null;
+      const dB=d===null||d===0?'':d>0?`<span class="delta-badge up-badge">+${d}%</span>`:`<span class="delta-badge dn-badge">${d}%</span>`;
+      return`<div class="gen-row"><span class="gen-label" title="${esc(i.label)}">${esc(i.label)}${dB}</span><div class="gen-bar-wrap"><div class="gen-bar"><div class="gen-bar-fill" style="width:${Math.min(i.prob,100)}%;background:${bc(i.prob)}"></div></div><span class="gen-pct" style="color:${bc(i.prob)}">${i.prob}%</span><span class="gen-vol">${fv(i.vol)}</span></div></div>`;
+    }).join('');
+  }catch(e){
+    rows.innerHTML=`<div class="gen-empty">Could not load ${esc(ticker)}: ${esc(e.message)}</div>`;
+  }
+}
+
+function loadAllGeneric(){
+  const grid=document.getElementById('generic-grid');
+  grid.innerHTML='';
+  GENERIC_MARKETS.forEach(cfg=>loadGeneric(cfg,grid));
+}
+
+// ---------- Existing custom cards ----------
 function tableRows(markets,nameKey){
   return markets.map(m=>{
     const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
@@ -249,7 +322,7 @@ function tableRows(markets,nameKey){
 }
 
 function acquirerRows(markets, nameKey){
-  return markets.filter(m=>m.yes_sub_title!=='None before July 2027').map(m=>{
+  return markets.map(m=>{
     const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
     const prob=yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
     const prev=parseFloat(m.previous_yes_bid_dollars||0);
@@ -264,14 +337,6 @@ function acquirerRows(markets, nameKey){
         <span class="pins-pct" style="color:${bc(prob)}">${prob}%</span>
         <span style="font-size:10px;color:#444">${fv(parseFloat(m.volume_fp||0))}</span>
       </div></div>`;
-  }).join('');
-}
-
-async function loadFedHike(){
-  const markets=(await fetchPinned('FEDHIKE',10)).filter(m=>m.close_time).sort((a,b)=>new Date(a.close_time)-new Date(b.close_time)).slice(0,4);
-  document.getElementById('fed-hike-rows').innerHTML=markets.map(m=>{
-    const p=Math.round(parseFloat(m.yes_bid_dollars||0)*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
-    return`<div class="hike-row"><span class="hike-label">${m.subtitle||''}</span><div class="hike-bar-wrap"><div class="hike-bar"><div class="hike-bar-fill" style="width:${p}%;background:${bc(p)}"></div></div><span class="hike-pct" style="color:${bc(p)}">${p}%</span><span class="hike-vol">${fv(parseFloat(m.volume_fp||0))}</span></div></div>`;
   }).join('');
 }
 
@@ -326,42 +391,20 @@ async function loadDJIA(){
 }
 
 async function loadPinterest(){
-  const markets=(await fetchPinned('KXACQUANNOUNCEPINS-27JAN01',10)).map(m=>{
-    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
-    return{...m,_p:yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)};
-  }).sort((a,b)=>b._p-a._p);
+  const markets=(await fetchPinned('KXACQUANNOUNCEPINS-27JAN01',10)).map(m=>({...m,_p:midProb(m)})).sort((a,b)=>b._p-a._p);
   document.getElementById('pins-rows').innerHTML=acquirerRows(markets,'Acquirer');
 }
 
 async function loadLetterboxd(){
-  const markets=(await fetchPinned('KXACQLETTERBOXD-28JAN01',10)).map(m=>{
-    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
-    return{...m,_p:yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)};
-  }).sort((a,b)=>b._p-a._p);
+  const markets=(await fetchPinned('KXACQLETTERBOXD-28JAN01',10)).map(m=>({...m,_p:midProb(m)})).sort((a,b)=>b._p-a._p);
   document.getElementById('lbox-rows').innerHTML=acquirerRows(markets,'Acquirer');
-}
-
-async function loadWarnerBros(){
-  const markets=(await fetchPinned('KXTAKEOVERACQWB-27JUN30',10)).map(m=>{
-    const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
-    return{...m,_p:yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100)};
-  }).sort((a,b)=>b._p-a._p);
-  document.getElementById('wb-rows').innerHTML=markets.map(m=>{
-    const prev=parseFloat(m.previous_yes_bid_dollars||0);
-    const prevP=prev>0?Math.round(prev*100):null;
-    const delta=prevP!==null?m._p-prevP:null;
-    const dBadge=delta===null?'':delta>0?`<span class="delta-badge up-badge">+${delta}%</span>`:delta<0?`<span class="delta-badge dn-badge">${delta}%</span>`:'';
-    const name=m.custom_strike?.Acquirer||m.yes_sub_title||'—';
-    return`<div class="pins-row"><span class="pins-acquirer">${name}${dBadge}</span><div class="pins-bar-wrap"><div class="pins-bar"><div class="pins-bar-fill" style="width:${m._p}%;background:${bc(m._p)}"></div></div><span class="pins-pct" style="color:${bc(m._p)}">${m._p}%</span><span style="font-size:10px;color:#444">${fv(parseFloat(m.volume_fp||0))}</span></div></div>`;
-  }).join('');
 }
 
 async function loadJPM(){
   const markets=await fetchPinned('KXACQANNOUNCEJPM-28JAN01',5);
   const m=markets[0];
   if(!m){document.getElementById('jpm-stat').innerHTML='<div style="color:#444;font-size:12px">No data</div>';return;}
-  const yb=parseFloat(m.yes_bid_dollars||0),ya=parseFloat(m.yes_ask_dollars||0);
-  const prob=yb>0?Math.round(((yb+ya)/2)*100):Math.round(ya*100)||Math.round(parseFloat(m.last_price_dollars||0)*100);
+  const prob=midProb(m);
   const prev=parseFloat(m.previous_yes_bid_dollars||0);
   const prevP=prev>0?Math.round(prev*100):null;
   const delta=prevP!==null?prob-prevP:null;
@@ -374,7 +417,7 @@ async function loadJPM(){
     <div style="font-size:11px;color:#444;line-height:1.5">${m.rules_primary||''}</div>`;
 }
 
-// NEWS SENTIMENT
+// ---------- NEWS SENTIMENT ----------
 const ENTITIES=[
   {id:'fed',label:'Fed rate decision',terms:['federal reserve','rate cut','rate hike','fomc','interest rate','powell'],cat:'macro',ks:'fed rate'},
   {id:'inflation',label:'Inflation / CPI',terms:['inflation','cpi','pce','consumer price'],cat:'macro',ks:'inflation'},
@@ -450,7 +493,8 @@ async function init(){
   document.getElementById('status').textContent='Loading...';
   document.getElementById('content').innerHTML='<div class="loading">Pulling news + Kalshi data...</div>';
   allCards=[];
-  Promise.all([loadFedHike(),loadRateCuts(),loadCBHikes(),loadWTI(),loadMA(),loadStakes(),loadDJIA(),loadPinterest(),loadLetterboxd(),loadWarnerBros(),loadJPM()]);
+  loadAllGeneric();
+  Promise.allSettled([loadRateCuts(),loadCBHikes(),loadWTI(),loadMA(),loadStakes(),loadDJIA(),loadPinterest(),loadLetterboxd(),loadJPM()]);
   try{
     const[newsItems,fg]=await Promise.all([fetchNews(),fetchFG()]);
     document.getElementById('status').textContent=`${newsItems.length} headlines fetched...`;
