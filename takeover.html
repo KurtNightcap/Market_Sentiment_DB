@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#141518;color:#e8e8e8;font-size:14px;min-height:100vh;padding:1rem 1.25rem 3rem}
+.nav{display:flex;gap:16px;padding:0.6rem 0;border-bottom:0.5px solid #2a2b2f;margin-bottom:1rem;flex-wrap:wrap}
+.nav a{font-size:12px;color:#555;text-decoration:none}
+.nav a.active{color:#e8e8e8;font-weight:500}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:0.75rem}
+.header h1{font-size:16px;font-weight:500;color:#fff}
+.status{font-size:12px;color:#555;margin-top:2px}
+.btn{padding:4px 12px;border-radius:8px;border:0.5px solid #2a2b2f;background:transparent;cursor:pointer;font-size:12px;color:#777}
+.btn:hover{background:#23242a;color:#aaa}
+.desc{font-size:11px;color:#555;line-height:1.6;background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:8px;padding:8px 10px;margin-bottom:12px}
+.summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:0.5rem 0 1rem}
+.metric{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:8px;padding:0.65rem 0.85rem}
+.metric-label{font-size:11px;color:#555;margin-bottom:3px}
+.metric-value{font-size:20px;font-weight:500;color:#fff}
+.metric-sub{font-size:10px;color:#444;margin-top:1px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+.fgroup{display:flex;flex-direction:column;gap:3px}
+.fgroup label{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:0.04em}
+.fgroup input[type=number],.fgroup select{background:#1e1f24;border:0.5px solid #2a2b2f;border-radius:6px;padding:5px 8px;color:#e8e8e8;font-size:12px;width:92px;outline:none}
+.fgroup select{width:140px}
+.fgroup input:focus,.fgroup select:focus{border-color:#444}
+.check{display:flex;align-items:center;gap:5px;font-size:12px;color:#888;padding-bottom:5px}
+.tablewrap{overflow-x:auto;border:0.5px solid #2a2b2f;border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:860px}
+th{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.04em;padding:8px;text-align:right;font-weight:500;border-bottom:0.5px solid #2a2b2f;background:#1a1b1f;position:sticky;top:0}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 8px;border-bottom:0.5px solid #1a1b1f;text-align:right;white-space:nowrap}
+tr:hover td{background:#1a1b1f}
+.tk{font-weight:600;color:#fff;text-decoration:none}
+.tk:hover{text-decoration:underline}
+.nm{font-size:11px;color:#666;max-width:240px;overflow:hidden;text-overflow:ellipsis;display:block}
+.neg{color:#639922}
+.pos{color:#E2844A}
+.flag{font-size:9px;padding:1px 5px;border-radius:8px;background:#2e1a0a;color:#E2844A;border:0.5px solid #8B4513;margin-left:4px}
+.loading,.error{text-align:center;padding:2rem;color:#555;font-size:13px}
+.error{color:#E24B4A}
+.foot{font-size:11px;color:#444;line-height:1.6;margin-top:12px}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="/">← Dashboard</a>
+  <a href="/opportunities.html">Opportunities</a>
+  <a href="/takeover.html" class="active">Takeover screener</a>
+</div>
+
+<div class="header">
+  <div><h1>Takeover exposure screener</h1><div class="status" id="status">Loading SEC data...</div></div>
+  <div style="display:flex;gap:6px"><button class="btn" onclick="copyTickers()">Copy tickers</button><button class="btn" onclick="load()">Reload</button></div>
+</div>
+
+<div class="desc">
+  Ranks US-listed companies by <b>cash-adjusted leverage</b> (CAL = (debt − cash) ÷ total assets), the takeover-exposure measure from Cremers, Nair and John. Lower = easier and cheaper to acquire. Percentile is measured across the full universe. This is a research queue, not a recommendation. Version 1 uses SEC filings only: no price, market cap, valuation, governance, or ownership data yet.
+</div>
+
+<div class="summary-row" id="summary"></div>
+
+<div class="filters">
+  <div class="fgroup"><label>CAL percentile ≤</label><input type="number" id="f-pct" value="25" min="1" max="100" onchange="render()"></div>
+  <div class="fgroup"><label>Assets min ($M)</label><input type="number" id="f-amin" value="300" onchange="render()"></div>
+  <div class="fgroup"><label>Assets max ($M)</label><input type="number" id="f-amax" value="25000" onchange="render()"></div>
+  <div class="fgroup"><label>Revenue min ($M)</label><input type="number" id="f-rev" value="50" onchange="render()"></div>
+  <div class="fgroup"><label>Sort by</label>
+    <select id="f-sort" onchange="render()">
+      <option value="cal">CAL (lowest first)</option>
+      <option value="calAdj">CAL incl. investments</option>
+      <option value="a">Assets (largest)</option>
+      <option value="r">Revenue (largest)</option>
+      <option value="m">Op. cash flow margin</option>
+    </select>
+  </div>
+  <label class="check"><input type="checkbox" id="f-ocf" checked onchange="render()"> Positive op. cash flow</label>
+  <label class="check"><input type="checkbox" id="f-dm" onchange="render()"> Hide unverified debt</label>
+</div>
+
+<div class="tablewrap">
+  <table>
+    <thead><tr>
+      <th>Company</th><th>CAL</th><th>CAL + inv.</th><th>Pctl</th><th>Debt</th><th>Cash</th><th>Assets</th><th>Revenue</th><th>Op. cash flow</th><th>OCF margin</th><th>Period</th>
+    </tr></thead>
+    <tbody id="tbody"><tr><td colspan="11" class="loading">Loading...</td></tr></tbody>
+  </table>
+</div>
+
+<div class="foot">
+  <b>Read before using:</b> (1) "Unverified debt" means the company reports no standard debt tag; it may truly be debt-free or may use a different tag, so check the 10-Q. (2) Financial-type names are excluded by keyword (banks, insurers, REITs, funds, SPACs), which also removes some legitimate companies; SIC-based filtering is next. (3) Revenue and operating cash flow come from the latest calendar-year annual data, so companies with off-calendar fiscal years may be missing. (4) Low CAL alone is not a thesis. Check why the cash is there, what the business earns, and who could plausibly buy it.
+</div>
+
+<script>
+let DATA=[],META=null,VIEW=[];
+const $=id=>document.getElementById(id);
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function money(v){
+  if(v==null)return'—';
+  const a=Math.abs(v),s=v<0?'-':'';
+  if(a>=1e9)return s+'$'+(a/1e9).toFixed(2)+'B';
+  if(a>=1e6)return s+'$'+Math.round(a/1e6)+'M';
+  return s+'$'+Math.round(a/1e3)+'K';
+}
+function pct(v){return (v*100).toFixed(1)+'%'}
+
+async function load(){
+  $('status').textContent='Loading SEC data (first load can take several seconds)...';
+  $('tbody').innerHTML='<tr><td colspan="11" class="loading">Loading...</td></tr>';
+  try{
+    const r=await fetch('/api/takeover');
+    const j=await r.json();
+    if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));
+    DATA=j.rows;META=j.meta;
+    $('status').textContent=`Balance sheets: ${META.period} · annual: ${META.annual} · universe ${META.universe.toLocaleString()} companies · generated ${new Date(META.generated).toLocaleString()}`;
+    render();
+  }catch(e){
+    $('status').textContent='Error';
+    $('tbody').innerHTML=`<tr><td colspan="11" class="error">${esc(e.message)}</td></tr>`;
+  }
+}
+
+function render(){
+  const pmax=parseFloat($('f-pct').value)||100;
+  const amin=(parseFloat($('f-amin').value)||0)*1e6;
+  const amax=(parseFloat($('f-amax').value)||1e9)*1e6;
+  const rmin=(parseFloat($('f-rev').value)||0)*1e6;
+  const needOcf=$('f-ocf').checked;
+  const hideDm=$('f-dm').checked;
+  const sort=$('f-sort').value;
+
+  VIEW=DATA.filter(r=>
+    r.p<=pmax && r.a>=amin && r.a<=amax &&
+    (rmin===0 || (r.r!=null && r.r>=rmin)) &&
+    (!needOcf || (r.o!=null && r.o>0)) &&
+    (!hideDm || !r.dm)
+  ).map(r=>({...r,m:(r.r&&r.o!=null)?r.o/r.r:null}));
+
+  VIEW.sort((x,y)=>{
+    if(sort==='cal')return x.cal-y.cal;
+    if(sort==='calAdj')return x.calAdj-y.calAdj;
+    if(sort==='a')return y.a-x.a;
+    if(sort==='r')return (y.r||0)-(x.r||0);
+    if(sort==='m')return (y.m==null?-9:y.m)-(x.m==null?-9:x.m);
+    return 0;
+  });
+
+  const netCash=VIEW.filter(r=>r.cal<0).length;
+  const dm=VIEW.filter(r=>r.dm).length;
+  const med=VIEW.length?VIEW.map(r=>r.cal).sort((a,b)=>a-b)[Math.floor(VIEW.length/2)]:null;
+  $('summary').innerHTML=`
+    <div class="metric"><div class="metric-label">Universe</div><div class="metric-value">${DATA.length.toLocaleString()}</div><div class="metric-sub">ranked companies</div></div>
+    <div class="metric"><div class="metric-label">Matches</div><div class="metric-value" style="color:#639922">${VIEW.length}</div><div class="metric-sub">pass filters</div></div>
+    <div class="metric"><div class="metric-label">Net cash</div><div class="metric-value">${netCash}</div><div class="metric-sub">CAL below 0</div></div>
+    <div class="metric"><div class="metric-label">Median CAL</div><div class="metric-value">${med==null?'—':pct(med)}</div><div class="metric-sub">of matches</div></div>
+    <div class="metric"><div class="metric-label">Unverified debt</div><div class="metric-value" style="color:#E2844A">${dm}</div><div class="metric-sub">check the 10-Q</div></div>`;
+
+  const rows=VIEW.slice(0,300).map(r=>{
+    const link=`https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${r.c}&type=10-Q&dateb=&owner=include&count=10`;
+    return `<tr>
+      <td><a class="tk" href="${link}" target="_blank" rel="noopener">${esc(r.t)}</a>${r.dm?'<span class="flag">debt?</span>':''}<span class="nm">${esc(r.n)}</span></td>
+      <td class="${r.cal<0?'neg':'pos'}">${pct(r.cal)}</td>
+      <td class="${r.calAdj<0?'neg':'pos'}">${pct(r.calAdj)}</td>
+      <td>${r.p.toFixed(1)}</td>
+      <td>${money(r.d)}</td>
+      <td>${money(r.ca)}</td>
+      <td>${money(r.a)}</td>
+      <td>${money(r.r)}</td>
+      <td class="${r.o>0?'neg':'pos'}">${money(r.o)}</td>
+      <td>${r.m==null?'—':pct(r.m)}</td>
+      <td style="color:#555">${esc(r.e)}</td>
+    </tr>`;
+  }).join('');
+  $('tbody').innerHTML=rows||'<tr><td colspan="11" class="loading">No companies match these filters.</td></tr>';
+}
+
+function copyTickers(){
+  const txt=VIEW.slice(0,300).map(r=>r.t).join(',');
+  try{navigator.clipboard.writeText(txt);$('status').textContent=`Copied ${Math.min(VIEW.length,300)} tickers`;}
+  catch(e){$('status').textContent='Copy blocked by browser';}
+}
+
+load();
+</script>
+</body>
+</html>
